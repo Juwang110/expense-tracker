@@ -1,10 +1,25 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 
-export default function Test() {
-  console.log("test");
+function App() {
+  const [message, setMessage] = useState("");
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:5000/api/data")
+      .then((response) => {
+        setMessage(response.data.message);
+      })
+      .catch((error) => {
+        console.error("Error fetching data from backend:", error);
+      });
+  }, []);
+
   return (
-    <div className="bg-blue-500 text-white p-4">
-      <p className="font-bold">Styled paragraph</p>
+    <div>
+      <h1>{message}</h1>
     </div>
   );
 }
+
+export default App;
