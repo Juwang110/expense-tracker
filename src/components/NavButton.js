@@ -1,7 +1,8 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { Button } from "flowbite-react";
 
-function Button({ value, link }) {
+function NavButton({ value, link }) {
   const navigate = useNavigate();
 
   const navigateTo = () => {
@@ -9,7 +10,11 @@ function Button({ value, link }) {
     navigate(link);
   };
 
-  return <button onClick={navigateTo}>{value}</button>;
+  return (
+    <Button onClick={navigateTo} color="blue">
+      {value}
+    </Button>
+  );
 }
 
-export default Button;
+export default NavButton;

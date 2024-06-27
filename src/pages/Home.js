@@ -1,6 +1,6 @@
 import React from "react";
-import Button from "../components/Button";
+import NavButton from "../components/NavButton";
 
 export default function Home() {
-  return <Button value="Go to Test" link="pages/Test" />;
+  return <NavButton value="Go to Test" link="pages/Test" />;
 }
