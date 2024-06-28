@@ -1,14 +1,17 @@
 import React, { useState } from "react";
-import { Label, TextInput, Button } from "flowbite-react";
+import { Label, TextInput, Button, Alert } from "flowbite-react";
 import { HiMail } from "react-icons/hi";
 import { FaRegUser } from "react-icons/fa";
 import { RiLockPasswordFill } from "react-icons/ri";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export default function LogIn() {
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [showAlert, setShowAlert] = useState(false);
+  const navigate = useNavigate();
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -23,14 +26,17 @@ export default function LogIn() {
       .then((response) => {
         if (response.data.message === "exists") {
           console.log("exists");
+          navigate("/Home");
         } else if (response.data.message === "wrong password") {
           console.log("wrong");
+          setShowAlert(true);
         } else {
           console.log(response.data.message);
           axios
             .post("http://localhost:5000/api/add_user", userData)
             .then((response) => {
               console.log(response.data.message);
+              navigate("/Account");
             })
             .catch((error) => {
               console.error("Error adding user:", error);
@@ -92,6 +98,12 @@ export default function LogIn() {
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
+          {showAlert && (
+            <Alert color="warning" onDismiss={() => setShowAlert(false)}>
+              <span className="font-medium">Password alert!</span> Wrong
+              password for this account
+            </Alert>
+          )}
           <Button type="submit">Submit</Button>
         </form>
       </div>
