@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Label, TextInput, Button, Alert } from "flowbite-react";
+import { Label, TextInput, Button, Alert, Modal } from "flowbite-react";
 import { HiMail } from "react-icons/hi";
 import { FaRegUser } from "react-icons/fa";
 import { RiLockPasswordFill } from "react-icons/ri";
@@ -11,6 +11,8 @@ export default function LogIn() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showAlert, setShowAlert] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
+  const [newUser, setNewUser] = useState(false);
   const navigate = useNavigate();
 
   function handleSubmit(e) {
@@ -26,17 +28,18 @@ export default function LogIn() {
       .then((response) => {
         if (response.data.message === "exists") {
           console.log("exists");
-          navigate("/Home");
+          setOpenModal(true);
         } else if (response.data.message === "wrong password") {
           console.log("wrong");
           setShowAlert(true);
         } else {
           console.log(response.data.message);
+          setNewUser(true);
           axios
             .post("http://localhost:5000/api/add_user", userData)
             .then((response) => {
               console.log(response.data.message);
-              navigate("/Account");
+              setOpenModal(true);
             })
             .catch((error) => {
               console.error("Error adding user:", error);
@@ -46,6 +49,15 @@ export default function LogIn() {
       .catch((error) => {
         console.error("Error checking user:", error);
       });
+  }
+
+  function handleAccept() {
+    setOpenModal(false);
+    if (newUser) {
+      navigate("/Account");
+    } else {
+      navigate("/Home");
+    }
   }
 
   return (
@@ -103,6 +115,24 @@ export default function LogIn() {
               <span className="font-medium">Password alert!</span> Wrong
               password for this account
             </Alert>
+          )}
+          {openModal && (
+            <Modal show={openModal} onClose={() => setOpenModal(false)}>
+              <Modal.Header>Notice</Modal.Header>
+              <Modal.Body>
+                <div className="space-y-6">
+                  <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+                    This app is still undergoing development and is not meant to
+                    be used for real life purposes as of now. Please keep this
+                    in mind but feel free to test the current features using
+                    fake data.
+                  </p>
+                </div>
+              </Modal.Body>
+              <Modal.Footer>
+                <Button onClick={handleAccept}>I accept</Button>
+              </Modal.Footer>
+            </Modal>
           )}
           <Button type="submit">Submit</Button>
         </form>
