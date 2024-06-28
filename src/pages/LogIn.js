@@ -56,7 +56,7 @@ export default function LogIn() {
     if (newUser) {
       navigate("/Account");
     } else {
-      navigate("/Home");
+      navigate("/About");
     }
   }
 
