@@ -22,6 +22,8 @@ export default function LogIn() {
       password: password,
       email: email,
     };
+    localStorage.setItem("username", username);
+    localStorage.setItem("email", email);
 
     axios
       .post("http://localhost:5000/api/get_user", userData)
@@ -56,7 +58,7 @@ export default function LogIn() {
     if (newUser) {
       navigate("/Account");
     } else {
-      navigate("/About");
+      navigate("/Landing");
     }
   }
 
