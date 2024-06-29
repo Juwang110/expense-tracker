@@ -2,7 +2,7 @@ import { Carousel } from "flowbite-react";
 
 export function LanderCarousel() {
   return (
-    <div className="h-full w-full sm:h-64 xl:h-80 2xl:h-96">
+    <div className="h-full w-full sm:h-64 xl:h-64 2xl:h-80">
       <Carousel slideInterval={5000}>
         <img
           src="https://flowbite.com/docs/images/carousel/carousel-1.svg"
