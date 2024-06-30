@@ -1,6 +1,7 @@
 from dotenv import load_dotenv
 from flask import Flask, jsonify, send_from_directory, request
 from flask_cors import CORS, cross_origin
+from flask_mail import Mail, Message
 from flask_mysqldb import MySQL
 import logging
 
@@ -18,6 +19,37 @@ app.config['MYSQL_DB'] = os.getenv("DB_NAME")
 
 # Initialize MySQL
 mysql = MySQL(app)
+
+# Configure Flask-Mail
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USERNAME'] = os.getenv('MAIL_USERNAME')
+app.config['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD')
+
+# Initialize Flask-Mail
+mail = Mail(app)
+
+@app.route('/api/send_email', methods=['POST'])
+@cross_origin()
+def send_email():
+    data = request.json
+    sender_email = data.get('email')  
+    subject = "Contact me " + data.get('email')
+    body = data.get('message')
+
+    recipient_email = os.getenv('MAIL_USERNAME')
+
+    msg = Message(subject, sender=sender_email, recipients=[recipient_email])
+    msg.body = body
+
+    try:
+        mail.send(msg)
+        app.logger.info('Email sent successfully!')
+        return jsonify({'message': 'Success'})
+    except Exception as e:
+        app.logger.error(f'Failed to send email: {str(e)}')
+        return jsonify({'error': 'Fail'}), 500
 
 @app.route('/api/get_user', methods=['POST', 'OPTIONS'])
 @cross_origin()
