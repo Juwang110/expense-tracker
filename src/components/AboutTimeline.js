@@ -1,0 +1,55 @@
+import { Button, Timeline } from "flowbite-react";
+import { HiArrowNarrowRight, HiCalendar } from "react-icons/hi";
+
+export default function AboutTimeline() {
+  return (
+    <section className="bg-gray-50 dark:bg-gray-800 w-full">
+      <div className="px-10">
+        <h2 className="text-4xl text-left font-bold tracking-tight text-gray-950 dark:text-white py-5">
+          Development Timeline
+        </h2>
+        <Timeline horizontal className="py-3">
+          <Timeline.Item>
+            <Timeline.Point icon={HiCalendar} />
+            <Timeline.Content>
+              <Timeline.Time>February 2022</Timeline.Time>
+              <Timeline.Title>
+                Application UI code in Tailwind CSS
+              </Timeline.Title>
+              <Timeline.Body>
+                Get access to over 20+ pages including a dashboard layout,
+                charts, kanban board, calendar, and pre-order E-commerce &
+                Marketing pages.
+              </Timeline.Body>
+            </Timeline.Content>
+          </Timeline.Item>
+          <Timeline.Item>
+            <Timeline.Point icon={HiCalendar} />
+            <Timeline.Content>
+              <Timeline.Time>March 2022</Timeline.Time>
+              <Timeline.Title>Marketing UI design in Figma</Timeline.Title>
+              <Timeline.Body>
+                All of the pages and components are first designed in Figma and
+                we keep a parity between the two versions even as we update the
+                project.
+              </Timeline.Body>
+            </Timeline.Content>
+          </Timeline.Item>
+          <Timeline.Item>
+            <Timeline.Point icon={HiCalendar} />
+            <Timeline.Content>
+              <Timeline.Time>April 2022</Timeline.Time>
+              <Timeline.Title>
+                E-Commerce UI code in Tailwind CSS
+              </Timeline.Title>
+              <Timeline.Body>
+                Get started with dozens of web components and interactive
+                elements built on top of Tailwind CSS.
+              </Timeline.Body>
+            </Timeline.Content>
+          </Timeline.Item>
+        </Timeline>
+      </div>
+    </section>
+  );
+}
