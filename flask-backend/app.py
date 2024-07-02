@@ -51,16 +51,9 @@ def send_email():
         app.logger.error(f'Failed to send email: {str(e)}')
         return jsonify({'error': 'Fail'}), 500
 
-@app.route('/api/get_user', methods=['POST', 'OPTIONS'])
+@app.route('/api/get_user', methods=['POST'])
 @cross_origin()
 def get_user():
-    if request.method == 'OPTIONS':
-        headers = {
-            'Access-Control-Allow-Origin': 'http://localhost:3000',
-            'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-            'Access-Control-Allow-Headers': 'Content-Type'
-        }
-        return ('', 204, headers)
     received_data = request.json
     app.logger.info(f"Received data: {received_data}")
     cur = mysql.connection.cursor()
@@ -99,32 +92,122 @@ def add_user():
     cur.close()
     return jsonify({'message': 'User added successfully!'})
 
-@app.route('/api/all_expenses', methods=['GET'])
+@app.route('/api/all_expenses', methods=['POST'])
+@cross_origin()
 def get_expenses():
-    received_data = request.json
-    user_id = received_data.get("id")
-    cur = mysql.connection.cursor()
-    query = """
-        SELECT * FROM Users 
-        JOIN Transport ON Users.id = Transport.user_id 
-        JOIN Flights ON Users.id = Flights.user_id
-        JOIN Housing ON Users.id = Housing.user_id
-        JOIN Food ON Users.id = Food.user_id
-        JOIN Medical ON Users.id = Medical.user_id
-        JOIN Wellness ON Users.id = Wellness.user_id
-        JOIN Loans ON Users.id = Loans.user_id
-        JOIN Entertainment ON Users.id = Entertainment.user_id
-        JOIN Clothing ON Users.id = Clothing.user_id
-        JOIN Insurance ON Users.id = Insurance.user_id
-        JOIN MiscItems ON Users.id = MiscItems.user_id
-        JOIN SaveInvest ON Users.id = SaveInvest.user_id
-        JOIN MiscExpense ON Users.id = MiscExpense.user_id
-        WHERE Users.id = %s
-    """
-    cur.execute(query, (user_id,))
-    expenses = cur.fetchone()
-    cur.close()
-    return jsonify(expenses)
+    try:
+        
+        received_data = request.json
+        user_id = received_data.get("id")
+        app.logger.info(f"Received data: {user_id}")
+        
+        cur = mysql.connection.cursor()
+        query = """
+            SELECT 'Transport' AS category, Transport.monthly_expense AS value
+            FROM Users 
+            JOIN Transport ON Users.id = Transport.user_id
+            WHERE Users.id = %s
+            
+            UNION ALL
+            
+            SELECT 'Flights' AS category, Flights.monthly_expense AS value
+            FROM Users 
+            JOIN Flights ON Users.id = Flights.user_id
+            WHERE Users.id = %s
+            
+            UNION ALL
+            
+            SELECT 'Housing' AS category, Housing.monthly_expense AS value
+            FROM Users 
+            JOIN Housing ON Users.id = Housing.user_id
+            WHERE Users.id = %s
+            
+            UNION ALL
+            
+            SELECT 'Food' AS category, Food.monthly_expense AS value
+            FROM Users 
+            JOIN Food ON Users.id = Food.user_id
+            WHERE Users.id = %s
+            
+            UNION ALL
+            
+            SELECT 'Medical' AS category, Medical.monthly_expense AS value
+            FROM Users 
+            JOIN Medical ON Users.id = Medical.user_id
+            WHERE Users.id = %s
+            
+            UNION ALL
+            
+            SELECT 'Wellness' AS category, Wellness.monthly_expense AS value
+            FROM Users 
+            JOIN Wellness ON Users.id = Wellness.user_id
+            WHERE Users.id = %s
+            
+            UNION ALL
+            
+            SELECT 'Loans' AS category, Loans.monthly_expense AS value
+            FROM Users 
+            JOIN Loans ON Users.id = Loans.user_id
+            WHERE Users.id = %s
+            
+            UNION ALL
+            
+            SELECT 'Entertainment' AS category, Entertainment.monthly_expense AS value
+            FROM Users 
+            JOIN Entertainment ON Users.id = Entertainment.user_id
+            WHERE Users.id = %s
+            
+            UNION ALL
+            
+            SELECT 'Clothing' AS category, Clothing.monthly_expense AS value
+            FROM Users 
+            JOIN Clothing ON Users.id = Clothing.user_id
+            WHERE Users.id = %s
+            
+            UNION ALL
+            
+            SELECT 'Insurance' AS category, Insurance.monthly_expense AS value
+            FROM Users 
+            JOIN Insurance ON Users.id = Insurance.user_id
+            WHERE Users.id = %s
+            
+            UNION ALL
+            
+            SELECT 'MiscItems' AS category, MiscItems.monthly_expense AS value
+            FROM Users 
+            JOIN MiscItems ON Users.id = MiscItems.user_id
+            WHERE Users.id = %s
+            
+            UNION ALL
+            
+            SELECT 'SaveInvest' AS category, SaveInvest.monthly_expense AS value
+            FROM Users 
+            JOIN SaveInvest ON Users.id = SaveInvest.user_id
+            WHERE Users.id = %s
+            
+            UNION ALL
+            
+            SELECT 'MiscExpense' AS category, MiscExpense.monthly_expense AS value
+            FROM Users 
+            JOIN MiscExpense ON Users.id = MiscExpense.user_id
+            WHERE Users.id = %s
+        """
+        app.logger.info("Before executing SQL query")
+        cur.execute(query, (user_id, user_id, user_id, user_id, user_id, user_id, 
+                            user_id, user_id, user_id, user_id, user_id, user_id, 
+                            user_id))
+        expenses = cur.fetchall()
+        app.logger.info(f"Received data: {expenses}")
+        app.logger.info("After executing SQL query")
+        cur.close()
+        
+        # Convert the result into a list of dictionaries
+        formatted_expenses = [{'category': expense[0], 'value': int(expense[1])} for expense in expenses]
+        
+        return jsonify(formatted_expenses)
+    
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 @app.route('/api/handle_survey', methods=['POST'])
 def handle_transport():
