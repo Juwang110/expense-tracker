@@ -1,5 +1,12 @@
 import React from "react";
+import FinancialSurvey from "../components/FinancialSurvey";
+import FinancePie from "../components/FinancePie";
 
 export default function FinancialProfile() {
-  return <h1>Fin Profile</h1>;
+  return (
+    <div>
+      <FinancialSurvey></FinancialSurvey>
+      <FinancePie></FinancePie>
+    </div>
+  );
 }
