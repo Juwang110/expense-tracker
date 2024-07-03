@@ -45,12 +45,26 @@ export default function SettingsModal({ onClose }) {
             <Modal.Body>
               <div className="space-y-6">
                 <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
-                  This app is still undergoing development and is not meant to
-                  be used for real life purposes as of now. Please keep this in
-                  mind but feel free to test the current features using fake
-                  data.
+                  Navigate to your desired setting category by using the sidebar
+                  on the right. Please note that this application is still in
+                  development so your data might not be fully secure.
                 </p>
               </div>
+            </Modal.Body>
+          </>
+        );
+      case "Profile":
+        return (
+          <>
+            <Modal.Header>Profile</Modal.Header>
+            <Modal.Body className="max-h-96 overflow-y-auto">
+              <div className="space-y-6">
+                <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+                  Update your email, password, or username with the text inputs
+                  below.
+                </p>
+              </div>
+              <EditUserForm></EditUserForm>
             </Modal.Body>
           </>
         );
@@ -68,8 +82,11 @@ export default function SettingsModal({ onClose }) {
         <Sidebar aria-label="Default sidebar example" className="w-1/3">
           <Sidebar.Items>
             <Sidebar.ItemGroup>
-              <Sidebar.Item href="#" icon={HiChartPie}>
-                Dashboard
+              <Sidebar.Item
+                icon={HiChartPie}
+                onClick={() => handleOption("Profile")}
+              >
+                Profile
               </Sidebar.Item>
               <Sidebar.Item
                 href="#"

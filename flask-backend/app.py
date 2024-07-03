@@ -73,6 +73,26 @@ def get_user():
         return jsonify({"message": "doesn't exist", "id" : top_user[0] + 1})
     else:
         return jsonify({"message": "doesn't exist", "id" : 1})
+    
+@app.route('/api/update_user', methods=['PUT'])
+@cross_origin()
+def update_user():
+    received_data = request.json
+    user_id = received_data.get("id")
+    email = received_data.get("email")
+    username = received_data.get("username")
+    password = received_data.get("password")
+    app.logger.info(f"Received data: {received_data}")
+    cur = mysql.connection.cursor()
+    if email:
+        cur.execute('UPDATE Users SET email = %s WHERE id = %s', (email, user_id))
+    if username:
+        cur.execute('UPDATE Users SET username = %s WHERE id = %s', (username, user_id))
+    if password:
+        cur.execute('UPDATE Users SET password = %s WHERE id = %s', (password, user_id))
+    mysql.connection.commit()
+    cur.close()
+    return jsonify({"message": "updated"})
 
 @app.route('/api/get_users', methods=['GET'])
 def get_users():
