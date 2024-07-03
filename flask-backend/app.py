@@ -30,6 +30,13 @@ app.config['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD')
 # Initialize Flask-Mail
 mail = Mail(app)
 
+tables = [
+    'Transport', 'Flights', 'Housing', 'Food', 'Medical', 'Wellness', 
+    'Loans', 'Entertainment', 'Clothing', 'Insurance', 'MiscItems', 
+    'SaveInvest', 'MiscExpense'
+]
+
+
 @app.route('/api/send_email', methods=['POST'])
 @cross_origin()
 def send_email():
@@ -73,6 +80,55 @@ def get_user():
         return jsonify({"message": "doesn't exist", "id" : top_user[0] + 1})
     else:
         return jsonify({"message": "doesn't exist", "id" : 1})
+    
+@app.route('/api/update_user', methods=['PUT'])
+@cross_origin()
+def update_user():
+    received_data = request.json
+    user_id = received_data.get("id")
+    email = received_data.get("email")
+    username = received_data.get("username")
+    password = received_data.get("password")
+    app.logger.info(f"Received data: {received_data}")
+    cur = mysql.connection.cursor()
+    if email:
+        cur.execute('UPDATE Users SET email = %s WHERE id = %s', (email, user_id))
+    if username:
+        cur.execute('UPDATE Users SET username = %s WHERE id = %s', (username, user_id))
+    if password:
+        cur.execute('UPDATE Users SET password = %s WHERE id = %s', (password, user_id))
+    mysql.connection.commit()
+    cur.close()
+    return jsonify({"message": "updated"})
+
+@app.route('/api/update_consent', methods=['PUT'])
+@cross_origin()
+def update_consent():
+    received_data = request.json
+    consent = received_data.get("consent")
+    user_id = received_data.get("id")
+    cur = mysql.connection.cursor()
+    cur.execute('UPDATE Users SET consent = %s WHERE id = %s', (consent, user_id))
+    mysql.connection.commit()
+    cur.close()
+    return jsonify({"message": "updated"})
+
+@app.route('/api/delete_user', methods=['POST'])
+def delete_user():
+    try:
+        received_data = request.json
+        user_id = received_data.get("id")
+        cur = mysql.connection.cursor()
+        cur.execute('DELETE FROM Users WHERE id = %s', (user_id,))
+        for table in tables:
+            cur.execute(f'DELETE FROM {table} WHERE user_id = %s', (user_id,))
+        
+        mysql.connection.commit()
+        cur.close()
+        return jsonify({"message": "User deleted successfully"})
+    except Exception as e:
+        return jsonify({"error": "Failed to delete user"}), 500
+
 
 @app.route('/api/get_users', methods=['GET'])
 def get_users():
@@ -86,8 +142,8 @@ def get_users():
 def add_user():
     recieved_data = request.json
     cur = mysql.connection.cursor()
-    cur.execute("INSERT INTO Users (username, password, email) VALUES (%s, %s, %s)",
-                (recieved_data.get("username"), recieved_data.get("password"), recieved_data.get("email")))
+    cur.execute("INSERT INTO Users (username, password, email, consent) VALUES (%s, %s, %s, %s)",
+                (recieved_data.get("username"), recieved_data.get("password"), recieved_data.get("email"), True))
     mysql.connection.commit()
     cur.close()
     return jsonify({'message': 'User added successfully!'})

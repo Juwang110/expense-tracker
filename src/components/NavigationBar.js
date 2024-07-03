@@ -1,11 +1,14 @@
 import React from "react";
 import { MegaMenu, Navbar, Dropdown, Avatar } from "flowbite-react";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import SettingsModal from "./SettingsModal";
 
 export default function NavigationBar() {
   const navigate = useNavigate();
   const username = localStorage.getItem("username");
   const email = localStorage.getItem("email");
+  const [settingsModal, setSettingsModal] = useState(false);
 
   return (
     <div className="border-b border-gray-400 dark:border-gray-800">
@@ -42,7 +45,10 @@ export default function NavigationBar() {
               <Dropdown.Item onClick={() => navigate("/FinancialProfile")}>
                 Financial Profile
               </Dropdown.Item>
-              <Dropdown.Item onClick={() => navigate("/Settings")}>
+              <Dropdown.Item
+                onClick={() => setSettingsModal(true)}
+                onClose={() => setSettingsModal(false)}
+              >
                 Settings
               </Dropdown.Item>
               <Dropdown.Divider />
@@ -104,6 +110,11 @@ export default function NavigationBar() {
           </Navbar.Collapse>
         </div>
       </MegaMenu>
+      <div>
+        {settingsModal && (
+          <SettingsModal onClose={() => setSettingsModal(false)} />
+        )}
+      </div>
     </div>
   );
 }
