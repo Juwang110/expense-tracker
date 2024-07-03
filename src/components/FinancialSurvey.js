@@ -9,6 +9,7 @@ import {
   List,
 } from "flowbite-react";
 import { HiMail } from "react-icons/hi";
+import { AiOutlineDollarCircle } from "react-icons/ai";
 import { HiInformationCircle } from "react-icons/hi";
 import { useState } from "react";
 import axios from "axios";
@@ -42,6 +43,7 @@ export default function FinancialSurvey() {
   const [showSaveModal, setShowSaveModal] = useState(false);
   const [showMiscModal, setShowMiscModal] = useState(false);
   const [showFieldsAlert, setFieldsAlert] = useState(false);
+  const [showSubmitAlert, setSubmitAlert] = useState(false);
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -87,7 +89,7 @@ export default function FinancialSurvey() {
       .post("http://localhost:5000/api/handle_survey", surveyData)
       .then((response) => {
         if (response.data.message === "success") {
-          console.log("yay");
+          setSubmitAlert(true);
         }
       })
       .catch((error) => {
@@ -98,17 +100,16 @@ export default function FinancialSurvey() {
   return (
     <Accordion collapseAll>
       <Accordion.Panel>
-        <Accordion.Title>What is Flowbite?</Accordion.Title>
+        <Accordion.Title>My Financial Survey</Accordion.Title>
         <Accordion.Content>
-          <form className="flex max-w-md flex-col gap-4">
+          <form className="flex max-w-md flex-col gap-4 mx-auto">
             <div className="max-w-md">
               <div className="mb-2 block">
                 <Label htmlFor="Transport" value="Transport Expenses" />
               </div>
               <TextInput
                 id="Transport"
-                icon={HiMail}
-                placeholder="transport expense"
+                icon={AiOutlineDollarCircle}
                 required
                 helperText={
                   <>
@@ -127,13 +128,12 @@ export default function FinancialSurvey() {
                 onChange={(e) => setTransportExpense(e.target.value)}
               />
 
-              <div className="mb-2 block">
+              <div className="mb-2 block mt-3">
                 <Label htmlFor="Flight" value="Flight Expenses" />
               </div>
               <TextInput
                 id="Flight"
-                icon={HiMail}
-                placeholder="flight expense"
+                icon={AiOutlineDollarCircle}
                 required
                 helperText={
                   <>
@@ -152,13 +152,12 @@ export default function FinancialSurvey() {
                 onChange={(e) => setFlightExpense(e.target.value)}
               />
 
-              <div className="mb-2 block">
+              <div className="mb-2 block mt-3">
                 <Label htmlFor="Housing" value="Housing Expenses" />
               </div>
               <TextInput
                 id="Housing"
-                icon={HiMail}
-                placeholder="housing expense"
+                icon={AiOutlineDollarCircle}
                 required
                 helperText={
                   <>
@@ -177,13 +176,12 @@ export default function FinancialSurvey() {
                 onChange={(e) => setHousingExpense(e.target.value)}
               />
 
-              <div className="mb-2 block">
+              <div className="mb-2 block mt-3">
                 <Label htmlFor="Food" value="Food Expenses" />
               </div>
               <TextInput
                 id="Food"
-                icon={HiMail}
-                placeholder="food expense"
+                icon={AiOutlineDollarCircle}
                 required
                 helperText={
                   <>
@@ -202,13 +200,12 @@ export default function FinancialSurvey() {
                 onChange={(e) => setFoodExpense(e.target.value)}
               />
 
-              <div className="mb-2 block">
+              <div className="mb-2 block mt-3">
                 <Label htmlFor="Medical" value="Medical Expenses" />
               </div>
               <TextInput
                 id="Medical"
-                icon={HiMail}
-                placeholder="medical expense"
+                icon={AiOutlineDollarCircle}
                 required
                 helperText={
                   <>
@@ -227,13 +224,12 @@ export default function FinancialSurvey() {
                 onChange={(e) => setMedicalExpense(e.target.value)}
               />
 
-              <div className="mb-2 block">
+              <div className="mb-2 block mt-3">
                 <Label htmlFor="Wellness" value="Wellness Expenses" />
               </div>
               <TextInput
                 id="Wellness"
-                icon={HiMail}
-                placeholder="wellness expense"
+                icon={AiOutlineDollarCircle}
                 required
                 helperText={
                   <>
@@ -252,13 +248,12 @@ export default function FinancialSurvey() {
                 onChange={(e) => setWellnessExpense(e.target.value)}
               />
 
-              <div className="mb-2 block">
+              <div className="mb-2 block mt-3">
                 <Label htmlFor="Loan" value="Loan Expenses" />
               </div>
               <TextInput
                 id="Loan"
-                icon={HiMail}
-                placeholder="loan expense"
+                icon={AiOutlineDollarCircle}
                 required
                 helperText={
                   <>
@@ -277,13 +272,12 @@ export default function FinancialSurvey() {
                 onChange={(e) => setLoanExpense(e.target.value)}
               />
 
-              <div className="mb-2 block">
+              <div className="mb-2 block mt-3">
                 <Label htmlFor="Entertainment" value="Entertainment Expenses" />
               </div>
               <TextInput
                 id="Entertainment"
-                icon={HiMail}
-                placeholder="entertainment expense"
+                icon={AiOutlineDollarCircle}
                 required
                 helperText={
                   <>
@@ -302,13 +296,12 @@ export default function FinancialSurvey() {
                 onChange={(e) => setEntExpense(e.target.value)}
               />
 
-              <div className="mb-2 block">
+              <div className="mb-2 block mt-3">
                 <Label htmlFor="Clothing" value="Clothing Expenses" />
               </div>
               <TextInput
                 id="Clothing"
-                icon={HiMail}
-                placeholder="clothing expense"
+                icon={AiOutlineDollarCircle}
                 required
                 helperText={
                   <>
@@ -327,13 +320,12 @@ export default function FinancialSurvey() {
                 onChange={(e) => setClothingExpense(e.target.value)}
               />
 
-              <div className="mb-2 block">
+              <div className="mb-2 block mt-3">
                 <Label htmlFor="Insurance" value="Insurance Expenses" />
               </div>
               <TextInput
                 id="Insurance"
-                icon={HiMail}
-                placeholder="insurance expense"
+                icon={AiOutlineDollarCircle}
                 required
                 helperText={
                   <>
@@ -352,13 +344,12 @@ export default function FinancialSurvey() {
                 onChange={(e) => setInsuranceExpense(e.target.value)}
               />
 
-              <div className="mb-2 block">
+              <div className="mb-2 block mt-3">
                 <Label htmlFor="Items" value="Items Expenses" />
               </div>
               <TextInput
                 id="Items"
-                icon={HiMail}
-                placeholder="items expense"
+                icon={AiOutlineDollarCircle}
                 required
                 helperText={
                   <>
@@ -377,13 +368,12 @@ export default function FinancialSurvey() {
                 onChange={(e) => setItemsExpense(e.target.value)}
               />
 
-              <div className="mb-2 block">
+              <div className="mb-2 block mt-3">
                 <Label htmlFor="Save" value="Save Expenses" />
               </div>
               <TextInput
                 id="Save"
-                icon={HiMail}
-                placeholder="save expense"
+                icon={AiOutlineDollarCircle}
                 required
                 helperText={
                   <>
@@ -402,13 +392,12 @@ export default function FinancialSurvey() {
                 onChange={(e) => setSaveExpense(e.target.value)}
               />
 
-              <div className="mb-2 block">
+              <div className="mb-2 block mt-3">
                 <Label htmlFor="Misc" value="Miscellaneous Expenses" />
               </div>
               <TextInput
                 id="Misc"
-                icon={HiMail}
-                placeholder="miscellaneous expense"
+                icon={AiOutlineDollarCircle}
                 required
                 helperText={
                   <>
@@ -427,11 +416,6 @@ export default function FinancialSurvey() {
                 onChange={(e) => setMiscExpense(e.target.value)}
               />
             </div>
-
-            <div className="flex items-center gap-2">
-              <Checkbox id="usage" />
-              <Label htmlFor="usage">Allow usage</Label>
-            </div>
             <Button onClick={handleSubmit} type="submit">
               Submit
             </Button>
@@ -439,6 +423,12 @@ export default function FinancialSurvey() {
               <Alert color="failure" onDismiss={() => setFieldsAlert(false)}>
                 <span className="font-medium">Fields alert!</span> Please fill
                 out all fields with integer USD amounts
+              </Alert>
+            )}
+            {showSubmitAlert && (
+              <Alert color="success" onDismiss={() => setSubmitAlert(false)}>
+                <span className="font-medium">Alert!</span> Data successfully
+                submitted, please reload the page to see updated chart
               </Alert>
             )}
           </form>
