@@ -11,6 +11,7 @@ import {
 
 export default function FinancePie() {
   const [data, setData] = useState([]);
+  const placeholderData = [{ category: "No Data", value: 1 }];
   const colors = [
     "#8884d8",
     "#82ca9d",
@@ -74,26 +75,55 @@ export default function FinancePie() {
     return null;
   };
 
-  return (
-    <ResponsiveContainer width="100%" height={400}>
-      <PieChart>
-        <Pie
-          data={dataWithPercentage}
-          dataKey="value"
-          nameKey="category"
-          cx="50%"
-          cy="50%"
-          outerRadius={150}
-          fill="#8884d8"
-          label
-        >
-          {dataWithPercentage.map((entry, index) => (
-            <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />
-          ))}
-        </Pie>
-        <Tooltip content={renderCustomTooltip} />
-        <Legend />
-      </PieChart>
-    </ResponsiveContainer>
-  );
+  if (data.length === 0) {
+    return (
+      <div style={{ textAlign: "center" }}>
+        <p>Fill in survey to populate pie chart</p>
+        <ResponsiveContainer width="100%" height={500}>
+          <PieChart>
+            <Pie
+              data={placeholderData}
+              dataKey="value"
+              nameKey="category"
+              cx="50%"
+              cy="50%"
+              outerRadius={150}
+              fill="#8884d8"
+              label
+            >
+              <Cell key={`cell-0`} fill={colors[0]} />
+            </Pie>
+            <Tooltip content={renderCustomTooltip} />
+            <Legend />
+          </PieChart>
+        </ResponsiveContainer>
+      </div>
+    );
+  } else {
+    return (
+      <ResponsiveContainer width="100%" height={500}>
+        <PieChart>
+          <Pie
+            data={dataWithPercentage}
+            dataKey="value"
+            nameKey="category"
+            cx="50%"
+            cy="50%"
+            outerRadius={150}
+            fill="#8884d8"
+            label
+          >
+            {dataWithPercentage.map((entry, index) => (
+              <Cell
+                key={`cell-${index}`}
+                fill={colors[index % colors.length]}
+              />
+            ))}
+          </Pie>
+          <Tooltip content={renderCustomTooltip} />
+          <Legend />
+        </PieChart>
+      </ResponsiveContainer>
+    );
+  }
 }

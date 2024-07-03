@@ -6,7 +6,9 @@ export default function FinancialProfile() {
   return (
     <div>
       <FinancialSurvey></FinancialSurvey>
-      <FinancePie></FinancePie>
+      <div className="py-20">
+        <FinancePie></FinancePie>
+      </div>
     </div>
   );
 }
