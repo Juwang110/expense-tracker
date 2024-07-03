@@ -60,7 +60,7 @@ export default function LogIn() {
   function handleAccept() {
     setOpenModal(false);
     if (newUser) {
-      navigate("/Account");
+      navigate("/Landing");
     } else {
       navigate("/Landing");
     }

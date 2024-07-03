@@ -1,6 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import LogIn from "./pages/LogIn";
-import Account from "./pages/Account";
 import Landing from "./pages/Landing";
 import Resources from "./pages/Resources";
 import Contact from "./pages/Contact";
@@ -21,7 +20,6 @@ function App() {
         <Route path="/Landing" element={<Landing />} />
         <Route path="/expense-tracker" element={<LogIn />} />
         <Route path="/LogIn" element={<LogIn />} />
-        <Route path="/Account" element={<Account />} />
         <Route path="/Resources" element={<Resources />} />
         <Route path="/Contact" element={<Contact />} />
         <Route path="/License" element={<License />} />

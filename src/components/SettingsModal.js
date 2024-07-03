@@ -1,6 +1,6 @@
 import React from "react";
 import { EditUserForm } from "../components/EditUserForm";
-import { Button, Modal } from "flowbite-react";
+import { Button, Modal, Checkbox, Label, Radio } from "flowbite-react";
 import { Sidebar } from "flowbite-react";
 import {
   HiChartPie,
@@ -68,6 +68,62 @@ export default function SettingsModal({ onClose }) {
             </Modal.Body>
           </>
         );
+      case "Privacy":
+        return (
+          <>
+            <Modal.Header>Privacy</Modal.Header>
+            <Modal.Body className="max-h-96 overflow-y-auto">
+              <div className="space-y-6">
+                <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+                  Update your privacy settings below
+                </p>
+                <div className="flex items-center gap-2">
+                  <Checkbox id="age" />
+                  <Label htmlFor="age">I am 18 years or older</Label>
+                </div>
+                <div className="flex gap-2">
+                  <div className="flex h-5 items-center">
+                    <Checkbox id="shipping" />
+                  </div>
+                  <div className="flex flex-col">
+                    <Label htmlFor="shipping">Comparison consent</Label>
+                    <div className="text-gray-500 dark:text-gray-300">
+                      <span className="text-xs font-normal">
+                        Allow your data to be factored into the comparison tool
+                        for other userss
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <Button color="failure">Delete Account</Button>
+              </div>
+            </Modal.Body>
+          </>
+        );
+      case "Appearance":
+        return (
+          <>
+            <Modal.Header>Appearance</Modal.Header>
+            <Modal.Body className="max-h-96 overflow-y-auto">
+              <div className="space-y-6">
+                <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+                  Update your appearance settings below
+                </p>
+                <fieldset className="flex max-w-md flex-col gap-4">
+                  <legend className="mb-4">Choose your display mode</legend>
+                  <div className="flex items-center gap-2">
+                    <Radio id="light" name="display-mode" defaultChecked />
+                    <Label htmlFor="light">Light mode</Label>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Radio id="dark" name="display-mode" />
+                    <Label htmlFor="dark">Dark mode</Label>
+                  </div>
+                </fieldset>
+              </div>
+            </Modal.Body>
+          </>
+        );
     }
   }
 
@@ -90,21 +146,22 @@ export default function SettingsModal({ onClose }) {
               </Sidebar.Item>
               <Sidebar.Item
                 href="#"
-                icon={HiViewBoards}
-                label="Pro"
-                labelColor="dark"
+                icon={HiUser}
+                onClick={() => handleOption("Privacy")}
               >
-                Kanban
+                Privacy
               </Sidebar.Item>
-              <Sidebar.Item href="#" icon={HiInbox} label="3">
-                Inbox
+              <Sidebar.Item
+                href="#"
+                icon={HiShoppingBag}
+                onClick={() => handleOption("Appearance")}
+              >
+                Appearance
               </Sidebar.Item>
-              <Sidebar.Item href="#" icon={HiUser}>
-                Users
-              </Sidebar.Item>
-              <Sidebar.Item href="#" icon={HiShoppingBag}>
-                Products
-              </Sidebar.Item>
+              <Sidebar.Item></Sidebar.Item>
+              <Sidebar.Item></Sidebar.Item>
+              <Sidebar.Item></Sidebar.Item>
+              <Sidebar.Item></Sidebar.Item>
               <Sidebar.Item></Sidebar.Item>
               <Sidebar.Item></Sidebar.Item>
               <Sidebar.Item></Sidebar.Item>
