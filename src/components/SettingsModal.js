@@ -10,6 +10,8 @@ import {
   HiViewBoards,
 } from "react-icons/hi";
 import { useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 /*
 Profile Settings: User information (name, email, profile picture). Change
@@ -31,9 +33,40 @@ Profile Settings: User information (name, email, profile picture). Change
 
 export default function SettingsModal({ onClose }) {
   const [option, setOption] = useState("default");
+  const [consent, setConsent] = useState(true);
+  const navigate = useNavigate();
+
+  function handleConsent(e) {
+    setConsent(e.target.checked);
+    axios
+      .put("http://localhost:5000/api/update_consent", {
+        consent: e.target.checked,
+        id: localStorage.getItem("id"),
+      })
+      .then((response) => {
+        console.log("Consent updated successfully:", response.data);
+      })
+      .catch((error) => {
+        console.error("Error updating consent:", error);
+      });
+  }
 
   function handleOption(option) {
     setOption(option);
+  }
+
+  function handleDelete() {
+    const user_data = { id: localStorage.getItem("id") };
+    axios
+      .post(`http://localhost:5000/api/delete_user`, user_data)
+      .then((response) => {
+        console.log("Account deleted successfully");
+      })
+      .catch((error) => {
+        console.error("Error deleting account:", error);
+      });
+
+    navigate("/LogIn");
   }
 
   function renderModalContent() {
@@ -77,13 +110,14 @@ export default function SettingsModal({ onClose }) {
                 <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
                   Update your privacy settings below
                 </p>
-                <div className="flex items-center gap-2">
-                  <Checkbox id="age" />
-                  <Label htmlFor="age">I am 18 years or older</Label>
-                </div>
+
                 <div className="flex gap-2">
                   <div className="flex h-5 items-center">
-                    <Checkbox id="shipping" />
+                    <Checkbox
+                      id="shipping"
+                      checked={consent}
+                      onChange={handleConsent}
+                    />
                   </div>
                   <div className="flex flex-col">
                     <Label htmlFor="shipping">Comparison consent</Label>
@@ -95,7 +129,9 @@ export default function SettingsModal({ onClose }) {
                     </div>
                   </div>
                 </div>
-                <Button color="failure">Delete Account</Button>
+                <Button color="failure" onClick={handleDelete}>
+                  Delete Account
+                </Button>
               </div>
             </Modal.Body>
           </>

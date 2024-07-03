@@ -30,6 +30,13 @@ app.config['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD')
 # Initialize Flask-Mail
 mail = Mail(app)
 
+tables = [
+    'Transport', 'Flights', 'Housing', 'Food', 'Medical', 'Wellness', 
+    'Loans', 'Entertainment', 'Clothing', 'Insurance', 'MiscItems', 
+    'SaveInvest', 'MiscExpense'
+]
+
+
 @app.route('/api/send_email', methods=['POST'])
 @cross_origin()
 def send_email():
@@ -94,6 +101,35 @@ def update_user():
     cur.close()
     return jsonify({"message": "updated"})
 
+@app.route('/api/update_consent', methods=['PUT'])
+@cross_origin()
+def update_consent():
+    received_data = request.json
+    consent = received_data.get("consent")
+    user_id = received_data.get("id")
+    cur = mysql.connection.cursor()
+    cur.execute('UPDATE Users SET consent = %s WHERE id = %s', (consent, user_id))
+    mysql.connection.commit()
+    cur.close()
+    return jsonify({"message": "updated"})
+
+@app.route('/api/delete_user', methods=['POST'])
+def delete_user():
+    try:
+        received_data = request.json
+        user_id = received_data.get("id")
+        cur = mysql.connection.cursor()
+        cur.execute('DELETE FROM Users WHERE id = %s', (user_id,))
+        for table in tables:
+            cur.execute(f'DELETE FROM {table} WHERE user_id = %s', (user_id,))
+        
+        mysql.connection.commit()
+        cur.close()
+        return jsonify({"message": "User deleted successfully"})
+    except Exception as e:
+        return jsonify({"error": "Failed to delete user"}), 500
+
+
 @app.route('/api/get_users', methods=['GET'])
 def get_users():
     cur = mysql.connection.cursor()
@@ -106,8 +142,8 @@ def get_users():
 def add_user():
     recieved_data = request.json
     cur = mysql.connection.cursor()
-    cur.execute("INSERT INTO Users (username, password, email) VALUES (%s, %s, %s)",
-                (recieved_data.get("username"), recieved_data.get("password"), recieved_data.get("email")))
+    cur.execute("INSERT INTO Users (username, password, email, consent) VALUES (%s, %s, %s, %s)",
+                (recieved_data.get("username"), recieved_data.get("password"), recieved_data.get("email"), True))
     mysql.connection.commit()
     cur.close()
     return jsonify({'message': 'User added successfully!'})
