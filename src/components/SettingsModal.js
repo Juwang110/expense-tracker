@@ -181,14 +181,12 @@ export default function SettingsModal({ onClose }) {
                 Profile
               </Sidebar.Item>
               <Sidebar.Item
-                href="#"
                 icon={HiUser}
                 onClick={() => handleOption("Privacy")}
               >
                 Privacy
               </Sidebar.Item>
               <Sidebar.Item
-                href="#"
                 icon={HiShoppingBag}
                 onClick={() => handleOption("Appearance")}
               >
