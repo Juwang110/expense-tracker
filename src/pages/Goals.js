@@ -1,25 +1,31 @@
 import React, { useState } from "react";
 import NavigationBar from "../components/NavigationBar";
 import { AppFooter } from "../components/Footer";
-import { Dropdown, TextInput, Button } from "flowbite-react";
+import { Dropdown, TextInput, Button, Alert } from "flowbite-react";
 import { useEffect } from "react";
 import axios from "axios";
 
 export default function Goals() {
   const [month, setMonth] = useState(getCurrentMonth());
   const [year, setYear] = useState(new Date().getFullYear());
+  const [goals, setGoals] = useState([]);
+  const [intAlert, setIntAlert] = useState(false);
+  const [stringAlert, setStringAlert] = useState(false);
+  const [successAlert, setSuccessAlert] = useState(false);
 
-  const [goals, setGoals] = useState([
-    {
-      category: "expense category",
-      change: "increase/decrease",
-      unit: "amount/percentage of",
-      amount: "",
-      user_id: localStorage.getItem("id"),
-      goal_month: month,
-      goal_year: year,
-    },
-  ]);
+  useEffect(() => {
+    setGoals([
+      {
+        category: "expense category",
+        change: "increase/decrease",
+        unit: "amount/percentage of",
+        amount: "",
+        user_id: localStorage.getItem("id"),
+        goal_month: month,
+        goal_year: year,
+      },
+    ]);
+  }, [month, year]);
 
   function getCurrentMonth() {
     const date = new Date();
@@ -28,8 +34,32 @@ export default function Goals() {
   }
 
   function handleSave() {
+    setIntAlert(false);
+    setStringAlert(false);
+    setSuccessAlert(false);
+    let allGoalsValid = true;
+
     goals.forEach((goal) => {
       if (goal.amount !== "") {
+        if (!canBeConvertedToInt(goal.amount)) {
+          allGoalsValid = false;
+          setIntAlert(true);
+          return;
+        } else if (
+          (goal.category == "expense category") |
+          (goal.change == "increase/decrease") |
+          (goal.unit == "amount/percentage of")
+        ) {
+          allGoalsValid = false;
+          setStringAlert(true);
+          return;
+        }
+      }
+    });
+
+    if (allGoalsValid) {
+      setSuccessAlert(true);
+      goals.forEach((goal) => {
         axios
           .post("http://localhost:5000/api/add_goal", {
             id: goal.user_id,
@@ -41,13 +71,13 @@ export default function Goals() {
             goal_year: goal.goal_year,
           })
           .then((response) => {
-            console.log(response.data.message); // Handle success message if needed
+            console.log(response.data.message);
           })
           .catch((error) => {
             console.error("Error adding goal:", error);
           });
-      }
-    });
+      });
+    }
   }
 
   function addNewGoal() {
@@ -63,6 +93,10 @@ export default function Goals() {
         goal_year: year,
       },
     ]);
+  }
+
+  function canBeConvertedToInt(str) {
+    return /^\d+$/.test(str);
   }
 
   function updateGoal(index, key, value) {
@@ -255,6 +289,24 @@ export default function Goals() {
           </div>
         ))}
         <Button onClick={handleSave}>Save Goals</Button>
+        {intAlert && (
+          <Alert color="warning" onDismiss={() => setIntAlert(false)}>
+            <span className="font-medium">Alert!</span> Please make sure all
+            amount inputs are integers
+          </Alert>
+        )}
+        {stringAlert && (
+          <Alert color="warning" onDismiss={() => setStringAlert(false)}>
+            <span className="font-medium">Alert!</span> Please make sure all of
+            the dropdowns have a value
+          </Alert>
+        )}
+        {successAlert && (
+          <Alert color="success" onDismiss={() => setSuccessAlert(false)}>
+            <span className="font-medium">Alert!</span> Monthly goal has been
+            successfully added! Please refresh to see it!
+          </Alert>
+        )}
       </div>
       <AppFooter />
     </div>
