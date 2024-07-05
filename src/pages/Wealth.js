@@ -1,7 +1,7 @@
 import React from "react";
 import NavigationBar from "../components/NavigationBar";
 import { AppFooter } from "../components/Footer";
-import { Button, Card, Label, TextInput, Alert } from "flowbite-react";
+import { Button, Card, Label, TextInput, Alert, Modal } from "flowbite-react";
 import { useState } from "react";
 
 export default function Wealth() {
@@ -14,6 +14,7 @@ export default function Wealth() {
   const [percentageWealth, setPercentageWealth] = useState(null);
   const [estimatedWorth, setEstimatedWorth] = useState(null);
   const [incompleteAlert, setIncompleteAlert] = useState(false);
+  const [showInfoModal, setShowInfoModal] = useState(false);
 
   function handleCalc() {
     const expectedNetWorth = (age * income) / 10;
@@ -43,11 +44,11 @@ export default function Wealth() {
     }
 
     if (actualNetWorth >= 2 * expectedNetWorth) {
-      setWealthStatus("PAW"); // Prodigious Accumulator of Wealth
+      setWealthStatus("PAW - Prodigious Accumulator of Wealth"); // Prodigious Accumulator of Wealth
     } else if (actualNetWorth <= 0.5 * expectedNetWorth) {
-      setWealthStatus("UAW"); // Under Accumulator of Wealth
+      setWealthStatus("UAW - Under Accumulator of Wealth"); // Under Accumulator of Wealth
     } else {
-      setWealthStatus("AAW"); // Average Accumulator of Wealth
+      setWealthStatus("AAW - Average Accumulator of Wealth"); // Average Accumulator of Wealth
     }
   }
 
@@ -125,6 +126,31 @@ export default function Wealth() {
       <Button onClick={wealthCalc} className="mx-auto my-4">
         Calculate Wealth Status
       </Button>
+      {showInfoModal && (
+        <Modal show={showInfoModal} onClose={() => setShowInfoModal(false)}>
+          <Modal.Header>Note</Modal.Header>
+          <Modal.Body>
+            <div className="space-y-6">
+              <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+                The estimated wealth formula was taken from the famous novel The
+                Millionaire Next Door. It is an extremely rough estimate but
+                provides a good benchmark on how well someone is accumulating
+                wealth. The formula is calculated by multiplying age by income
+                and dividing by ten.
+              </p>
+              <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+                There are three different wealth status' according to the book,
+                PAW - Prodigious Accumulator of Wealth, UAW - Under Accumulator
+                of Wealth, and AAW - Average Accumulator of Wealth. PAW means
+                that your net worth is equal to or greater than two times your
+                expected. UAW means that is equal to or less than .5 times
+                expected. AAW is everywhere in between.
+              </p>
+            </div>
+          </Modal.Body>
+        </Modal>
+      )}
+
       {incompleteAlert && (
         <Alert color="warning" onDismiss={() => setIncompleteAlert(false)}>
           <span className="font-medium">Alert!</span> Please fill out all fields
@@ -133,17 +159,25 @@ export default function Wealth() {
       )}
       {netWorth !== null && (
         <Card className="w-full p-6 mx-auto my-4">
-          <h2 className="text-2xl font-bold tracking-tight text-gray-950 dark:text-white mb-3">
+          <h2 className="text-2xl font-bold tracking-tight text-gray-950 dark:text-white">
             Results
           </h2>
+          <a
+            href="#"
+            className="font-medium text-cyan-600 hover:underline dark:text-cyan-500"
+            onClick={() => setShowInfoModal(true)}
+          >
+            More Info
+          </a>
           <p className="text-lg">
             <strong>Actual Net Worth:</strong> ${netWorth.toLocaleString()}
           </p>
           <p className="text-lg">
-            <strong>Estimated Net Worth</strong> ${netWorth.toLocaleString()}
+            <strong>Estimated Net Worth</strong> $
+            {estimatedWorth.toLocaleString()}
           </p>
           <p className="text-lg">
-            <strong>Wealth Status:</strong> ${estimatedWorth.toLocaleString()}
+            <strong>Wealth Status:</strong> {wealthStatus.toLocaleString()}
           </p>
           <p className="text-lg">
             <strong>Percentage Wealth:</strong> {percentageWealth.toFixed(2)}%
