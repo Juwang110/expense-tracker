@@ -146,6 +146,20 @@ export default function Goals() {
     setYear(selectedYear);
   }
 
+  function handleDelete(id) {
+    console.log(id);
+    axios
+      .post("http://localhost:5000/api/delete_goal", {
+        goal_id: id,
+      })
+      .then((response) => {
+        console.log(response.data.message);
+      })
+      .catch((error) => {
+        console.error("Error deleting goal:", error);
+      });
+  }
+
   function goalCell() {
     return myGoals.map((myGoal, index) => (
       <Table.Row
@@ -153,16 +167,18 @@ export default function Goals() {
         className="bg-white dark:border-gray-700 dark:bg-gray-800"
       >
         <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-          {myGoal[2]} {/* Category */}
+          {myGoal[2]}
         </Table.Cell>
-        <Table.Cell>{myGoal[6]}</Table.Cell> {/* Year */}
-        <Table.Cell>{myGoal[7]}</Table.Cell> {/* Month */}
-        <Table.Cell>{myGoal[5]}</Table.Cell> {/* Change */}
-        <Table.Cell>{myGoal[3]}</Table.Cell> {/* Unit */}
-        <Table.Cell>{myGoal[4]}</Table.Cell> {/* Amount */}
+        <Table.Cell>{myGoal[0]}</Table.Cell>
+        <Table.Cell>{myGoal[6]}</Table.Cell>
+        <Table.Cell>{myGoal[7]}</Table.Cell>
+        <Table.Cell>{myGoal[5]}</Table.Cell>
+        <Table.Cell>{myGoal[3]}</Table.Cell>
+        <Table.Cell>{myGoal[4]}</Table.Cell>
         <Table.Cell>
           <a
             href="#"
+            onClick={() => handleDelete(myGoal[0])}
             className="font-medium text-cyan-600 hover:underline dark:text-cyan-500"
           >
             Delete
@@ -178,6 +194,7 @@ export default function Goals() {
         <Table>
           <Table.Head>
             <Table.HeadCell>Category</Table.HeadCell>
+            <Table.HeadCell>ID</Table.HeadCell>
             <Table.HeadCell>Year</Table.HeadCell>
             <Table.HeadCell>Month</Table.HeadCell>
             <Table.HeadCell>Change</Table.HeadCell>
@@ -392,6 +409,10 @@ export default function Goals() {
           </Alert>
         )}
         <h1 className="text-4xl font-bold">My current goals</h1>
+        <p>
+          Navigate to financial profile to see what you need to achieve these
+          goals and how far off you were from them if the month has passed
+        </p>
         {constructTable()}
       </div>
       <AppFooter />
