@@ -90,6 +90,16 @@ def send_email():
     except Exception as e:
         app.logger.error(f'Failed to send email: {str(e)}')
         return jsonify({'error': 'Fail'}), 500
+    
+@app.route('/api/get_goals', methods=['POST'])
+def get_goals():
+    received_data = request.json
+    user_id = received_data.get('id')
+    cur = mysql.connection.cursor()
+    cur.execute('SELECT * FROM Goals WHERE user_id = %s', (user_id,)) 
+    data = cur.fetchall()
+    cur.close()
+    return jsonify(data)
 
 @app.route('/api/get_user', methods=['POST'])
 @cross_origin()

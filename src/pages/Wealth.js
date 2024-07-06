@@ -16,16 +16,6 @@ export default function Wealth() {
   const [incompleteAlert, setIncompleteAlert] = useState(false);
   const [showInfoModal, setShowInfoModal] = useState(false);
 
-  function handleCalc() {
-    const expectedNetWorth = (age * income) / 10;
-    console.log(expectedNetWorth);
-  }
-
-  function calcNetWorth() {
-    const actualNetWorth = assets - liabilities;
-    console.log(actualNetWorth);
-  }
-
   function wealthCalc() {
     const actualNetWorth = assets - liabilities;
     const expectedNetWorth = (age * income) / 10;
@@ -89,7 +79,6 @@ export default function Wealth() {
               helperText={<>This data is not stored*</>}
               onChange={(e) => setAge(Number(e.target.value))}
             />
-            <Button onClick={handleCalc}>Calculate</Button>
           </form>
         </Card>
         <Card className="w-full md:w-1/2 p-6">
@@ -119,7 +108,6 @@ export default function Wealth() {
               value={liabilities}
               onChange={(e) => setLiabilities(Number(e.target.value))}
             />
-            <Button onClick={calcNetWorth}>Calculate</Button>
           </form>
         </Card>
       </div>
