@@ -8,9 +8,11 @@ import {
   Alert,
   Card,
   Table,
+  Modal,
 } from "flowbite-react";
 import { useEffect } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export default function Goals() {
   const [month, setMonth] = useState(getCurrentMonth());
@@ -20,6 +22,13 @@ export default function Goals() {
   const [intAlert, setIntAlert] = useState(false);
   const [stringAlert, setStringAlert] = useState(false);
   const [successAlert, setSuccessAlert] = useState(false);
+  const [showInfoModal, setShowInfoModal] = useState(false);
+  const [deleteAlert, setDeleteAlert] = useState(false);
+  const navigate = useNavigate();
+
+  function handleProfile() {
+    navigate("/FinancialProfile");
+  }
 
   useEffect(() => {
     setGoals([
@@ -37,10 +46,7 @@ export default function Goals() {
 
   useEffect(() => {
     fetchGoals();
-    if (successAlert) {
-      fetchGoals();
-    }
-  }, [successAlert]);
+  }, [successAlert, deleteAlert]);
 
   useEffect(() => {
     console.log(myGoals);
@@ -64,10 +70,11 @@ export default function Goals() {
     return date.toLocaleDateString("en-US", options);
   }
 
-  function handleSave() {
+  async function handleSave() {
     setIntAlert(false);
     setStringAlert(false);
     setSuccessAlert(false);
+    setDeleteAlert(false);
     let allGoalsValid = true;
 
     goals.forEach((goal) => {
@@ -85,31 +92,40 @@ export default function Goals() {
           setStringAlert(true);
           return;
         }
+      } else if (
+        ((goal.amount == "") & (goal.category != "expense category")) |
+        (goal.change != "increase/decrease") |
+        (goal.unit != "amount/percentage of")
+      ) {
+        allGoalsValid = false;
+        setIntAlert(true);
+        return;
       }
     });
 
     if (allGoalsValid) {
-      setSuccessAlert(true);
-      goals.forEach((goal) => {
-        if (goal.amount !== "") {
-          axios
-            .post("http://localhost:5000/api/add_goal", {
-              id: goal.user_id,
-              category: goal.category,
-              unit: goal.unit,
-              amount: goal.amount,
-              change_by: goal.change,
-              goal_month: goal.goal_month,
-              goal_year: goal.goal_year,
-            })
-            .then((response) => {
-              console.log(response.data.message);
-            })
-            .catch((error) => {
-              console.error("Error adding goal:", error);
-            });
-        }
-      });
+      try {
+        await Promise.all(
+          goals.map((goal) => {
+            if (goal.amount !== "") {
+              axios.post("http://localhost:5000/api/add_goal", {
+                id: goal.user_id,
+                category: goal.category,
+                unit: goal.unit,
+                amount: goal.amount,
+                change_by: goal.change,
+                goal_month: goal.goal_month,
+                goal_year: goal.goal_year,
+              });
+            }
+          })
+        );
+        setGoals([]);
+        setSuccessAlert(true);
+        fetchGoals();
+      } catch (error) {
+        console.error("Error adding goal:", error);
+      }
     }
   }
 
@@ -147,13 +163,14 @@ export default function Goals() {
   }
 
   function handleDelete(id) {
+    setDeleteAlert(false);
     console.log(id);
     axios
       .post("http://localhost:5000/api/delete_goal", {
         goal_id: id,
       })
       .then((response) => {
-        console.log(response.data.message);
+        setDeleteAlert(true);
       })
       .catch((error) => {
         console.error("Error deleting goal:", error);
@@ -214,6 +231,32 @@ export default function Goals() {
     <div className="flex flex-col min-h-screen px-20">
       <NavigationBar />
       <div className="flex flex-col py-3 flex-1 px-20">
+        <h1 className="text-4xl font-bold mt-5">Add new goals</h1>
+        <a
+          href="#"
+          className="font-medium text-cyan-600 hover:underline dark:text-cyan-500"
+          onClick={() => setShowInfoModal(true)}
+        >
+          More Info
+        </a>
+        {showInfoModal && (
+          <Modal show={showInfoModal} onClose={() => setShowInfoModal(false)}>
+            <Modal.Header>Note</Modal.Header>
+            <Modal.Body>
+              <div className="space-y-6">
+                <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+                  This is the goals section. Here you can add financial goals
+                  and see what goals you currently have.
+                </p>
+                <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+                  The financial profile will update depending on your goals and
+                  show you how your budget must change to meet these goals or,
+                  if the month has passed it will show you how far off you were.
+                </p>
+              </div>
+            </Modal.Body>
+          </Modal>
+        )}
         <p className="flex items-center space-x-2 py-4">
           In the month of&nbsp;
           <Dropdown label={month} inline>
@@ -390,30 +433,41 @@ export default function Goals() {
           </div>
         ))}
         <Button onClick={handleSave}>Save Goals</Button>
-        {intAlert && (
-          <Alert color="warning" onDismiss={() => setIntAlert(false)}>
-            <span className="font-medium">Alert!</span> Please make sure all
-            amount inputs are integers
-          </Alert>
-        )}
-        {stringAlert && (
-          <Alert color="warning" onDismiss={() => setStringAlert(false)}>
-            <span className="font-medium">Alert!</span> Please make sure all of
-            the dropdowns have a value
-          </Alert>
-        )}
-        {successAlert && (
-          <Alert color="success" onDismiss={() => setSuccessAlert(false)}>
-            <span className="font-medium">Alert!</span> Monthly goals have been
-            successfully added
-          </Alert>
-        )}
-        <h1 className="text-4xl font-bold">My current goals</h1>
-        <p>
-          Navigate to financial profile to see what you need to achieve these
-          goals and how far off you were from them if the month has passed
-        </p>
+        <div className="py-4">
+          {intAlert && (
+            <Alert color="warning" onDismiss={() => setIntAlert(false)}>
+              <span className="font-medium">Alert!</span> Please make sure all
+              amount inputs are integers
+            </Alert>
+          )}
+          {stringAlert && (
+            <Alert color="warning" onDismiss={() => setStringAlert(false)}>
+              <span className="font-medium">Alert!</span> Please make sure all
+              of the dropdowns have a value
+            </Alert>
+          )}
+          {successAlert && (
+            <Alert color="success" onDismiss={() => setSuccessAlert(false)}>
+              <span className="font-medium">Alert!</span> Monthly goals have
+              been successfully added
+            </Alert>
+          )}
+        </div>
+        <h1 className="text-4xl font-bold py-5">My current goals</h1>
+
         {constructTable()}
+        {deleteAlert && (
+          <Alert color="success" onDismiss={() => setDeleteAlert(false)}>
+            <span className="font-medium">Alert!</span> Monthly goal has been
+            successfully deleted
+          </Alert>
+        )}
+        <div className="py-4 px-4">
+          <p className="mb-2">
+            Navigate to financial profile to see goal updates
+          </p>
+          <Button onClick={handleProfile}>Financial Profile</Button>
+        </div>
       </div>
       <AppFooter />
     </div>
