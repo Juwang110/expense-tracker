@@ -7,8 +7,8 @@ import License from "./pages/License";
 import FinancialProfile from "./pages/FinancialProfile";
 import About from "./pages/About";
 import Wealth from "./pages/Wealth";
-import Breakdown from "./pages/Breakdown";
 import Comp from "./pages/Comparison";
+import Goals from "./pages/Goals";
 
 import "tailwindcss/tailwind.css";
 
@@ -26,7 +26,7 @@ function App() {
         <Route path="/FinancialProfile" element={<FinancialProfile />} />
         <Route path="/About" element={<About />} />
         <Route path="/Comp" element={<Comp />} />
-        <Route path="/Breakdown" element={<Breakdown />} />
+        <Route path="/Goals" element={<Goals />} />
         <Route path="/Wealth" element={<Wealth />} />
 
         {/* Define other routes if needed */}

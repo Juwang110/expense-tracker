@@ -36,6 +36,39 @@ tables = [
     'SaveInvest', 'MiscExpense'
 ]
 
+@app.route('/api/add_goal', methods=['POST'])
+@cross_origin()
+def add_goal():
+    data = request.json
+    user_id = data.get('id')  
+    category = data.get('category')
+    unit = data.get('unit')
+    amount = data.get('amount')
+    change_by = data.get('change_by')
+    goal_month = data.get('goal_month')
+    goal_year = data.get('goal_year')
+
+    cur = mysql.connection.cursor()
+    cur.execute("INSERT INTO Goals (user_id, category, unit, amount, change_by, goal_month, goal_year) VALUES (%s, %s, %s, %s, %s, %s, %s)",
+                (user_id, category, unit, amount, change_by, goal_month, goal_year))
+
+    mysql.connection.commit()
+    cur.close()
+    return jsonify({"message": "updated"})
+
+@app.route('/api/delete_goal', methods=['POST'])
+def delete_goal():
+    try:
+        received_data = request.json
+        goal_id = received_data.get("goal_id")
+        cur = mysql.connection.cursor()
+        cur.execute('DELETE FROM Goals WHERE id = %s', (goal_id,))
+        mysql.connection.commit()
+        cur.close()
+        return jsonify({"message": "Goal deleted successfully"})
+    except Exception as e:
+        return jsonify({"error": "Failed to delete Goal"}), 500
+
 
 @app.route('/api/send_email', methods=['POST'])
 @cross_origin()
@@ -57,6 +90,16 @@ def send_email():
     except Exception as e:
         app.logger.error(f'Failed to send email: {str(e)}')
         return jsonify({'error': 'Fail'}), 500
+    
+@app.route('/api/get_goals', methods=['POST'])
+def get_goals():
+    received_data = request.json
+    user_id = received_data.get('id')
+    cur = mysql.connection.cursor()
+    cur.execute('SELECT * FROM Goals WHERE user_id = %s', (user_id,)) 
+    data = cur.fetchall()
+    cur.close()
+    return jsonify(data)
 
 @app.route('/api/get_user', methods=['POST'])
 @cross_origin()

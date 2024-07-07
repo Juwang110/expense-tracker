@@ -87,10 +87,10 @@ export default function NavigationBar() {
                   <div className="space-y-4 p-4">
                     <li>
                       <a
-                        href="/Breakdown"
+                        href="/Goals"
                         className="hover:text-primary-600 dark:hover:text-primary-500"
                       >
-                        Budget Breakdown
+                        Budget Goals
                       </a>
                     </li>
                     <li>
