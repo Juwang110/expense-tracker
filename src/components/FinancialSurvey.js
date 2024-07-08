@@ -7,6 +7,7 @@ import {
   Modal,
   Alert,
   List,
+  Dropdown,
 } from "flowbite-react";
 import { HiMail } from "react-icons/hi";
 import { AiOutlineDollarCircle } from "react-icons/ai";
@@ -45,6 +46,23 @@ export default function FinancialSurvey() {
   const [showFieldsAlert, setFieldsAlert] = useState(false);
   const [showSubmitAlert, setSubmitAlert] = useState(false);
 
+  const [month, setMonth] = useState(getCurrentMonth());
+  const [year, setYear] = useState(new Date().getFullYear());
+
+  function getCurrentMonth() {
+    const date = new Date();
+    const options = { month: "long" };
+    return date.toLocaleDateString("en-US", options);
+  }
+
+  function handleMonthChange(selectedMonth) {
+    setMonth(selectedMonth);
+  }
+
+  function handleYearChange(selectedYear) {
+    setYear(selectedYear);
+  }
+
   function handleSubmit(e) {
     e.preventDefault();
     const surveyData = {
@@ -62,6 +80,8 @@ export default function FinancialSurvey() {
       itemsExpense: itemsExpense,
       saveExpense: saveExpense,
       miscExpense: miscExpense,
+      year: year,
+      month: month,
     };
 
     if (
@@ -102,6 +122,65 @@ export default function FinancialSurvey() {
       <Accordion.Panel>
         <Accordion.Title>My Financial Survey</Accordion.Title>
         <Accordion.Content>
+          <p className="flex items-center space-x-2 py-4">
+            In the month of&nbsp;
+            <Dropdown label={month} inline>
+              <Dropdown.Item onClick={() => handleMonthChange("January")}>
+                January
+              </Dropdown.Item>
+              <Dropdown.Item onClick={() => handleMonthChange("February")}>
+                February
+              </Dropdown.Item>
+              <Dropdown.Item onClick={() => handleMonthChange("March")}>
+                March
+              </Dropdown.Item>
+              <Dropdown.Item onClick={() => handleMonthChange("April")}>
+                April
+              </Dropdown.Item>
+              <Dropdown.Item onClick={() => handleMonthChange("May")}>
+                May
+              </Dropdown.Item>
+              <Dropdown.Item onClick={() => handleMonthChange("June")}>
+                June
+              </Dropdown.Item>
+              <Dropdown.Item onClick={() => handleMonthChange("July")}>
+                July
+              </Dropdown.Item>
+              <Dropdown.Item onClick={() => handleMonthChange("August")}>
+                August
+              </Dropdown.Item>
+              <Dropdown.Item onClick={() => handleMonthChange("September")}>
+                September
+              </Dropdown.Item>
+              <Dropdown.Item onClick={() => handleMonthChange("October")}>
+                October
+              </Dropdown.Item>
+              <Dropdown.Item onClick={() => handleMonthChange("November")}>
+                November
+              </Dropdown.Item>
+              <Dropdown.Item onClick={() => handleMonthChange("December")}>
+                December
+              </Dropdown.Item>
+            </Dropdown>
+            &nbsp;year:
+            <Dropdown label={year} inline>
+              <Dropdown.Item onClick={() => handleYearChange("2024")}>
+                2024
+              </Dropdown.Item>
+              <Dropdown.Item onClick={() => handleYearChange("2025")}>
+                2025
+              </Dropdown.Item>
+              <Dropdown.Item onClick={() => handleYearChange("2026")}>
+                2026
+              </Dropdown.Item>
+              <Dropdown.Item onClick={() => handleYearChange("2027")}>
+                2027
+              </Dropdown.Item>
+              <Dropdown.Item onClick={() => handleYearChange("2028")}>
+                2028
+              </Dropdown.Item>
+            </Dropdown>
+          </p>
           <form className="flex max-w-md flex-col gap-4 mx-auto">
             <div className="max-w-md">
               <div className="mb-2 block">
