@@ -3,6 +3,7 @@ import FinancialSurvey from "../components/FinancialSurvey";
 import FinancePie from "../components/FinancePie";
 import NavigationBar from "../components/NavigationBar";
 import { AppFooter } from "../components/Footer";
+import FinanceHistory from "../components/FinanceHistory";
 
 export default function FinancialProfile() {
   const username = localStorage.getItem("username");
@@ -19,6 +20,7 @@ export default function FinancialProfile() {
           <div className="mt-8">
             <FinancePie />
           </div>
+          <FinanceHistory></FinanceHistory>
         </div>
       </div>
       <AppFooter />

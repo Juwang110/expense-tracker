@@ -191,6 +191,120 @@ def add_user():
     cur.close()
     return jsonify({'message': 'User added successfully!'})
 
+
+@app.route('/api/get_category', methods=['POST'])
+def get_category():
+    received_data = request.json
+    user_id = received_data.get('id')
+    category = received_data.get('category')
+    
+    cur = mysql.connection.cursor()
+    try:
+        query = f"SELECT * FROM {category} WHERE user_id = %s"
+        cur.execute(query, (user_id,))
+        data = cur.fetchall()
+        cur.close()
+        return jsonify(data)
+    except Exception as e:
+        cur.close()
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/total_expenses', methods=['POST'])
+@cross_origin()
+def get_total_expenses():
+    try:
+        received_data = request.json
+        user_id = received_data.get("id")
+        cur = mysql.connection.cursor()
+        query = """
+            SELECT month, year, SUM(total_expense) AS total_expenditure
+            FROM (
+                SELECT month, year, monthly_expense AS total_expense
+                FROM Transport
+                WHERE user_id = %s
+
+                UNION ALL
+
+                SELECT month, year, monthly_expense
+                FROM Flights
+                WHERE user_id = %s
+
+                UNION ALL
+
+                SELECT month, year, monthly_expense
+                FROM Housing
+                WHERE user_id = %s
+
+                UNION ALL
+
+                SELECT month, year, monthly_expense
+                FROM Food
+                WHERE user_id = %s
+
+                UNION ALL
+
+                SELECT month, year, monthly_expense
+                FROM Medical
+                WHERE user_id = %s
+
+                UNION ALL
+
+                SELECT month, year, monthly_expense
+                FROM Wellness
+                WHERE user_id = %s
+
+                UNION ALL
+
+                SELECT month, year, monthly_expense
+                FROM Loans
+                WHERE user_id = %s
+
+                UNION ALL
+
+                SELECT month, year, monthly_expense
+                FROM Entertainment
+                WHERE user_id = %s
+
+                UNION ALL
+
+                SELECT month, year, monthly_expense
+                FROM Clothing
+                WHERE user_id = %s
+
+                UNION ALL
+
+                SELECT month, year, monthly_expense
+                FROM Insurance
+                WHERE user_id = %s
+
+                UNION ALL
+
+                SELECT month, year, monthly_expense
+                FROM MiscItems
+                WHERE user_id = %s
+
+                UNION ALL
+
+                SELECT month, year, monthly_expense
+                FROM MiscExpense
+                WHERE user_id = %s
+
+            ) AS all_expenses
+            GROUP BY month, year;
+        """
+
+        app.logger.info("Before executing SQL query")
+        cur.execute(query, (user_id, user_id, user_id, user_id, user_id, user_id, user_id, user_id, user_id, user_id, user_id, user_id))
+        data = cur.fetchall()
+        cur.close()
+        
+        return jsonify(data)
+    
+    except Exception as e:
+        app.logger.error(f"Error occurred: {str(e)}")
+        return jsonify({'error': str(e)}), 500
+
+
 @app.route('/api/all_expenses', methods=['POST'])
 @cross_origin()
 def get_expenses():
