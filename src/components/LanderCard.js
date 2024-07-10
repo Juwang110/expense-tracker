@@ -10,11 +10,11 @@ export function LanderCard() {
         Welcome to your free budgeting and wealth insight tool, money!
       </h5>
       <p className="font-normal text-gray-700 dark:text-gray-400 py-3">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-        tempor incididunt ut labore et dolore magna aliqua. Aliquam vestibulum
-        morbi blandit cursus risus at ultrices mi. Cras pulvinar mattis nunc
-        sed. Ultrices tincidunt arcu non sodales neque sodales ut etiam. At
-        auctor urna nunc id cursus metus aliquam.
+        This is a multipurpose budgeting insight web application for you to
+        create an account, input monthly expenses, and gain insights based on
+        them. The full list of tools is described below but money has a wealth
+        calculator based on The Millionaire Next Door, budget history and
+        charts, and goal setting with more features to come!
       </p>
       <Button onClick={() => navigate("/About")}>Read more</Button>
     </Card>

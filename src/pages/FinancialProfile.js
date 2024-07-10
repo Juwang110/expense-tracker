@@ -20,7 +20,12 @@ export default function FinancialProfile() {
           <div className="mt-8">
             <FinancePie />
           </div>
-          <FinanceHistory></FinanceHistory>
+          <div className="py-8">
+            <h2 className="mb-4 text-4xl font-bold tracking-tight text-gray-900 dark:text-white">
+              Expenditure history
+            </h2>
+            <FinanceHistory></FinanceHistory>
+          </div>
         </div>
       </div>
       <AppFooter />

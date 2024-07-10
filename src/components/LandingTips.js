@@ -9,8 +9,8 @@ export default function LandingTips() {
         How to get started
       </h5>
       <p className="font-normal text-gray-700 dark:text-gray-400 py-7">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-        tempor incididunt ut labore et dolore magna aliqua.
+        Fill out your expenses for the previous month using the financial survey
+        in your financial profile.
       </p>
       <Button onClick={() => navigate("/FinancialProfile")}>My Finances</Button>
     </div>

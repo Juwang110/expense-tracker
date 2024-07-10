@@ -101,6 +101,16 @@ def get_goals():
     cur.close()
     return jsonify(data)
 
+@app.route('/api/get_dates', methods=['POST'])
+def get_dates():
+    received_data = request.json
+    user_id = received_data.get('id')
+    cur = mysql.connection.cursor()
+    cur.execute('SELECT month, year FROM Transport WHERE user_id = %s', (user_id,)) 
+    data = cur.fetchall()
+    cur.close()
+    return jsonify(data)
+
 @app.route('/api/get_user', methods=['POST'])
 @cross_origin()
 def get_user():
