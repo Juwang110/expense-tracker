@@ -70,6 +70,12 @@ export default function FinanceHistory() {
         [categoryData]
       );
 
+      updatedData.sort((a, b) => {
+        const dateA = new Date(a.time);
+        const dateB = new Date(b.time);
+        return dateA - dateB;
+      });
+
       setSaveExpenseData(updatedData);
     }
   }, [categoryData, totalData]);
