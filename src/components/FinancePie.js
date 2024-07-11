@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Card, Dropdown, List, Label } from "flowbite-react";
+import { Card, Dropdown, Table } from "flowbite-react";
 import {
   PieChart,
   Pie,
@@ -12,8 +12,16 @@ import {
 
 export default function FinancePie() {
   const [data, setData] = useState([]);
+  const [prevData, setPrevData] = useState([]);
   const [month, setMonth] = useState(getCurrentMonth());
   const [year, setYear] = useState(new Date().getFullYear());
+  const [prevMonth, setPrevMonth] = useState(
+    getPreviousMonthYear(month, year).month
+  );
+  const [prevYear, setPrevYear] = useState(
+    getPreviousMonthYear(month, year).year
+  );
+
   const placeholderData = [{ category: "No Data", value: 1 }];
   const colors = [
     "#1E3A8A", // Dark blue
@@ -39,10 +47,39 @@ export default function FinancePie() {
 
   function handleMonthChange(selectedMonth) {
     setMonth(selectedMonth);
+    setPrevMonth(getPreviousMonthYear(selectedMonth, year).month);
+    setPrevYear(getPreviousMonthYear(selectedMonth, year).year);
   }
 
   function handleYearChange(selectedYear) {
     setYear(selectedYear);
+    setPrevMonth(getPreviousMonthYear(month, selectedYear).month);
+    setPrevYear(getPreviousMonthYear(month, selectedYear).year);
+  }
+
+  function getPreviousMonthYear(month, year) {
+    const monthNames = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
+    ];
+    const monthIndex = monthNames.indexOf(month);
+    let prevMonthIndex = monthIndex - 1;
+    let prevYear = year;
+    if (prevMonthIndex < 0) {
+      prevMonthIndex = 11;
+      prevYear = year - 1;
+    }
+    return { month: monthNames[prevMonthIndex], year: prevYear };
   }
 
   useEffect(() => {
@@ -59,6 +96,21 @@ export default function FinancePie() {
     };
     fetchData();
   }, [month, year]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.post(
+          "http://localhost:5000/api/all_expenses",
+          { id: localStorage.getItem("id"), month: prevMonth, year: prevYear }
+        );
+        setPrevData(response.data);
+      } catch (error) {
+        console.error("No Data, Error:", error);
+      }
+    };
+    fetchData();
+  }, [prevMonth, prevYear]);
 
   const total = data.reduce(
     (accumulator, currentValue) => accumulator + currentValue.value,
@@ -91,6 +143,45 @@ export default function FinancePie() {
     }
     return null;
   };
+
+  const expenseCell = (data, prevData) => {
+    const dataWithPrevValue = data.map((expense) => {
+      const prevExpense = prevData.find(
+        (item) => item.category === expense.category
+      );
+      return { ...expense, prevValue: prevExpense ? prevExpense.value : 0 };
+    });
+
+    return dataWithPrevValue.map((expense, index) => (
+      <Table.Row
+        key={index}
+        className="bg-white dark:border-gray-700 dark:bg-gray-800"
+      >
+        <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+          {expense.category}
+        </Table.Cell>
+        <Table.Cell>{expense.value}</Table.Cell>
+        <Table.Cell>{expense.prevValue}</Table.Cell>
+      </Table.Row>
+    ));
+  };
+
+  function constructTable() {
+    return (
+      <div className="overflow-x-auto">
+        <Table>
+          <Table.Head>
+            <Table.HeadCell>Category</Table.HeadCell>
+            <Table.HeadCell>Value</Table.HeadCell>
+            <Table.HeadCell>PrevValue</Table.HeadCell>
+          </Table.Head>
+          <Table.Body className="divide-y">
+            {expenseCell(data, prevData)}
+          </Table.Body>
+        </Table>
+      </div>
+    );
+  }
 
   if (data.length === 0) {
     return (
@@ -265,6 +356,7 @@ export default function FinancePie() {
             <Legend />
           </PieChart>
         </ResponsiveContainer>
+        {constructTable()}
       </Card>
     );
   }
