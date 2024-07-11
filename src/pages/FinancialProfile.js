@@ -4,6 +4,7 @@ import FinancePie from "../components/FinancePie";
 import NavigationBar from "../components/NavigationBar";
 import { AppFooter } from "../components/Footer";
 import FinanceHistory from "../components/FinanceHistory";
+import FinanceGoals from "../components/FinanceGoals";
 
 export default function FinancialProfile() {
   const username = localStorage.getItem("username");
@@ -20,6 +21,7 @@ export default function FinancialProfile() {
           <div className="mt-8">
             <FinancePie />
           </div>
+          <FinanceGoals></FinanceGoals>
           <div className="py-8">
             <h2 className="mb-4 text-4xl font-bold tracking-tight text-gray-900 dark:text-white">
               Expenditure history
