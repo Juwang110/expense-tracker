@@ -161,7 +161,19 @@ export default function FinancePie() {
           {expense.category}
         </Table.Cell>
         <Table.Cell>{expense.value}</Table.Cell>
-        <Table.Cell>{expense.prevValue}</Table.Cell>
+        <Table.Cell>
+          {(() => {
+            if (expense.prevValue !== 0) {
+              return `${(
+                ((expense.value - expense.prevValue) / expense.prevValue) *
+                100
+              ).toFixed(2)}`;
+            } else {
+              return "No data for prev month";
+            }
+          })()}
+          %
+        </Table.Cell>
       </Table.Row>
     ));
   };
@@ -173,7 +185,7 @@ export default function FinancePie() {
           <Table.Head>
             <Table.HeadCell>Category</Table.HeadCell>
             <Table.HeadCell>Value</Table.HeadCell>
-            <Table.HeadCell>PrevValue</Table.HeadCell>
+            <Table.HeadCell>Percent Change</Table.HeadCell>
           </Table.Head>
           <Table.Body className="divide-y">
             {expenseCell(data, prevData)}
@@ -333,6 +345,7 @@ export default function FinancePie() {
             </Dropdown.Item>
           </Dropdown>
         </p>
+
         <ResponsiveContainer width="100%" height={500}>
           <PieChart>
             <Pie
