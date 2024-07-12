@@ -11,7 +11,6 @@ export default function FinancialProfile() {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <NavigationBar />
       <div className="flex flex-col items-center justify-center flex-1 px-8 py-6">
         <h1 className="text-4xl font-bold tracking-tight text-gray-900 dark:text-white text-center">
           Hello, {username}

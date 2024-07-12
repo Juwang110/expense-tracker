@@ -9,29 +9,45 @@ import About from "./pages/About";
 import Wealth from "./pages/Wealth";
 import Comp from "./pages/Comparison";
 import Goals from "./pages/Goals";
-
+import { useState, useEffect } from "react";
 import "tailwindcss/tailwind.css";
+import NavigationBar from "./components/NavigationBar";
 
 function App() {
-  return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Landing />} />
-        <Route path="/Landing" element={<Landing />} />
-        <Route path="/expense-tracker" element={<LogIn />} />
-        <Route path="/LogIn" element={<LogIn />} />
-        <Route path="/Resources" element={<Resources />} />
-        <Route path="/Contact" element={<Contact />} />
-        <Route path="/License" element={<License />} />
-        <Route path="/FinancialProfile" element={<FinancialProfile />} />
-        <Route path="/About" element={<About />} />
-        <Route path="/Comp" element={<Comp />} />
-        <Route path="/Goals" element={<Goals />} />
-        <Route path="/Wealth" element={<Wealth />} />
+  const [darkMode, setDarkMode] = useState(false);
 
-        {/* Define other routes if needed */}
-      </Routes>
-    </Router>
+  const toggleDarkMode = (isDarkMode) => {
+    setDarkMode(isDarkMode);
+  };
+
+  useEffect(() => {
+    if (localStorage.getItem("dark") === "true") {
+      toggleDarkMode(true);
+    }
+  }, [toggleDarkMode]);
+
+  return (
+    <div className={darkMode ? "dark" : ""}>
+      <Router>
+        <div className="px-20">
+          <NavigationBar toggleDarkMode={toggleDarkMode} darkMode={darkMode} />
+        </div>
+        <Routes>
+          <Route path="/" element={<Landing />} />
+          <Route path="/Landing" element={<Landing />} />
+          <Route path="/expense-tracker" element={<LogIn />} />
+          <Route path="/LogIn" element={<LogIn />} />
+          <Route path="/Resources" element={<Resources />} />
+          <Route path="/Contact" element={<Contact />} />
+          <Route path="/License" element={<License />} />
+          <Route path="/FinancialProfile" element={<FinancialProfile />} />
+          <Route path="/About" element={<About />} />
+          <Route path="/Comp" element={<Comp />} />
+          <Route path="/Goals" element={<Goals />} />
+          <Route path="/Wealth" element={<Wealth />} />
+        </Routes>
+      </Router>
+    </div>
   );
 }
 

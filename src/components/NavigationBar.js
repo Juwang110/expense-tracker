@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import SettingsModal from "./SettingsModal";
 
-export default function NavigationBar() {
+export default function NavigationBar({ darkMode, toggleDarkMode }) {
   const navigate = useNavigate();
   const username = localStorage.getItem("username");
   const email = localStorage.getItem("email");
@@ -112,7 +112,11 @@ export default function NavigationBar() {
       </MegaMenu>
       <div>
         {settingsModal && (
-          <SettingsModal onClose={() => setSettingsModal(false)} />
+          <SettingsModal
+            onClose={() => setSettingsModal(false)}
+            darkMode={darkMode}
+            toggleDarkMode={toggleDarkMode}
+          />
         )}
       </div>
     </div>

@@ -229,7 +229,6 @@ export default function Goals() {
 
   return (
     <div className="flex flex-col min-h-screen px-20">
-      <NavigationBar />
       <div className="flex flex-col py-3 flex-1 px-20">
         <h1 className="text-4xl font-bold mt-5">Add new goals</h1>
         <a
