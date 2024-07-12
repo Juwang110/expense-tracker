@@ -14,8 +14,8 @@ export default function About() {
           About Money
         </h1>
         <p className="py-4 px-56">
-          Volutpat odio facilisis mauris sit amet massa. Tempus urna et pharetra
-          pharetra massa massa ultricies mi quis.
+          A budgeting and expenditure insight application with more features to
+          come!
         </p>
         <img
           src={userIcon}
@@ -23,21 +23,21 @@ export default function About() {
           className="w-64 h-auto py-10"
         />
         <p className="py-4">
-          Eros in cursus turpis massa tincidunt. Sit amet mauris commodo quis
-          imperdiet. Dapibus ultrices in iaculis nunc. Lacus suspendisse
-          faucibus interdum posuere lorem ipsum dolor sit. Quis blandit turpis
-          cursus in hac. Diam ut venenatis tellus in metus vulputate. Vel orci
-          porta non pulvinar neque laoreet suspendisse. Et malesuada fames ac
-          turpis egestas. Ut sem nulla pharetra diam. Auctor augue mauris augue
-          neque gravida in fermentum et sollicitudin. Arcu felis bibendum ut
-          tristique et. Pellentesque habitant morbi tristique senectus et netus.
-          Adipiscing enim eu turpis egestas pretium aenean pharetra. Aenean
-          pharetra magna ac placerat vestibulum lectus mauris ultrices. In nibh
-          mauris cursus mattis molestie a iaculis at. Massa tincidunt dui ut
-          ornare lectus sit amet est placerat. Suspendisse in est ante in nibh.
-          Libero id faucibus nisl tincidunt eget nullam non. Bibendum ut
-          tristique et egestas quis ipsum suspendisse ultrices gravida. Viverra
-          nam libero justo laoreet sit amet cursus sit amet.
+          Money is a multi-purpose expenditure and budgeting insight app that is
+          still under development with more functionality to be added. You can
+          calculate your net and expected net worth, set monthly budget goals,
+          view expenditure history, and view budget breakdowns and
+          visualizations. The idea for creating Money stemmed from the novel The
+          Millionaire Next Door. I began reading this book during the summer
+          after my freshman year of college and thought it would be cool to
+          create a budgeting web application that would help me learn full-stack
+          web development while keeping me interested. I previously worked with
+          basic React.js principles and I learned SQL just prior. I have never
+          worked on both front and back end and decided this would be a great
+          learning opportunity. This website is not meant to be unique or
+          original, it is just a passion project of mine that I enjoy creating
+          and updating. Money uses React.js, Tailwind.css, Flowbite-react,
+          MySQL, Flask, and ReCharts.
         </p>
         <div className="py-5 w-full">
           <AboutTimeline></AboutTimeline>

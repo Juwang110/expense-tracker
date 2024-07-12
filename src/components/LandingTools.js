@@ -8,63 +8,79 @@ export function LanderTools() {
             Designed for the everyday user
           </h2>
           <p class="text-gray-500 sm:text-xl dark:text-gray-400">
-            Phasellus tristique imperdiet lectus a consectetur. Aliquam erat
-            volutpat. Ut lorem dui, tempus bibendum orci non, gravida venenatis
-            enim.
+            An easy to use website application which stores data and gives
+            digestible financial insights
           </p>
         </div>
+
         <div class="space-y-8 md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-12 md:space-y-0">
           <div class="flex flex-col items-center">
             <div class="text-center">
-              <h3 class="mb-2 text-xl font-bold dark:text-white">Tool</h3>
+              <h3 class="mb-2 text-xl font-bold dark:text-white">
+                Profile Survey
+              </h3>
               <p class="text-gray-500 dark:text-gray-400">
-                Vivamus ut felis pulvinar, iaculis orci pellentesque, rutrum ex.
-                Curabitur aliquet a velit vel iaculis. Suspendisse potenti.
+                Fillable for each month, this survey collects expense data. A
+                pie chart displays your breakdown and a table shows expense
+                percent change from the previous month.
               </p>
             </div>
           </div>
           <div class="flex flex-col items-center">
             <div class="text-center">
-              <h3 class="mb-2 text-xl font-bold dark:text-white">Tool</h3>
+              <h3 class="mb-2 text-xl font-bold dark:text-white">
+                Expenditure history
+              </h3>
               <p class="text-gray-500 dark:text-gray-400">
-                Vivamus ut felis pulvinar, iaculis orci pellentesque, rutrum ex.
-                Curabitur aliquet a velit vel iaculis. Suspendisse potenti.
+                Collects the history of all expenditure data and enables you to
+                display a line chart filterable by each category compared to
+                total expenses for that month.
               </p>
             </div>
           </div>
           <div class="flex flex-col items-center">
             <div class="text-center">
-              <h3 class="mb-2 text-xl font-bold dark:text-white">Tool</h3>
+              <h3 class="mb-2 text-xl font-bold dark:text-white">
+                Budget Goals
+              </h3>
               <p class="text-gray-500 dark:text-gray-400">
-                Vivamus ut felis pulvinar, iaculis orci pellentesque, rutrum ex.
-                Curabitur aliquet a velit vel iaculis. Suspendisse potenti.
+                Set and manage budget goals for different expense categories
+                given the month/year. Navigate to the your profile to see goal
+                results.
               </p>
             </div>
           </div>
           <div class="flex flex-col items-center">
             <div class="text-center">
-              <h3 class="mb-2 text-xl font-bold dark:text-white">Tool</h3>
+              <h3 class="mb-2 text-xl font-bold dark:text-white">
+                Wealth Calculator
+              </h3>
               <p class="text-gray-500 dark:text-gray-400">
-                Vivamus ut felis pulvinar, iaculis orci pellentesque, rutrum ex.
-                Curabitur aliquet a velit vel iaculis. Suspendisse potenti.
+                Inspired by The Millionaire Next Door, this tool allows you to
+                calculate your net worth and expected net worth giving insight
+                on how well you are accumulating wealth.
               </p>
             </div>
           </div>
           <div class="flex flex-col items-center">
             <div class="text-center">
-              <h3 class="mb-2 text-xl font-bold dark:text-white">Tool</h3>
+              <h3 class="mb-2 text-xl font-bold dark:text-white">
+                More to come!
+              </h3>
               <p class="text-gray-500 dark:text-gray-400">
-                Vivamus ut felis pulvinar, iaculis orci pellentesque, rutrum ex.
-                Curabitur aliquet a velit vel iaculis. Suspendisse potenti.
+                Stay tuned! This application is still in development and there
+                are more features that will be avaliable.
               </p>
             </div>
           </div>
           <div class="flex flex-col items-center">
             <div class="text-center">
-              <h3 class="mb-2 text-xl font-bold dark:text-white">Tool</h3>
+              <h3 class="mb-2 text-xl font-bold dark:text-white">
+                More to come!
+              </h3>
               <p class="text-gray-500 dark:text-gray-400">
-                Vivamus ut felis pulvinar, iaculis orci pellentesque, rutrum ex.
-                Curabitur aliquet a velit vel iaculis. Suspendisse potenti.
+                Stay tuned! This application is still in development and there
+                are more features that will be avaliable.
               </p>
             </div>
           </div>
