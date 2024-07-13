@@ -228,9 +228,11 @@ export default function Goals() {
   }
 
   return (
-    <div className="flex flex-col min-h-screen px-20">
+    <div className="flex flex-col min-h-screen px-20 dark:bg-gray-700">
       <div className="flex flex-col py-3 flex-1 px-20">
-        <h1 className="text-4xl font-bold mt-5">Add new goals</h1>
+        <h1 className="text-4xl font-bold mt-5 dark:text-white">
+          Add new goals
+        </h1>
         <a
           href="#"
           className="font-medium text-cyan-600 hover:underline dark:text-cyan-500"
@@ -242,7 +244,7 @@ export default function Goals() {
           <Modal show={showInfoModal} onClose={() => setShowInfoModal(false)}>
             <Modal.Header>Note</Modal.Header>
             <Modal.Body>
-              <div className="space-y-6">
+              <div className="space-y-6 ">
                 <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
                   This is the goals section. Here you can add financial goals
                   and see what goals you currently have.
@@ -256,7 +258,7 @@ export default function Goals() {
             </Modal.Body>
           </Modal>
         )}
-        <p className="flex items-center space-x-2 py-4">
+        <p className="flex items-center space-x-2 py-4 dark:text-white">
           In the month of&nbsp;
           <Dropdown label={month} inline>
             <Dropdown.Item onClick={() => handleMonthChange("January")}>
@@ -316,7 +318,7 @@ export default function Goals() {
           </Dropdown>
         </p>
         {goals.map((goal, index) => (
-          <div key={index} className="mb-4">
+          <div key={index} className="mb-4 dark:text-white">
             <Card>
               <p className="flex items-center space-x-2">
                 I want to&nbsp;
@@ -434,35 +436,49 @@ export default function Goals() {
         <Button onClick={handleSave}>Save Goals</Button>
         <div className="py-4">
           {intAlert && (
-            <Alert color="warning" onDismiss={() => setIntAlert(false)}>
+            <Alert
+              color={"dark" ? "dark" : "warning"}
+              onDismiss={() => setIntAlert(false)}
+            >
               <span className="font-medium">Alert!</span> Please make sure all
               amount inputs are integers
             </Alert>
           )}
           {stringAlert && (
-            <Alert color="warning" onDismiss={() => setStringAlert(false)}>
+            <Alert
+              color={"dark" ? "dark" : "warning"}
+              onDismiss={() => setStringAlert(false)}
+            >
               <span className="font-medium">Alert!</span> Please make sure all
               of the dropdowns have a value
             </Alert>
           )}
           {successAlert && (
-            <Alert color="success" onDismiss={() => setSuccessAlert(false)}>
+            <Alert
+              color={"dark" ? "dark" : "success"}
+              onDismiss={() => setSuccessAlert(false)}
+            >
               <span className="font-medium">Alert!</span> Monthly goals have
               been successfully added
             </Alert>
           )}
         </div>
-        <h1 className="text-4xl font-bold py-5">My current goals</h1>
+        <h1 className="text-4xl font-bold py-5 dark:text-white">
+          My current goals
+        </h1>
 
         {constructTable()}
         {deleteAlert && (
-          <Alert color="success" onDismiss={() => setDeleteAlert(false)}>
+          <Alert
+            color={"dark" ? "dark" : "success"}
+            onDismiss={() => setDeleteAlert(false)}
+          >
             <span className="font-medium">Alert!</span> Monthly goal has been
             successfully deleted
           </Alert>
         )}
         <div className="py-4 px-4">
-          <p className="mb-2">
+          <p className="mb-2 dark:text-white">
             Navigate to financial profile to see goal updates
           </p>
           <Button onClick={handleProfile}>Financial Profile</Button>

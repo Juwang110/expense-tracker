@@ -7,12 +7,12 @@ import AboutTimeline from "../components/AboutTimeline";
 
 export default function About() {
   return (
-    <div className="flex flex-col min-h-screen px-20">
+    <div className="flex flex-col min-h-screen px-20 dark:bg-gray-700">
       <div className="flex flex-col justify-center text-center py-3 items-center flex-1">
         <h1 className="text-4xl font-bold tracking-tight text-gray-950 dark:text-white">
           About Money
         </h1>
-        <p className="py-4 px-56">
+        <p className="py-4 px-56 dark:text-white">
           A budgeting and expenditure insight application with more features to
           come!
         </p>
@@ -21,7 +21,7 @@ export default function About() {
           alt="Picture of developer"
           className="w-64 h-auto py-10"
         />
-        <p className="py-4">
+        <p className="py-4 dark:text-white">
           Money is a multi-purpose expenditure and budgeting insight app that is
           still under development with more functionality to be added. You can
           calculate your net and expected net worth, set monthly budget goals,

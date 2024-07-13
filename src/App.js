@@ -18,6 +18,13 @@ function App() {
 
   const toggleDarkMode = (isDarkMode) => {
     setDarkMode(isDarkMode);
+    if (isDarkMode) {
+      document.documentElement.classList.add("dark");
+      localStorage.setItem("dark", "true");
+    } else {
+      document.documentElement.classList.remove("dark");
+      localStorage.setItem("dark", "false");
+    }
   };
 
   useEffect(() => {
@@ -29,26 +36,103 @@ function App() {
   return (
     <div className={darkMode ? "dark" : ""}>
       <Router>
-        <div className="px-20">
-          <NavigationBar toggleDarkMode={toggleDarkMode} darkMode={darkMode} />
-        </div>
         <Routes>
-          <Route path="/" element={<Landing />} />
-          <Route path="/Landing" element={<Landing />} />
+          <Route
+            path="/"
+            element={
+              <WithNavBar>
+                <Landing />
+              </WithNavBar>
+            }
+          />
+          <Route
+            path="/Landing"
+            element={
+              <WithNavBar>
+                <Landing />
+              </WithNavBar>
+            }
+          />
+          <Route
+            path="/Resources"
+            element={
+              <WithNavBar>
+                <Resources />
+              </WithNavBar>
+            }
+          />
+          <Route
+            path="/Contact"
+            element={
+              <WithNavBar>
+                <Contact />
+              </WithNavBar>
+            }
+          />
+          <Route
+            path="/License"
+            element={
+              <WithNavBar>
+                <License />
+              </WithNavBar>
+            }
+          />
+          <Route
+            path="/FinancialProfile"
+            element={
+              <WithNavBar>
+                <FinancialProfile />
+              </WithNavBar>
+            }
+          />
+          <Route
+            path="/About"
+            element={
+              <WithNavBar>
+                <About />
+              </WithNavBar>
+            }
+          />
+          <Route
+            path="/Comp"
+            element={
+              <WithNavBar>
+                <Comp />
+              </WithNavBar>
+            }
+          />
+          <Route
+            path="/Goals"
+            element={
+              <WithNavBar>
+                <Goals />
+              </WithNavBar>
+            }
+          />
+          <Route
+            path="/Wealth"
+            element={
+              <WithNavBar>
+                <Wealth />
+              </WithNavBar>
+            }
+          />
+
           <Route path="/expense-tracker" element={<LogIn />} />
           <Route path="/LogIn" element={<LogIn />} />
-          <Route path="/Resources" element={<Resources />} />
-          <Route path="/Contact" element={<Contact />} />
-          <Route path="/License" element={<License />} />
-          <Route path="/FinancialProfile" element={<FinancialProfile />} />
-          <Route path="/About" element={<About />} />
-          <Route path="/Comp" element={<Comp />} />
-          <Route path="/Goals" element={<Goals />} />
-          <Route path="/Wealth" element={<Wealth />} />
         </Routes>
       </Router>
     </div>
   );
+
+  function WithNavBar({ children }) {
+    return (
+      <div className="">
+        <NavigationBar toggleDarkMode={toggleDarkMode} darkMode={darkMode} />
+        {children}
+      </div>
+    );
+  }
 }
 
 export default App;

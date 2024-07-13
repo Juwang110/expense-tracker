@@ -8,6 +8,7 @@ import {
   Legend,
   ResponsiveContainer,
   Cell,
+  Label,
 } from "recharts";
 
 export default function FinancePie() {
@@ -198,7 +199,7 @@ export default function FinancePie() {
   if (data.length === 0) {
     return (
       <div style={{ textAlign: "center" }}>
-        <p>No survey data for this month/year</p>
+        <p className="dark:text-white">No survey data for this month/year</p>
         <Card href="#" className="max-w-lg mx-auto">
           <p className="flex items-center space-x-2 py-4">
             In the month of&nbsp;
@@ -282,7 +283,7 @@ export default function FinancePie() {
     );
   } else {
     return (
-      <Card href="#" className="max-w-lg mx-auto">
+      <Card href="#" className="max-w-lg mx-auto ">
         <h1 className="text-4xl font-bold tracking-tight text-gray-900 dark:text-white">
           Budget Breakdown
         </h1>

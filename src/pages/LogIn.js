@@ -67,13 +67,13 @@ export default function LogIn() {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen bg-gray-100">
+    <div className="flex flex-col items-center justify-center h-screen bg-gray-100 dark:bg-gray-800">
       <div className="text-center mb-8">
-        <h1 className="text-4xl font-bold">App title here</h1>
+        <h1 className="text-4xl font-bold dark:text-white">App title here</h1>
       </div>
 
-      <div className="w-full max-w-md bg-white p-10 rounded-lg shadow-md">
-        <h2 className="text-2xl font-bold mb-6 text-center">Log In</h2>
+      <div className="w-full max-w-md bg-white p-10 rounded-lg shadow-md dark:text-white dark:bg-gray-700">
+        <h2 className="text-2xl font-bold mb-6 text-center ">Log In</h2>
         <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
           <div>
             <Label htmlFor="email4" value="Your email" />
