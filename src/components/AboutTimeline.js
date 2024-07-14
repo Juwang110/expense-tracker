@@ -12,14 +12,14 @@ export default function AboutTimeline() {
           <Timeline.Item>
             <Timeline.Point icon={HiCalendar} />
             <Timeline.Content>
-              <Timeline.Time>February 2022</Timeline.Time>
+              <Timeline.Time>June 2024</Timeline.Time>
               <Timeline.Title>
-                Application UI code in Tailwind CSS
+                First commit and development start
               </Timeline.Title>
               <Timeline.Body>
-                Get access to over 20+ pages including a dashboard layout,
-                charts, kanban board, calendar, and pre-order E-commerce &
-                Marketing pages.
+                Created the react app and started developing this budgeting
+                website with the following features in mind: user profiles,
+                wealth calculation, budget breakdown.
               </Timeline.Body>
             </Timeline.Content>
           </Timeline.Item>

@@ -12,26 +12,8 @@ import {
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-
-/*
-Profile Settings: User information (name, email, profile picture). Change
-      password. Account preferences (currency, language). Notification Settings:
-      Manage notification preferences (email, push notifications). Customize
-      notification types (budget alerts, transaction reminders). Theme and
-      Appearance: Light mode/dark mode toggle. Customizable themes or color
-      schemes. Budget Settings: Set default budget categories. Adjust budgeting
-      periods (monthly, weekly, custom). Transaction Settings: Manage
-      transaction categories (add, edit, delete). Currency settings (default
-      currency, exchange rates). Security Settings: Two-factor authentication
-      (2FA) setup. Data export/import options. Privacy Settings: Manage data
-      sharing preferences. Clear data or delete account options. Backup and
-      Sync: Backup data (local, cloud-based). Sync across devices (if
-      applicable). Help and Support: Access app documentation or help guides.
-      Contact support or provide feedback. About: App version and updates. Terms
-      of service and privacy policy.
-*/
-
-export default function SettingsModal({ onClose }) {
+import { useEffect } from "react";
+export default function SettingsModal({ onClose, darkMode, toggleDarkMode }) {
   const [option, setOption] = useState("default");
   const [consent, setConsent] = useState(true);
   const navigate = useNavigate();
@@ -148,11 +130,29 @@ export default function SettingsModal({ onClose }) {
                 <fieldset className="flex max-w-md flex-col gap-4">
                   <legend className="mb-4">Choose your display mode</legend>
                   <div className="flex items-center gap-2">
-                    <Radio id="light" name="display-mode" defaultChecked />
+                    <Radio
+                      id="light"
+                      name="display-mode"
+                      checked={!darkMode}
+                      onChange={() => {
+                        localStorage.setItem("dark", false);
+                        console.log(localStorage.getItem("dark"));
+                        toggleDarkMode(false);
+                      }}
+                    />
                     <Label htmlFor="light">Light mode</Label>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Radio id="dark" name="display-mode" />
+                    <Radio
+                      id="dark"
+                      name="display-mode"
+                      checked={darkMode}
+                      onChange={() => {
+                        localStorage.setItem("dark", true);
+                        console.log(localStorage.getItem("dark"));
+                        toggleDarkMode(true);
+                      }}
+                    />
                     <Label htmlFor="dark">Dark mode</Label>
                   </div>
                 </fieldset>

@@ -11,7 +11,7 @@ export function AboutMe() {
       <h1 className="text-4xl font-bold tracking-tight text-gray-950 dark:text-white">
         About me
       </h1>
-      <div className="flex items-stretch px-10 py-5 border-t border-gray-400 dark:border-gray-800">
+      <div className="flex items-stretch px-10 py-5 border-t border-gray-400 dark:border-gray-400">
         <div className="flex flex-col justify-between max-w-md text-left font-normal text-gray-700 dark:text-gray-400">
           <p>
             Hello, my name is Justin and I'm the developer of this website

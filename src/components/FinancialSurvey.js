@@ -118,7 +118,7 @@ export default function FinancialSurvey() {
   }
 
   return (
-    <Accordion collapseAll>
+    <Accordion collapseAll className="dark:bg-gray-800">
       <Accordion.Panel>
         <Accordion.Title>My Financial Survey</Accordion.Title>
         <Accordion.Content>
@@ -499,13 +499,19 @@ export default function FinancialSurvey() {
               Submit
             </Button>
             {showFieldsAlert && (
-              <Alert color="failure" onDismiss={() => setFieldsAlert(false)}>
+              <Alert
+                color={"dark" ? "dark" : "failure"}
+                onDismiss={() => setFieldsAlert(false)}
+              >
                 <span className="font-medium">Fields alert!</span> Please fill
                 out all fields with integer USD amounts
               </Alert>
             )}
             {showSubmitAlert && (
-              <Alert color="success" onDismiss={() => setSubmitAlert(false)}>
+              <Alert
+                color={"dark" ? "dark" : "success"}
+                onDismiss={() => setSubmitAlert(false)}
+              >
                 <span className="font-medium">Alert!</span> Data successfully
                 submitted, please reload the page to see updated chart
               </Alert>

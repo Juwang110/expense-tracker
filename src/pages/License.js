@@ -4,8 +4,7 @@ import { AppFooter } from "../components/Footer";
 
 export default function License() {
   return (
-    <div className="flex flex-col min-h-screen px-20">
-      <NavigationBar />
+    <div className="flex flex-col min-h-screen px-20 dark:bg-gray-700 dark:text-white">
       <div className="flex flex-col justify-center items-center text-center mt-5">
         <h1 className="text-4xl font-bold tracking-tight text-gray-950 dark:text-white">
           GNU General Public License (GPL) v3

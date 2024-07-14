@@ -43,8 +43,7 @@ export default function Wealth() {
   }
 
   return (
-    <div className="flex flex-col min-h-screen px-20">
-      <NavigationBar />
+    <div className="flex flex-col min-h-screen px-20 dark:bg-gray-700">
       <div className="relative mt-6">
         <h1 className="text-4xl font-bold tracking-tight text-gray-950 dark:text-white mb-3">
           Net Worth and Wealth Calculator
@@ -140,7 +139,10 @@ export default function Wealth() {
       )}
 
       {incompleteAlert && (
-        <Alert color="warning" onDismiss={() => setIncompleteAlert(false)}>
+        <Alert
+          color={"dark" ? "dark" : "warning"}
+          onDismiss={() => setIncompleteAlert(false)}
+        >
           <span className="font-medium">Alert!</span> Please fill out all fields
           for your wealth insight
         </Alert>
@@ -157,17 +159,17 @@ export default function Wealth() {
           >
             More Info
           </a>
-          <p className="text-lg">
+          <p className="text-lg dark:text-white">
             <strong>Actual Net Worth:</strong> ${netWorth.toLocaleString()}
           </p>
-          <p className="text-lg">
+          <p className="text-lg dark:text-white">
             <strong>Estimated Net Worth</strong> $
             {estimatedWorth.toLocaleString()}
           </p>
-          <p className="text-lg">
+          <p className="text-lg dark:text-white">
             <strong>Wealth Status:</strong> {wealthStatus.toLocaleString()}
           </p>
-          <p className="text-lg">
+          <p className="text-lg dark:text-white">
             <strong>Percentage Wealth:</strong> {percentageWealth.toFixed(2)}%
           </p>
         </Card>
