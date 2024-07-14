@@ -4,6 +4,8 @@ from flask_cors import CORS, cross_origin
 from flask_mail import Mail, Message
 from flask_mysqldb import MySQL
 import logging
+import requests
+
 
 import os
 
@@ -35,6 +37,22 @@ tables = [
     'Loans', 'Entertainment', 'Clothing', 'Insurance', 'MiscItems', 
     'SaveInvest', 'MiscExpense'
 ]
+
+@app.route('/api/fred_data')
+def get_fred_data():
+    #REPLACE
+    fred_api_url = 'https://api.stlouisfed.org/fred/series/observations'
+    api_key = os.getenv('FRED_KEY')
+    params = {
+        'series_id': 'GNPCA',
+        'api_key': api_key,
+        'file_type': 'json'
+    }
+    
+    response = requests.get(fred_api_url, params=params)
+    data = response.json()
+
+    return jsonify(data)
 
 @app.route('/api/add_goal', methods=['POST'])
 @cross_origin()
