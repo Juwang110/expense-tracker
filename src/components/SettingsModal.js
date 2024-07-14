@@ -106,7 +106,7 @@ export default function SettingsModal({ onClose, darkMode, toggleDarkMode }) {
                     <div className="text-gray-500 dark:text-gray-300">
                       <span className="text-xs font-normal">
                         Allow your data to be factored into the comparison tool
-                        for other userss
+                        for other users (not implemented currently)
                       </span>
                     </div>
                   </div>
@@ -128,7 +128,9 @@ export default function SettingsModal({ onClose, darkMode, toggleDarkMode }) {
                   Update your appearance settings below
                 </p>
                 <fieldset className="flex max-w-md flex-col gap-4">
-                  <legend className="mb-4">Choose your display mode</legend>
+                  <legend className="mb-4 dark:text-white">
+                    Choose your display mode
+                  </legend>
                   <div className="flex items-center gap-2">
                     <Radio
                       id="light"
