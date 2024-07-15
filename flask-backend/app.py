@@ -38,21 +38,30 @@ tables = [
     'SaveInvest', 'MiscExpense'
 ]
 
-@app.route('/api/fred_data')
+@app.route('/api/fred_data_mostrecent')
 def get_fred_data():
-    #REPLACE
     fred_api_url = 'https://api.stlouisfed.org/fred/series/observations'
     api_key = os.getenv('FRED_KEY')
+    series_id = request.args.get('series_id', 'PSAVERT') 
+    
     params = {
-        'series_id': 'GNPCA',
+        'series_id': series_id,
         'api_key': api_key,
         'file_type': 'json'
     }
     
-    response = requests.get(fred_api_url, params=params)
-    data = response.json()
+    try:
+        response = requests.get(fred_api_url, params=params)
+        response.raise_for_status() 
+        data = response.json()
+        most_recent_observation = data['observations'][-1] if 'observations' in data and len(data['observations']) > 0 else None
+    except requests.exceptions.RequestException as e:
+        return jsonify({'error': str(e)}), 500
 
-    return jsonify(data)
+    return jsonify(most_recent_observation)
+
+if __name__ == '__main__':
+    app.run(debug=True)
 
 @app.route('/api/add_goal', methods=['POST'])
 @cross_origin()
