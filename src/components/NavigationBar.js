@@ -70,7 +70,7 @@ export default function NavigationBar({ darkMode, toggleDarkMode }) {
                         href="/Comp"
                         className="hover:text-primary-600 dark:hover:text-primary-500"
                       >
-                        Comparison Calculator
+                        Savings Rate Comparison
                       </a>
                     </li>
                   </div>

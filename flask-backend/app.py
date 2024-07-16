@@ -60,8 +60,27 @@ def get_fred_data():
 
     return jsonify(most_recent_observation)
 
-if __name__ == '__main__':
-    app.run(debug=True)
+@app.route('/api/fred_data')
+def get_fred_data_all():
+    fred_api_url = 'https://api.stlouisfed.org/fred/series/observations'
+    api_key = os.getenv('FRED_KEY')
+    series_id = request.args.get('series_id', 'PSAVERT') 
+    
+    params = {
+        'series_id': series_id,
+        'api_key': api_key,
+        'file_type': 'json'
+    }
+    
+    try:
+        response = requests.get(fred_api_url, params=params)
+        response.raise_for_status() 
+        data = response.json()
+    except requests.exceptions.RequestException as e:
+        return jsonify({'error': str(e)}), 500
+
+    return jsonify(data)
+
 
 @app.route('/api/add_goal', methods=['POST'])
 @cross_origin()
