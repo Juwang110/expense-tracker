@@ -118,9 +118,20 @@ export default function Goals() {
                 goal_year: goal.goal_year,
               });
             }
+            return Promise.resolve();
           })
         );
-        setGoals([]);
+        setGoals([
+          {
+            category: "expense category",
+            change: "increase/decrease",
+            unit: "amount/percentage of",
+            amount: "",
+            user_id: localStorage.getItem("id"),
+            goal_month: month,
+            goal_year: year,
+          },
+        ]);
         setSuccessAlert(true);
         fetchGoals();
       } catch (error) {
@@ -471,6 +482,7 @@ export default function Goals() {
         {deleteAlert && (
           <Alert
             color={"dark" ? "dark" : "success"}
+            className="mt-4"
             onDismiss={() => setDeleteAlert(false)}
           >
             <span className="font-medium">Alert!</span> Monthly goal has been
