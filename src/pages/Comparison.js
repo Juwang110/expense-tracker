@@ -90,7 +90,8 @@ export default function Comp() {
                 helperText={<>This data is not stored*</>}
                 value={savings}
                 onChange={(e) => {
-                  setSavings(Number(e.target.value));
+                  const value = e.target.value;
+                  setSavings(value === "" ? null : Number(value));
                   setSavingRate(null);
                 }}
                 className="mt-2"
@@ -106,7 +107,8 @@ export default function Comp() {
                 helperText={<>This data is not stored*</>}
                 value={dpi}
                 onChange={(e) => {
-                  setDPI(Number(e.target.value));
+                  const value = e.target.value;
+                  setDPI(value === "" ? null : Number(value));
                   setSavingRate(null);
                 }}
                 className="mt-2"
