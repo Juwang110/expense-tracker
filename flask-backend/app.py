@@ -485,7 +485,7 @@ def get_expenses():
 
 
 @app.route('/api/handle_survey', methods=['POST'])
-def handle_transport():
+def handle_survey():
     received_data = request.json
     user_id = received_data.get("id")
     transportExpense = received_data.get("transportExpense")
