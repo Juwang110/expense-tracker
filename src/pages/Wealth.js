@@ -65,7 +65,10 @@ export default function Wealth() {
               type="number"
               helperText={<>This data is not stored*</>}
               value={income}
-              onChange={(e) => setIncome(Number(e.target.value))}
+              onChange={(e) => {
+                const value = e.target.value;
+                setIncome(value === "" ? null : Number(value));
+              }}
             />
             <div className="mb-2 block">
               <Label htmlFor="age" value="Your age" />
@@ -76,7 +79,10 @@ export default function Wealth() {
               type="number"
               value={age}
               helperText={<>This data is not stored*</>}
-              onChange={(e) => setAge(Number(e.target.value))}
+              onChange={(e) => {
+                const value = e.target.value;
+                setAge(value === "" ? null : Number(value));
+              }}
             />
           </form>
         </Card>
@@ -94,7 +100,10 @@ export default function Wealth() {
               type="number"
               helperText={<>This data is not stored*</>}
               value={assets}
-              onChange={(e) => setAssets(Number(e.target.value))}
+              onChange={(e) => {
+                const value = e.target.value;
+                setAssets(value === "" ? null : Number(value));
+              }}
             />
             <div className="mb-2 block">
               <Label htmlFor="liabilities" value="Your total liabilities" />
@@ -105,7 +114,10 @@ export default function Wealth() {
               type="number"
               helperText={<>This data is not stored*</>}
               value={liabilities}
-              onChange={(e) => setLiabilities(Number(e.target.value))}
+              onChange={(e) => {
+                const value = e.target.value;
+                setLiabilities(value === "" ? null : Number(value));
+              }}
             />
           </form>
         </Card>

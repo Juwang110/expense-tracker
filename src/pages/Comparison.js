@@ -1,7 +1,7 @@
 import { AppFooter } from "../components/Footer";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Card, Label, TextInput, Button } from "flowbite-react";
+import { Card, Label, TextInput, Button, Alert } from "flowbite-react";
 import {
   LineChart,
   Line,
@@ -19,10 +19,14 @@ export default function Comp() {
   const [savings, setSavings] = useState(null);
   const [dpi, setDPI] = useState(null);
   const [savingRate, setSavingRate] = useState(null);
+  const [incompleteAlert, setIncompleteAlert] = useState(false);
 
   function handleSubmit() {
     const rate = (savings / dpi) * 100;
     setSavingRate(rate);
+    if (savings == null || dpi == null) {
+      setIncompleteAlert(true);
+    }
   }
 
   useEffect(() => {
@@ -85,7 +89,11 @@ export default function Comp() {
                 placeholder="Enter your savings"
                 helperText={<>This data is not stored*</>}
                 value={savings}
-                onChange={(e) => setSavings(Number(e.target.value))}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  setSavings(value === "" ? null : Number(value));
+                  setSavingRate(null);
+                }}
                 className="mt-2"
               />
             </div>
@@ -98,15 +106,28 @@ export default function Comp() {
                 placeholder="Enter your disposable income"
                 helperText={<>This data is not stored*</>}
                 value={dpi}
-                onChange={(e) => setDPI(Number(e.target.value))}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  setDPI(value === "" ? null : Number(value));
+                  setSavingRate(null);
+                }}
                 className="mt-2"
               />
             </div>
             <Button onClick={handleSubmit}>Submit</Button>
+            {incompleteAlert && (
+              <Alert
+                color="warning"
+                onDismiss={() => setIncompleteAlert(false)}
+              >
+                <span className="font-medium">Field alert!</span> Please fill in
+                all fields
+              </Alert>
+            )}
           </form>
         </Card>
 
-        {savingRate !== null && (
+        {dpi !== null && savings !== null && savingRate !== null && (
           <Card className="w-full p-6 mx-auto my-4">
             <div className=" text-center">
               <h2 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white mb-4">
