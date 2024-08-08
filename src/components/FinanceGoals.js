@@ -5,6 +5,7 @@ import axios from "axios";
 export default function FinanceGoals() {
   const [goalData, setGoalData] = useState([]);
   const [filledDates, setFilledDates] = useState([]);
+  const [achievedStatus, setAchievedStatus] = useState({});
 
   useEffect(() => {
     const fetchData = async () => {
@@ -28,8 +29,28 @@ export default function FinanceGoals() {
   }, []);
 
   useEffect(() => {
-    console.log(filledDates);
-  }, [filledDates]);
+    const fetchAchievedStatus = async () => {
+      const status = {};
+      for (const goal of completedGoals) {
+        const achieved = await goalAchieved(
+          goal[2],
+          goal[5],
+          goal[3],
+          goal[4],
+          goal[6],
+          goal[7]
+        );
+        console.log(achieved);
+        status[goal[0]] = achieved;
+      }
+      setAchievedStatus(status);
+    };
+    fetchAchievedStatus();
+  }, [goalData, filledDates]);
+
+  useEffect(() => {
+    console.log(achievedStatus[47]);
+  });
 
   const isGoalCompleted = (goal) => {
     return filledDates.some(
@@ -77,14 +98,16 @@ export default function FinanceGoals() {
       );
 
       const prevData = response.data.find(
-        (item) => item.year === prevYear && item.month === prevMonth
-      );
-      const currentData = response.data.find(
-        (item) => item.year === year && item.month === month
+        (item) => item[3] == prevYear && item[4] == prevMonth
       );
 
-      const prevExpense = prevData.monthly_expense;
-      const currentExpense = currentData.monthly_expense;
+      const currentData = response.data.find(
+        (item) => item[3] == year && item[4] == month
+      );
+
+      const prevExpense = prevData[2];
+      const currentExpense = currentData[2];
+      console.log(currentExpense);
 
       if (change === "decrease") {
         if (unit === "a percentage of") {
@@ -106,8 +129,9 @@ export default function FinanceGoals() {
         return "invalid";
       }
     } catch (error) {
+      console.log("what");
       console.error("data error:", error);
-      return false;
+      return "no data for prev month";
     }
   };
 
@@ -131,25 +155,32 @@ export default function FinanceGoals() {
   };
 
   const goalCellCompleted = (goals) => {
-    return goals.map((goal, index) => (
-      <Table.Row
-        key={index}
-        className="bg-white dark:border-gray-700 dark:bg-gray-800"
-      >
-        <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-          {goal[2]}
-        </Table.Cell>
-        <Table.Cell>{goal[0]}</Table.Cell>
-        <Table.Cell>{goal[6]}</Table.Cell>
-        <Table.Cell>{goal[7]}</Table.Cell>
-        <Table.Cell>{goal[5]}</Table.Cell>
-        <Table.Cell>{goal[3]}</Table.Cell>
-        <Table.Cell>{goal[4]}</Table.Cell>
-        <Table.Cell>
-          {goalAchieved(goal[2], goal[5], goal[3], goal[4], goal[6], goal[7])}
-        </Table.Cell>
-      </Table.Row>
-    ));
+    return goals.map((goal, index) => {
+      const goalId = parseInt(goal[0], 10);
+
+      return (
+        <Table.Row
+          key={index}
+          className="bg-white dark:border-gray-700 dark:bg-gray-800"
+        >
+          <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+            {goal[2]}
+          </Table.Cell>
+          <Table.Cell>{goal[0]}</Table.Cell>
+          <Table.Cell>{goal[6]}</Table.Cell>
+          <Table.Cell>{goal[7]}</Table.Cell>
+          <Table.Cell>{goal[5]}</Table.Cell>
+          <Table.Cell>{goal[3]}</Table.Cell>
+          <Table.Cell>{goal[4]}</Table.Cell>
+
+          <Table.Cell>
+            {achievedStatus.hasOwnProperty(goalId)
+              ? achievedStatus[goalId].toString()
+              : "Not Achieved"}
+          </Table.Cell>
+        </Table.Row>
+      );
+    });
   };
 
   const constructTable = (title, goals) => {
@@ -185,9 +216,11 @@ export default function FinanceGoals() {
             <Table.HeadCell>Change</Table.HeadCell>
             <Table.HeadCell>Unit</Table.HeadCell>
             <Table.HeadCell>Amount</Table.HeadCell>
-            <Table.HeadCell>Achieved?</Table.HeadCell>
+            <Table.HeadCell>Achieved</Table.HeadCell>
           </Table.Head>
-          <Table.Body className="divide-y">{goalCell(goals)}</Table.Body>
+          <Table.Body className="divide-y">
+            {goalCellCompleted(goals)}
+          </Table.Body>
         </Table>
       </div>
     );
