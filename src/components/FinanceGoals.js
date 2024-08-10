@@ -108,19 +108,19 @@ export default function FinanceGoals() {
           const percentChange =
             ((currentExpense - prevExpense) / prevExpense) * 100;
           const sign = percentChange >= 0 ? "+" : "";
-          if (percentChange >= amount) {
-            return (
-              "You changed expenses by " +
-              sign +
-              percentChange.toFixed(2) +
-              "% good job!"
-            );
-          } else if (percentChange > 0) {
+          if (percentChange > 0) {
             return (
               "Oh no, you worked against your goal! You changed expenses by " +
               sign +
               percentChange.toFixed(2) +
               "%"
+            );
+          } else if (Math.abs(percentChange) >= amount) {
+            return (
+              "You changed expenses by " +
+              sign +
+              percentChange.toFixed(2) +
+              "% good job!"
             );
           } else if (percentChange === 0) {
             return (
@@ -138,15 +138,15 @@ export default function FinanceGoals() {
         } else if (unit === "an amount of") {
           const changeAmount = prevExpense - currentExpense;
           const sign = changeAmount >= 0 ? "+" : "";
-          if (changeAmount >= amount) {
-            return (
-              "You changed expenses by " + sign + changeAmount + ", good job!"
-            );
-          } else if (changeAmount > 0) {
+          if (changeAmount > 0) {
             return (
               "Oh no, you worked against your goal! You changed expenses by " +
               sign +
               changeAmount
+            );
+          } else if (Math.abs(changeAmount) >= amount) {
+            return (
+              "You changed expenses by " + sign + changeAmount + ", good job!"
             );
           } else if (changeAmount === 0) {
             return (
@@ -164,19 +164,19 @@ export default function FinanceGoals() {
           const percentChange =
             ((currentExpense - prevExpense) / prevExpense) * 100;
           const sign = percentChange >= 0 ? "+" : "";
-          if (percentChange >= amount) {
-            return (
-              "You changed expenses by " +
-              sign +
-              percentChange.toFixed(2) +
-              "% good job!"
-            );
-          } else if (percentChange > 0) {
+          if (percentChange < 0) {
             return (
               "Oh no, you worked against your goal! You changed expenses by " +
               sign +
               percentChange.toFixed(2) +
               "%"
+            );
+          } else if (percentChange >= amount) {
+            return (
+              "You changed expenses by " +
+              sign +
+              percentChange.toFixed(2) +
+              "% good job!"
             );
           } else if (percentChange === 0) {
             return (
@@ -194,15 +194,15 @@ export default function FinanceGoals() {
         } else if (unit === "an amount of") {
           const changeAmount = currentExpense - prevExpense;
           const sign = changeAmount >= 0 ? "+" : "";
-          if (changeAmount >= amount) {
-            return (
-              "You changed expenses by " + sign + changeAmount + ", good job!"
-            );
-          } else if (changeAmount > 0) {
+          if (changeAmount < 0) {
             return (
               "Oh no, you worked against your goal! You changed expenses by " +
               sign +
               changeAmount
+            );
+          } else if (changeAmount >= amount) {
+            return (
+              "You changed expenses by " + sign + changeAmount + ", good job!"
             );
           } else if (changeAmount === 0) {
             return (
