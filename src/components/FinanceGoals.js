@@ -40,17 +40,12 @@ export default function FinanceGoals() {
           goal[6],
           goal[7]
         );
-        console.log(achieved);
         status[goal[0]] = achieved;
       }
       setAchievedStatus(status);
     };
     fetchAchievedStatus();
   }, [goalData, filledDates]);
-
-  useEffect(() => {
-    console.log(achievedStatus[47]);
-  });
 
   const isGoalCompleted = (goal) => {
     return filledDates.some(
@@ -107,31 +102,125 @@ export default function FinanceGoals() {
 
       const prevExpense = prevData[2];
       const currentExpense = currentData[2];
-      console.log(currentExpense);
 
       if (change === "decrease") {
         if (unit === "a percentage of") {
-          return prevExpense - currentExpense >= (amount / 100) * prevExpense;
+          const percentChange =
+            ((currentExpense - prevExpense) / prevExpense) * 100;
+          const sign = percentChange >= 0 ? "+" : "";
+          if (percentChange >= amount) {
+            return (
+              "You changed expenses by " +
+              sign +
+              percentChange.toFixed(2) +
+              "% good job!"
+            );
+          } else if (percentChange > 0) {
+            return (
+              "Oh no, you worked against your goal! You changed expenses by " +
+              sign +
+              percentChange.toFixed(2) +
+              "%"
+            );
+          } else if (percentChange === 0) {
+            return (
+              "You didn't change expenses at all! It stayed at " +
+              currentExpense
+            );
+          } else {
+            return (
+              "Almost made it! You changed expenses by " +
+              sign +
+              percentChange.toFixed(2) +
+              "%"
+            );
+          }
         } else if (unit === "an amount of") {
-          return prevExpense - currentExpense >= amount;
-        } else {
-          return currentExpense <= amount;
+          const changeAmount = prevExpense - currentExpense;
+          const sign = changeAmount >= 0 ? "+" : "";
+          if (changeAmount >= amount) {
+            return (
+              "You changed expenses by " + sign + changeAmount + ", good job!"
+            );
+          } else if (changeAmount > 0) {
+            return (
+              "Oh no, you worked against your goal! You changed expenses by " +
+              sign +
+              changeAmount
+            );
+          } else if (changeAmount === 0) {
+            return (
+              "You didn't change expenses at all! It stayed at " +
+              currentExpense
+            );
+          } else {
+            return (
+              "Almost made it! You changed expenses by " + sign + changeAmount
+            );
+          }
         }
       } else if (change === "increase") {
         if (unit === "a percentage of") {
-          return currentExpense - prevExpense >= (amount / 100) * prevExpense;
+          const percentChange =
+            ((currentExpense - prevExpense) / prevExpense) * 100;
+          const sign = percentChange >= 0 ? "+" : "";
+          if (percentChange >= amount) {
+            return (
+              "You changed expenses by " +
+              sign +
+              percentChange.toFixed(2) +
+              "% good job!"
+            );
+          } else if (percentChange > 0) {
+            return (
+              "Oh no, you worked against your goal! You changed expenses by " +
+              sign +
+              percentChange.toFixed(2) +
+              "%"
+            );
+          } else if (percentChange === 0) {
+            return (
+              "You didn't change expenses at all! It stayed at " +
+              currentExpense
+            );
+          } else {
+            return (
+              "Almost made it! You changed expenses by " +
+              sign +
+              percentChange.toFixed(2) +
+              "%"
+            );
+          }
         } else if (unit === "an amount of") {
-          return currentExpense - prevExpense >= amount;
-        } else {
-          return currentExpense >= amount;
+          const changeAmount = currentExpense - prevExpense;
+          const sign = changeAmount >= 0 ? "+" : "";
+          if (changeAmount >= amount) {
+            return (
+              "You changed expenses by " + sign + changeAmount + ", good job!"
+            );
+          } else if (changeAmount > 0) {
+            return (
+              "Oh no, you worked against your goal! You changed expenses by " +
+              sign +
+              changeAmount
+            );
+          } else if (changeAmount === 0) {
+            return (
+              "You didn't change expenses at all! It stayed at " +
+              currentExpense
+            );
+          } else {
+            return (
+              "Almost made it! You changed expenses by " + sign + changeAmount
+            );
+          }
         }
       } else {
-        return "invalid";
+        return "Invalid change type.";
       }
     } catch (error) {
-      console.log("what");
       console.error("data error:", error);
-      return "no data for prev month";
+      return "error";
     }
   };
 
