@@ -296,16 +296,16 @@ export default function FinanceGoals() {
     return (
       <div className="overflow-x-auto mb-6">
         <h2 className="text-lg font-bold mb-4">{title}</h2>
-        <Accordion>
+        <Accordion collapseAll>
           {goals.map((goal, index) => {
             const goalId = parseInt(goal[0], 10);
             return (
               <Accordion.Panel key={index}>
-                <Accordion.Title>
+                <Accordion.Title className="hover:bg-gray-800 dark:bg-gray-800">
                   {goal[2]} - {goal[6]} {goal[7]}
                 </Accordion.Title>
                 <Accordion.Content>
-                  <div className="p-4 bg-gray-100 rounded">
+                  <div className="p-4 bg-gray-800 rounded">
                     <p>
                       <strong>Status:</strong>{" "}
                       {achievedStatus[goalId] || "Not Achieved"}
