@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Table } from "flowbite-react";
+import { Table, Accordion } from "flowbite-react";
 import axios from "axios";
 
 export default function FinanceGoals() {
@@ -296,21 +296,35 @@ export default function FinanceGoals() {
     return (
       <div className="overflow-x-auto mb-6">
         <h2 className="text-lg font-bold mb-4">{title}</h2>
-        <Table>
-          <Table.Head>
-            <Table.HeadCell>Category</Table.HeadCell>
-            <Table.HeadCell>ID</Table.HeadCell>
-            <Table.HeadCell>Year</Table.HeadCell>
-            <Table.HeadCell>Month</Table.HeadCell>
-            <Table.HeadCell>Change</Table.HeadCell>
-            <Table.HeadCell>Unit</Table.HeadCell>
-            <Table.HeadCell>Amount</Table.HeadCell>
-            <Table.HeadCell>Achieved</Table.HeadCell>
-          </Table.Head>
-          <Table.Body className="divide-y">
-            {goalCellCompleted(goals)}
-          </Table.Body>
-        </Table>
+        <Accordion>
+          {goals.map((goal, index) => {
+            const goalId = parseInt(goal[0], 10);
+            return (
+              <Accordion.Panel key={index}>
+                <Accordion.Title>
+                  {goal[2]} - {goal[6]} {goal[7]}
+                </Accordion.Title>
+                <Accordion.Content>
+                  <div className="p-4 bg-gray-100 rounded">
+                    <p>
+                      <strong>Status:</strong>{" "}
+                      {achievedStatus[goalId] || "Not Achieved"}
+                    </p>
+                    <p>
+                      <strong>Change:</strong> {goal[5]}
+                    </p>
+                    <p>
+                      <strong>Unit:</strong> {goal[3]}
+                    </p>
+                    <p>
+                      <strong>Amount:</strong> {goal[4]}
+                    </p>
+                  </div>
+                </Accordion.Content>
+              </Accordion.Panel>
+            );
+          })}
+        </Accordion>
       </div>
     );
   };
