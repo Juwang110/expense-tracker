@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { Table, Accordion } from "flowbite-react";
 import axios from "axios";
+import { FaCheckCircle } from "react-icons/fa";
+import { FaCircleXmark } from "react-icons/fa6";
 
 export default function FinanceGoals() {
   const [goalData, setGoalData] = useState([]);
   const [filledDates, setFilledDates] = useState([]);
   const [achievedStatus, setAchievedStatus] = useState({});
+  const [checkedStatus, setCheckedStatus] = useState({});
 
   useEffect(() => {
     const fetchData = async () => {
@@ -31,6 +34,7 @@ export default function FinanceGoals() {
   useEffect(() => {
     const fetchAchievedStatus = async () => {
       const status = {};
+      const checked = {};
       for (const goal of completedGoals) {
         const achieved = await goalAchieved(
           goal[2],
@@ -41,8 +45,14 @@ export default function FinanceGoals() {
           goal[7]
         );
         status[goal[0]] = achieved;
+        if (achieved.endsWith("good job!")) {
+          checked[goal[0]] = true;
+        } else {
+          checked[goal[0]] = false;
+        }
       }
       setAchievedStatus(status);
+      setCheckedStatus(checked);
     };
     fetchAchievedStatus();
   }, [goalData, filledDates]);
@@ -299,10 +309,18 @@ export default function FinanceGoals() {
         <Accordion collapseAll>
           {goals.map((goal, index) => {
             const goalId = parseInt(goal[0], 10);
+            const isChecked = checkedStatus[goalId];
             return (
               <Accordion.Panel key={index}>
-                <Accordion.Title className="hover:bg-gray-800 dark:bg-gray-800">
-                  {goal[2]} - {goal[6]} {goal[7]}
+                <Accordion.Title className="text-gray-900 dark:text-white dark:bg-gray-800">
+                  <span className="flex items-center space-x-2">
+                    {goal[2]} - {goal[6]} {goal[7]}
+                    {isChecked ? (
+                      <FaCheckCircle color="green" />
+                    ) : (
+                      <FaCircleXmark color="red" />
+                    )}
+                  </span>
                 </Accordion.Title>
                 <Accordion.Content>
                   <div className="p-4 bg-gray-800 rounded">
