@@ -316,26 +316,21 @@ export default function FinanceGoals() {
                   <span className="flex items-center space-x-2">
                     {goal[2]} - {goal[6]} {goal[7]}
                     {isChecked ? (
-                      <FaCheckCircle color="green" />
+                      <FaCheckCircle className="ml-2 mt-0.5" color="green" />
                     ) : (
-                      <FaCircleXmark color="red" />
+                      <FaCircleXmark className="ml-2 mt-0.5" color="red" />
                     )}
                   </span>
                 </Accordion.Title>
                 <Accordion.Content>
-                  <div className="p-4 bg-gray-800 rounded">
+                  <div className="p-4 dark:bg-gray-800 rounded">
                     <p>
-                      <strong>Status:</strong>{" "}
-                      {achievedStatus[goalId] || "Not Achieved"}
+                      <strong>Status: </strong>
+                      {achievedStatus[goalId]}
                     </p>
                     <p>
-                      <strong>Change:</strong> {goal[5]}
-                    </p>
-                    <p>
-                      <strong>Unit:</strong> {goal[3]}
-                    </p>
-                    <p>
-                      <strong>Amount:</strong> {goal[4]}
+                      <strong>Original goal: </strong>
+                      {goal[5]} {goal[2]} by {goal[3]} {goal[4]}
                     </p>
                   </div>
                 </Accordion.Content>
