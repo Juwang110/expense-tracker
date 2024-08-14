@@ -17,13 +17,6 @@ export default function Wealth() {
   const [showInfoModal, setShowInfoModal] = useState(false);
 
   function wealthCalc() {
-    const actualNetWorth = assets - liabilities;
-    const expectedNetWorth = (age * income) / 10;
-    const percentageWealth = (actualNetWorth / expectedNetWorth) * 100;
-    setNetWorth(actualNetWorth);
-    setPercentageWealth(percentageWealth);
-    setEstimatedWorth(expectedNetWorth);
-
     if (
       (income == null) |
       (age == null) |
@@ -31,14 +24,21 @@ export default function Wealth() {
       (liabilities == null)
     ) {
       setIncompleteAlert(true);
-    }
-
-    if (actualNetWorth >= 2 * expectedNetWorth) {
-      setWealthStatus("PAW - Prodigious Accumulator of Wealth"); // Prodigious Accumulator of Wealth
-    } else if (actualNetWorth <= 0.5 * expectedNetWorth) {
-      setWealthStatus("UAW - Under Accumulator of Wealth"); // Under Accumulator of Wealth
+      setNetWorth(null);
     } else {
-      setWealthStatus("AAW - Average Accumulator of Wealth"); // Average Accumulator of Wealth
+      const actualNetWorth = assets - liabilities;
+      const expectedNetWorth = (age * income) / 10;
+      const percentageWealth = (actualNetWorth / expectedNetWorth) * 100;
+      setNetWorth(actualNetWorth);
+      setPercentageWealth(percentageWealth);
+      setEstimatedWorth(expectedNetWorth);
+      if (actualNetWorth >= 2 * expectedNetWorth) {
+        setWealthStatus("PAW - Prodigious Accumulator of Wealth"); // Prodigious Accumulator of Wealth
+      } else if (actualNetWorth <= 0.5 * expectedNetWorth) {
+        setWealthStatus("UAW - Under Accumulator of Wealth"); // Under Accumulator of Wealth
+      } else {
+        setWealthStatus("AAW - Average Accumulator of Wealth"); // Average Accumulator of Wealth
+      }
     }
   }
 
@@ -154,6 +154,7 @@ export default function Wealth() {
         <Alert
           color={"dark" ? "dark" : "warning"}
           onDismiss={() => setIncompleteAlert(false)}
+          className="mb-4"
         >
           <span className="font-medium">Alert!</span> Please fill out all fields
           for your wealth insight
