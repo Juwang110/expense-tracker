@@ -9,8 +9,8 @@ export function AppFooter() {
           <Footer.Brand
             href="#"
             src="https://cdn-icons-png.freepik.com/256/6204/6204408.png?uid=R151848132&ga=GA1.1.1507691374.1717099387&semt=ais_hybrid"
-            alt="Money Logo"
-            name="Money"
+            alt="SpendTrack Logo"
+            name="SpendTrack"
           />
           <Footer.LinkGroup>
             <Footer.Link href="/About">About</Footer.Link>
@@ -19,7 +19,7 @@ export function AppFooter() {
           </Footer.LinkGroup>
         </div>
         <Footer.Divider />
-        <Footer.Copyright href="#" by="Money" year={2024} />
+        <Footer.Copyright href="#" by="SpendTrack" year={2024} />
       </div>
     </Footer>
   );
