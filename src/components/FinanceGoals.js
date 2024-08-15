@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Table, Accordion } from "flowbite-react";
+import { Table, Accordion, Button } from "flowbite-react";
 import axios from "axios";
 import { FaCheckCircle } from "react-icons/fa";
 import { FaCircleXmark } from "react-icons/fa6";
@@ -9,6 +9,7 @@ export default function FinanceGoals() {
   const [filledDates, setFilledDates] = useState([]);
   const [achievedStatus, setAchievedStatus] = useState({});
   const [checkedStatus, setCheckedStatus] = useState({});
+  const [showAllGoals, setShowAllGoals] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -64,7 +65,13 @@ export default function FinanceGoals() {
   };
 
   const inProgressGoals = goalData.filter((goal) => !isGoalCompleted(goal));
-  const completedGoals = goalData.filter((goal) => isGoalCompleted(goal));
+  const completedGoals = goalData
+    .filter((goal) => isGoalCompleted(goal))
+    .sort((a, b) => {
+      const dateA = new Date(a[6], a[7] - 1);
+      const dateB = new Date(b[6], b[7] - 1);
+      return dateB - dateA;
+    });
 
   function getPreviousMonthYear(month, year) {
     const monthNames = [
@@ -303,41 +310,87 @@ export default function FinanceGoals() {
   };
 
   const constructCompletedTable = (title, goals) => {
+    const visibleGoals = goals.slice(0, 5);
+    const hiddenGoals = goals.slice(5);
+
     return (
       <div className="overflow-x-auto mb-6">
         <h2 className="text-lg font-bold mb-4">{title}</h2>
         <Accordion collapseAll>
-          {goals.map((goal, index) => {
-            const goalId = parseInt(goal[0], 10);
-            const isChecked = checkedStatus[goalId];
-            return (
-              <Accordion.Panel key={index}>
-                <Accordion.Title className="text-gray-900 dark:text-white dark:bg-gray-800">
-                  <span className="flex items-center space-x-2">
-                    {goal[2]} - {goal[6]} {goal[7]}
-                    {isChecked ? (
-                      <FaCheckCircle className="ml-2 mt-0.5" color="green" />
-                    ) : (
-                      <FaCircleXmark className="ml-2 mt-0.5" color="red" />
-                    )}
-                  </span>
-                </Accordion.Title>
-                <Accordion.Content>
-                  <div className="p-4 dark:bg-gray-800 rounded">
-                    <p>
-                      <strong>Status: </strong>
-                      {achievedStatus[goalId]}
-                    </p>
-                    <p>
-                      <strong>Original goal: </strong>
-                      {goal[5]} {goal[2]} by {goal[3]} {goal[4]}
-                    </p>
-                  </div>
-                </Accordion.Content>
-              </Accordion.Panel>
-            );
-          })}
+          {visibleGoals.map((goal, index) => (
+            <Accordion.Panel key={index}>
+              <Accordion.Title className="text-gray-900 dark:text-white dark:bg-gray-800">
+                <span className="flex items-center space-x-2">
+                  {goal[2]} - {goal[6]} {goal[7]}
+                  {checkedStatus[goal[0]] ? (
+                    <FaCheckCircle className="ml-2 mt-0.5" color="green" />
+                  ) : (
+                    <FaCircleXmark className="ml-2 mt-0.5" color="red" />
+                  )}
+                </span>
+              </Accordion.Title>
+              <Accordion.Content>
+                <div className="p-4 dark:bg-gray-800 rounded">
+                  <p>
+                    <strong>Status: </strong>
+                    {achievedStatus[goal[0]]}
+                  </p>
+                  <p>
+                    <strong>Original goal: </strong>
+                    {goal[5]} {goal[2]} by {goal[3]} {goal[4]}
+                  </p>
+                </div>
+              </Accordion.Content>
+            </Accordion.Panel>
+          ))}
         </Accordion>
+        {hiddenGoals.length > 0 && (
+          <div>
+            {!showAllGoals && (
+              <Button className="mt-4" onClick={() => setShowAllGoals(true)}>
+                Show More Goals
+              </Button>
+            )}
+            {showAllGoals && (
+              <Accordion collapseAll>
+                {hiddenGoals.map((goal, index) => (
+                  <Accordion.Panel key={index}>
+                    <Accordion.Title className="text-gray-900 dark:text-white dark:bg-gray-800">
+                      <span className="flex items-center space-x-2">
+                        {goal[2]} - {goal[6]} {goal[7]}
+                        {checkedStatus[goal[0]] ? (
+                          <FaCheckCircle
+                            className="ml-2 mt-0.5"
+                            color="green"
+                          />
+                        ) : (
+                          <FaCircleXmark className="ml-2 mt-0.5" color="red" />
+                        )}
+                      </span>
+                    </Accordion.Title>
+                    <Accordion.Content>
+                      <div className="p-4 dark:bg-gray-800 rounded">
+                        <p>
+                          <strong>Status: </strong>
+                          {achievedStatus[goal[0]]}
+                        </p>
+                        <p>
+                          <strong>Original goal: </strong>
+                          {goal[5]} {goal[2]} by {goal[3]} {goal[4]}
+                        </p>
+                      </div>
+                    </Accordion.Content>
+                  </Accordion.Panel>
+                ))}
+              </Accordion>
+            )}
+          </div>
+        )}
+        {showAllGoals && (
+          <Button className="mt-4" onClick={() => setShowAllGoals(false)}>
+            Hide More Goals
+          </Button>
+        )}
       </div>
     );
   };
@@ -345,7 +398,7 @@ export default function FinanceGoals() {
   return (
     <div>
       {constructTable("In Progress Goals", inProgressGoals)}
-      {constructCompletedTable("Completed Goals", completedGoals)}
+      {constructCompletedTable("Recently Completed", completedGoals)}
     </div>
   );
 }
