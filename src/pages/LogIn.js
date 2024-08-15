@@ -69,7 +69,7 @@ export default function LogIn() {
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-gray-100 dark:bg-gray-800">
       <div className="text-center mb-8">
-        <h1 className="text-4xl font-bold dark:text-white">App title here</h1>
+        <h1 className="text-4xl font-bold dark:text-white">SpendTrack</h1>
       </div>
 
       <div className="w-full max-w-md bg-white p-10 rounded-lg shadow-md dark:text-white dark:bg-gray-700">
