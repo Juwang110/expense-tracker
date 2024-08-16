@@ -65,11 +65,12 @@ export function LanderTools() {
           <div class="flex flex-col items-center">
             <div class="text-center">
               <h3 class="mb-2 text-xl font-bold dark:text-white">
-                More to come!
+                Savings Rate Comparison
               </h3>
               <p class="text-gray-500 dark:text-gray-400">
-                Stay tuned! This application is still in development and there
-                are more features that will be avaliable.
+                Using the US Federal Reserve Economic Data, this tool determines
+                your savings rate and compares it to the average personal
+                savings rate in the US.
               </p>
             </div>
           </div>

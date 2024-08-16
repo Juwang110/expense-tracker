@@ -133,6 +133,7 @@ export default function FinancePie() {
             backgroundColor: "#fff",
             padding: "10px",
             border: "1px solid #ccc",
+            color: "#000",
           }}
         >
           <p>
