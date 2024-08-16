@@ -1,6 +1,6 @@
 import React from "react";
 import NavigationBar from "../components/NavigationBar";
-import userIcon from "../assets/userIcon.png";
+import fintech from "../assets/fintech.jpg";
 import { AppFooter } from "../components/Footer";
 import { AboutMe } from "../components/AboutMe";
 import AboutTimeline from "../components/AboutTimeline";
@@ -17,9 +17,9 @@ export default function About() {
           come!
         </p>
         <img
-          src={userIcon}
+          src={fintech}
           alt="Picture of developer"
-          className="w-64 h-auto py-10"
+          className="w-6/12 h-auto py-10"
         />
         <p className="py-4 dark:text-white">
           SpendTrack is a multi-purpose expenditure and budgeting insight app

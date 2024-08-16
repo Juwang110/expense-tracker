@@ -46,6 +46,22 @@ export default function Resources() {
               inspiration
             </a>
           </List.Item>
+          <List.Item>
+            About page stock photo by{" "}
+            <a
+              href="https://unsplash.com/@smigielski?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash"
+              className="text-blue-500 hover:text-blue-700 underline"
+            >
+              Adam Śmigielski
+            </a>{" "}
+            on{" "}
+            <a
+              href="https://unsplash.com/photos/a-person-holding-a-cell-phone-in-front-of-a-stock-chart-K5mPtONmpHM?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash"
+              className="text-blue-500 hover:text-blue-700 underline"
+            >
+              Unsplash
+            </a>
+          </List.Item>
         </List>
       </div>
       <AppFooter></AppFooter>

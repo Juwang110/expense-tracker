@@ -82,7 +82,7 @@ export default function LogIn() {
             id="email4"
             type="email"
             icon={HiMail}
-            placeholder="name@flowbite.com"
+            placeholder="name@gmail.com"
             required
             className="w-full"
             value={email}
