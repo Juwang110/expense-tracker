@@ -6,7 +6,6 @@ from flask_mysqldb import MySQL
 import logging
 import requests
 
-
 import os
 
 app = Flask(__name__, static_folder='../../build')
@@ -14,6 +13,7 @@ CORS(app)
 load_dotenv()
 logging.basicConfig(level=logging.INFO)
 
+# Configuring MySQL connection
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = os.getenv("DB_USER")
 app.config['MYSQL_PASSWORD'] = os.getenv("MYSQL_ROOT_PASSWORD")
@@ -32,12 +32,35 @@ app.config['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD')
 # Initialize Flask-Mail
 mail = Mail(app)
 
+# List of all category tables
 tables = [
     'Transport', 'Flights', 'Housing', 'Food', 'Medical', 'Wellness', 
     'Loans', 'Entertainment', 'Clothing', 'Insurance', 'MiscItems', 
     'SaveInvest', 'MiscExpense'
 ]
 
+# Flask-Mail email route to send me an email
+@app.route('/api/send_email', methods=['POST'])
+@cross_origin()
+def send_email():
+    data = request.json
+    sender_email = data.get('email')  
+    subject = "Contact me " + data.get('email')
+    body = data.get('message')
+
+    recipient_email = os.getenv('MAIL_USERNAME')
+
+    msg = Message(subject, sender=sender_email, recipients=[recipient_email])
+    msg.body = body
+
+    try:
+        mail.send(msg)
+        return jsonify({'message': 'Success'})
+    except Exception as e:
+        app.logger.error(f'Failed to send email: {str(e)}')
+        return jsonify({'error': 'Fail'}), 500
+
+# FRED data API connection route
 @app.route('/api/fred_data_mostrecent')
 def get_fred_data():
     fred_api_url = 'https://api.stlouisfed.org/fred/series/observations'
@@ -50,6 +73,7 @@ def get_fred_data():
         'file_type': 'json'
     }
     
+    # Gets most recent PSAVERT table data point from FRED
     try:
         response = requests.get(fred_api_url, params=params)
         response.raise_for_status() 
@@ -60,6 +84,7 @@ def get_fred_data():
 
     return jsonify(most_recent_observation)
 
+# Gets all PSAVERT table data from FRED
 @app.route('/api/fred_data')
 def get_fred_data_all():
     fred_api_url = 'https://api.stlouisfed.org/fred/series/observations'
@@ -81,7 +106,7 @@ def get_fred_data_all():
 
     return jsonify(data)
 
-
+# Adding a budget goal into the goals table
 @app.route('/api/add_goal', methods=['POST'])
 @cross_origin()
 def add_goal():
@@ -102,6 +127,7 @@ def add_goal():
     cur.close()
     return jsonify({"message": "updated"})
 
+# Deleting a specified goal from the goals table
 @app.route('/api/delete_goal', methods=['POST'])
 def delete_goal():
     try:
@@ -115,28 +141,7 @@ def delete_goal():
     except Exception as e:
         return jsonify({"error": "Failed to delete Goal"}), 500
 
-
-@app.route('/api/send_email', methods=['POST'])
-@cross_origin()
-def send_email():
-    data = request.json
-    sender_email = data.get('email')  
-    subject = "Contact me " + data.get('email')
-    body = data.get('message')
-
-    recipient_email = os.getenv('MAIL_USERNAME')
-
-    msg = Message(subject, sender=sender_email, recipients=[recipient_email])
-    msg.body = body
-
-    try:
-        mail.send(msg)
-        app.logger.info('Email sent successfully!')
-        return jsonify({'message': 'Success'})
-    except Exception as e:
-        app.logger.error(f'Failed to send email: {str(e)}')
-        return jsonify({'error': 'Fail'}), 500
-    
+# Gets all goals for a specific user
 @app.route('/api/get_goals', methods=['POST'])
 def get_goals():
     received_data = request.json
@@ -147,6 +152,7 @@ def get_goals():
     cur.close()
     return jsonify(data)
 
+# Gets all dates that the specified user filled out the survey for
 @app.route('/api/get_dates', methods=['POST'])
 def get_dates():
     received_data = request.json
@@ -157,11 +163,11 @@ def get_dates():
     cur.close()
     return jsonify(data)
 
+# Login route attempting to retrieve user
 @app.route('/api/get_user', methods=['POST'])
 @cross_origin()
 def get_user():
     received_data = request.json
-    app.logger.info(f"Received data: {received_data}")
     cur = mysql.connection.cursor()
     cur.execute('SELECT * FROM Users WHERE username = %s AND email = %s',
                 (received_data.get("username"), received_data.get("email")))
@@ -179,7 +185,8 @@ def get_user():
         return jsonify({"message": "doesn't exist", "id" : top_user[0] + 1})
     else:
         return jsonify({"message": "doesn't exist", "id" : 1})
-    
+
+# Updates the current user with a new email/user/pass
 @app.route('/api/update_user', methods=['PUT'])
 @cross_origin()
 def update_user():
@@ -188,7 +195,6 @@ def update_user():
     email = received_data.get("email")
     username = received_data.get("username")
     password = received_data.get("password")
-    app.logger.info(f"Received data: {received_data}")
     cur = mysql.connection.cursor()
     if email:
         cur.execute('UPDATE Users SET email = %s WHERE id = %s', (email, user_id))
@@ -200,6 +206,7 @@ def update_user():
     cur.close()
     return jsonify({"message": "updated"})
 
+# Updates match consent for user
 @app.route('/api/update_consent', methods=['PUT'])
 @cross_origin()
 def update_consent():
@@ -212,6 +219,7 @@ def update_consent():
     cur.close()
     return jsonify({"message": "updated"})
 
+# Deletes the specified user
 @app.route('/api/delete_user', methods=['POST'])
 def delete_user():
     try:
@@ -228,7 +236,7 @@ def delete_user():
     except Exception as e:
         return jsonify({"error": "Failed to delete user"}), 500
 
-
+# Gets all users
 @app.route('/api/get_users', methods=['GET'])
 def get_users():
     cur = mysql.connection.cursor()
@@ -237,6 +245,7 @@ def get_users():
     cur.close()
     return jsonify(data)
 
+# Adds a new user
 @app.route('/api/add_user', methods=['POST'])
 def add_user():
     recieved_data = request.json
@@ -247,7 +256,7 @@ def add_user():
     cur.close()
     return jsonify({'message': 'User added successfully!'})
 
-
+# Gets all category survey entries from a specified category with the current user
 @app.route('/api/get_category', methods=['POST'])
 def get_category():
     received_data = request.json
@@ -265,6 +274,7 @@ def get_category():
         cur.close()
         return jsonify({'error': str(e)}), 500
 
+# Gets the total expenses of all categories except Save/Invest
 @app.route('/api/total_expenses', methods=['POST'])
 @cross_origin()
 def get_total_expenses():
@@ -349,7 +359,6 @@ def get_total_expenses():
             GROUP BY month, year;
         """
 
-        app.logger.info("Before executing SQL query")
         cur.execute(query, (user_id, user_id, user_id, user_id, user_id, user_id, user_id, user_id, user_id, user_id, user_id, user_id))
         data = cur.fetchall()
         cur.close()
@@ -357,10 +366,9 @@ def get_total_expenses():
         return jsonify(data)
     
     except Exception as e:
-        app.logger.error(f"Error occurred: {str(e)}")
         return jsonify({'error': str(e)}), 500
 
-
+# Gets each category's expense during a given month and year
 @app.route('/api/all_expenses', methods=['POST'])
 @cross_origin()
 def get_expenses():
@@ -369,8 +377,6 @@ def get_expenses():
         user_id = received_data.get("id")
         month = received_data.get("month")
         year = received_data.get("year")
-
-        app.logger.info(f"Received data: {received_data}")
 
         cur = mysql.connection.cursor()
 
@@ -465,25 +471,21 @@ def get_expenses():
             WHERE Users.id = %s AND MiscExpense.month = %s AND MiscExpense.year = %s
         """
 
-        app.logger.info("Before executing SQL query")
         cur.execute(query, (user_id, month, year, user_id, month, year, user_id, month, year, user_id, month, year, user_id, month, year,
                             user_id, month, year, user_id, month, year, user_id, month, year, user_id, month, year, user_id, month, year,
                             user_id, month, year, user_id, month, year, user_id, month, year))
         expenses = cur.fetchall()
-        app.logger.info(f"Query result: {expenses}")
-        app.logger.info("After executing SQL query")
         cur.close()
         
-        # Convert the result into a list of dictionaries
+        # Convert the result into a list of dictionaries to use for pie chart
         formatted_expenses = [{'category': expense[0], 'value': int(expense[1])} for expense in expenses]
         
         return jsonify(formatted_expenses)
     
     except Exception as e:
-        app.logger.error(f"Error occurred: {str(e)}")
         return jsonify({'error': str(e)}), 500
 
-
+# Handles the expense survey either updating or inserting depending on completion for that month and year
 @app.route('/api/handle_survey', methods=['POST'])
 def handle_survey():
     received_data = request.json
