@@ -15,6 +15,8 @@ import { HiInformationCircle } from "react-icons/hi";
 import { useState } from "react";
 import axios from "axios";
 
+// Financial Profile Survey with a form to input monthly expenses as well as modals
+// for each category to provide examples. On submission use Flask to post survey results to database.
 export default function FinancialSurvey() {
   const [transportExpense, setTransportExpense] = useState();
   const [flightExpense, setFlightExpense] = useState();
@@ -49,20 +51,24 @@ export default function FinancialSurvey() {
   const [month, setMonth] = useState(getCurrentMonth());
   const [year, setYear] = useState(new Date().getFullYear());
 
+  // Gets todays month
   function getCurrentMonth() {
     const date = new Date();
     const options = { month: "long" };
     return date.toLocaleDateString("en-US", options);
   }
 
+  // Handles user month selection change
   function handleMonthChange(selectedMonth) {
     setMonth(selectedMonth);
   }
 
+  // Handles user year selection change
   function handleYearChange(selectedYear) {
     setYear(selectedYear);
   }
 
+  // Handles survey submission
   function handleSubmit(e) {
     e.preventDefault();
     const surveyData = {
@@ -84,6 +90,7 @@ export default function FinancialSurvey() {
       month: month,
     };
 
+    // Displays alert if any boxes are empty
     if (
       !transportExpense ||
       !flightExpense ||
@@ -105,6 +112,7 @@ export default function FinancialSurvey() {
       setFieldsAlert(false);
     }
 
+    // Posts survey category expense data to SQL
     axios
       .post("http://localhost:5000/api/handle_survey", surveyData)
       .then((response) => {
@@ -117,11 +125,14 @@ export default function FinancialSurvey() {
       });
   }
 
+  // Renders collapsable accordion with survey form nested inside
+  // with user inputs for monthly expenses and info modals for each category
   return (
     <Accordion collapseAll className="dark:bg-gray-800">
       <Accordion.Panel>
         <Accordion.Title>My Financial Survey</Accordion.Title>
         <Accordion.Content>
+          {/*User selection of month/year for their survey */}
           <p className="flex items-center space-x-2 py-4">
             In the month of&nbsp;
             <Dropdown label={month} inline>
@@ -182,6 +193,8 @@ export default function FinancialSurvey() {
             </Dropdown>
           </p>
           <form className="flex max-w-md flex-col gap-4 mx-auto">
+            {/*Form to fill in each category's monthly expense, each category
+            features an info modal giving example expenses that falls under the category */}
             <div className="max-w-md">
               <div className="mb-2 block">
                 <Label htmlFor="Transport" value="Transport Expenses" />

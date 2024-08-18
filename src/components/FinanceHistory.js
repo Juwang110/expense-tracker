@@ -12,6 +12,7 @@ import {
 } from "recharts";
 import { Dropdown, Spinner, Card } from "flowbite-react";
 
+// Line chart that displays one category's monthly expense compared to total expenses for that month/year
 export default function FinanceHistory() {
   const [categoryData, setCategoryData] = useState([]);
   const [totalData, setTotalData] = useState([]);
@@ -19,6 +20,7 @@ export default function FinanceHistory() {
   const [isLoading, setIsLoading] = useState(true);
   const [category, setCategory] = useState("SaveInvest");
 
+  // Fetches all data from specified category and total expenses for each month
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -43,7 +45,10 @@ export default function FinanceHistory() {
     fetchData();
   }, [category]);
 
+  // Sets SaveExpense object to use for line chart
   useEffect(() => {
+    // If data is present, creates new object with time, category monthly expense and total expense
+    // for each month/year filled out
     if (categoryData.length > 0 && totalData.length > 0) {
       const updatedData = [];
 
@@ -70,6 +75,7 @@ export default function FinanceHistory() {
         [categoryData]
       );
 
+      // Sorts the object by most recent
       updatedData.sort((a, b) => {
         const dateA = new Date(a.time);
         const dateB = new Date(b.time);
@@ -80,10 +86,12 @@ export default function FinanceHistory() {
     }
   }, [categoryData, totalData]);
 
+  // Handles when user selects a different category, updating state
   function handleCategoryChange(selectedCategory) {
     setCategory(selectedCategory);
   }
 
+  // Renders a card with the line chart and selectable month/year dropdowns
   return (
     <div>
       {isLoading ? (
@@ -138,6 +146,7 @@ export default function FinanceHistory() {
           </Dropdown>
 
           <ResponsiveContainer width="100%" height={300}>
+            {/*Line chart comparing one category's monthly expense to total expenses for that month/year*/}
             <LineChart
               data={saveExpenseData}
               margin={{ top: 5, right: 30, left: 20, bottom: 5 }}

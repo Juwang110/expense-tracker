@@ -1,5 +1,6 @@
 import { Carousel } from "flowbite-react";
 
+// Simple landing page image carousel using Flowbite
 export function LanderCarousel() {
   return (
     <div className="h-full w-full sm:h-64 xl:h-64 2xl:h-80">

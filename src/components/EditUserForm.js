@@ -2,6 +2,8 @@ import { Button, Label, TextInput, Alert } from "flowbite-react";
 import axios from "axios";
 import { useState } from "react";
 
+// Edit info form present in settings section to update user email, pass, or username.
+// Upon submission, the form sends the data to a Flask backend via a request.
 export function EditUserForm() {
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
@@ -10,6 +12,7 @@ export function EditUserForm() {
   const [showEmailAlert, setEmailAlert] = useState(false);
   const [showPasswordAlert, setPasswordAlert] = useState(false);
 
+  // Handles updating username in database
   function handleUsernameSubmit() {
     const userData = {
       id: localStorage.getItem("id"),
@@ -26,6 +29,7 @@ export function EditUserForm() {
       });
   }
 
+  // Handles updating email in database
   function handleEmailSubmit() {
     const userData = {
       id: localStorage.getItem("id"),
@@ -42,6 +46,7 @@ export function EditUserForm() {
       });
   }
 
+  // Handles updating password in database
   function handlePasswordSubmit() {
     const userData = {
       id: localStorage.getItem("id"),
@@ -57,6 +62,8 @@ export function EditUserForm() {
       });
   }
 
+  // Renders form to update email, username and password with conditional
+  // email, username and password success alerts depending on Flask response
   return (
     <div>
       <form className="flex max-w-md flex-col gap-4">

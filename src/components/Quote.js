@@ -1,6 +1,7 @@
 import { Blockquote } from "flowbite-react";
 import { Rating } from "flowbite-react";
 
+// Simple quote component from Flowbite Blockquote
 export function Quote() {
   return (
     <div className="py-10 px-6">

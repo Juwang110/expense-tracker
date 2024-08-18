@@ -13,11 +13,16 @@ import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
+
+// User settings menu which gets state from parent NavigationBar,
+// Features a sidebar for different settings options and enables for control of
+// Light/Dark mode, consent matching, editing user information, deleting user
 export default function SettingsModal({ onClose, darkMode, toggleDarkMode }) {
   const [option, setOption] = useState("default");
   const [consent, setConsent] = useState(true);
   const navigate = useNavigate();
 
+  // Updates consent status in sql
   function handleConsent(e) {
     setConsent(e.target.checked);
     axios
@@ -33,10 +38,12 @@ export default function SettingsModal({ onClose, darkMode, toggleDarkMode }) {
       });
   }
 
+  // Handles navigation of settings modal
   function handleOption(option) {
     setOption(option);
   }
 
+  // Handles user account deletion
   function handleDelete() {
     const user_data = { id: localStorage.getItem("id") };
     axios
@@ -51,6 +58,7 @@ export default function SettingsModal({ onClose, darkMode, toggleDarkMode }) {
     navigate("/LogIn");
   }
 
+  // Rerenders the modal based on the menu option chosen
   function renderModalContent() {
     switch (option) {
       case "default":
@@ -132,6 +140,7 @@ export default function SettingsModal({ onClose, darkMode, toggleDarkMode }) {
                     Choose your display mode
                   </legend>
                   <div className="flex items-center gap-2">
+                    {/*Sets display to light mode and changes local storage record */}
                     <Radio
                       id="light"
                       name="display-mode"
@@ -145,6 +154,7 @@ export default function SettingsModal({ onClose, darkMode, toggleDarkMode }) {
                     <Label htmlFor="light">Light mode</Label>
                   </div>
                   <div className="flex items-center gap-2">
+                    {/*Sets display to dark mode and changes local storage record */}
                     <Radio
                       id="dark"
                       name="display-mode"
@@ -165,6 +175,7 @@ export default function SettingsModal({ onClose, darkMode, toggleDarkMode }) {
     }
   }
 
+  // Renders the settings modal with sidebar option navigation
   return (
     <Modal
       show={true}

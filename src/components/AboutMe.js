@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 import userIcon from "../assets/userIcon.png";
 import developer from "../assets/developer.jpg";
 
+// About me page text card with title and paragraph using Flowbite Card
+// with a navigation button to contact page
 export function AboutMe() {
   const navigate = useNavigate();
   return (

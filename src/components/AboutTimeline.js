@@ -1,6 +1,7 @@
 import { Button, Timeline } from "flowbite-react";
 import { HiArrowNarrowRight, HiCalendar } from "react-icons/hi";
 
+// Timeline component to show development process using Flowbite Timeline
 export default function AboutTimeline() {
   return (
     <section className="bg-gray-50 dark:bg-gray-800 w-full">

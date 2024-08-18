@@ -11,6 +11,8 @@ import {
   Label,
 } from "recharts";
 
+// Pie chart which displays all monthly expenses for a specified month/year
+// and a table to show each category and its percent change from last month/year
 export default function FinancePie() {
   const [data, setData] = useState([]);
   const [prevData, setPrevData] = useState([]);
@@ -40,24 +42,28 @@ export default function FinancePie() {
     "#9CA3AF", // Light gray
   ];
 
+  // Gets today's month
   function getCurrentMonth() {
     const date = new Date();
     const options = { month: "long" };
     return date.toLocaleDateString("en-US", options);
   }
 
+  // Sets new previous month/year based on user month change
   function handleMonthChange(selectedMonth) {
     setMonth(selectedMonth);
     setPrevMonth(getPreviousMonthYear(selectedMonth, year).month);
     setPrevYear(getPreviousMonthYear(selectedMonth, year).year);
   }
 
+  // Sets new previous month/year based on user year change
   function handleYearChange(selectedYear) {
     setYear(selectedYear);
     setPrevMonth(getPreviousMonthYear(month, selectedYear).month);
     setPrevYear(getPreviousMonthYear(month, selectedYear).year);
   }
 
+  // Gets the previous month/year given a month and a year
   function getPreviousMonthYear(month, year) {
     const monthNames = [
       "January",
@@ -83,6 +89,7 @@ export default function FinancePie() {
     return { month: monthNames[prevMonthIndex], year: prevYear };
   }
 
+  // Fetches all expenses from the selected month/year of the user
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -98,6 +105,7 @@ export default function FinancePie() {
     fetchData();
   }, [month, year]);
 
+  // Fetches all expenses from the previous month/year of the selected month/year of the user
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -113,16 +121,19 @@ export default function FinancePie() {
     fetchData();
   }, [prevMonth, prevYear]);
 
+  // Gets total value from all monthly values
   const total = data.reduce(
     (accumulator, currentValue) => accumulator + currentValue.value,
     0
   );
 
+  // Adds percent key for each item
   const dataWithPercentage = data.map((item) => ({
     ...item,
     percent: ((item.value / total) * 100).toFixed(2),
   }));
 
+  // Creates custom tooltip for pie chart to display percentage on mouse hover
   const renderCustomTooltip = (props) => {
     const { active, payload } = props;
     if (active && payload && payload.length) {
@@ -146,7 +157,9 @@ export default function FinancePie() {
     return null;
   };
 
+  // For each category, creates a table row
   const expenseCell = (data, prevData) => {
+    // Maps survey data and adds previous expense key in order to calculate percent difference
     const dataWithPrevValue = data.map((expense) => {
       const prevExpense = prevData.find(
         (item) => item.category === expense.category
@@ -164,6 +177,7 @@ export default function FinancePie() {
         </Table.Cell>
         <Table.Cell>{expense.value}</Table.Cell>
         <Table.Cell>
+          {/*Displays percent change from previous month */}
           {(() => {
             if (expense.prevValue !== 0) {
               return `${(
@@ -180,6 +194,7 @@ export default function FinancePie() {
     ));
   };
 
+  // Constructs the expense table
   function constructTable() {
     return (
       <div className="overflow-x-auto">
@@ -197,6 +212,8 @@ export default function FinancePie() {
     );
   }
 
+  // If there is no data for the specified month/year return an empty pie chart, else
+  // create the filled pie chart with the table for each category and percent change
   if (data.length === 0) {
     return (
       <div style={{ textAlign: "center" }}>
