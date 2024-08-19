@@ -6,6 +6,12 @@ import { AppFooter } from "../components/Footer";
 import FinanceHistory from "../components/FinanceHistory";
 import FinanceGoals from "../components/FinanceGoals";
 
+// Financial profile page with a lengthy monthly expense survey form,
+// A budget breakdown pie chart showing the monthly expense for each category
+// in the selected month/year and the percent change from the previous month,
+// A Goals section showing in progress goals and completed goals,
+// and a Expenditure history line chart comparing one selected category's monthly expenses
+// compared to the total expenses for that month/year
 export default function FinancialProfile() {
   const username = localStorage.getItem("username");
 

@@ -5,6 +5,8 @@ import { AppFooter } from "../components/Footer";
 import { AboutMe } from "../components/AboutMe";
 import AboutTimeline from "../components/AboutTimeline";
 
+// About page providing text to describe the app, a development timeline,
+// and an About me section with a contact me navigation button
 export default function About() {
   return (
     <div className="flex flex-col min-h-screen px-20 dark:bg-gray-700">

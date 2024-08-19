@@ -2,6 +2,8 @@ import React from "react";
 import { AppFooter } from "../components/Footer";
 import { List } from "flowbite-react";
 
+// Simple Resources page showing a bulleted list of all resources used
+// and links to said resources
 export default function Resources() {
   return (
     <div className="flex flex-col min-h-screen px-20 dark:bg-gray-700">
@@ -41,6 +43,15 @@ export default function Resources() {
             Landing page&nbsp;
             <a
               href="https://github.com/themesberg/tailwind-landing-page"
+              className="text-blue-500 hover:text-blue-700 underline"
+            >
+              inspiration
+            </a>
+          </List.Item>
+          <List.Item>
+            SpendTrack&nbsp;
+            <a
+              href="https://themillionairenextdoor.com/"
               className="text-blue-500 hover:text-blue-700 underline"
             >
               inspiration

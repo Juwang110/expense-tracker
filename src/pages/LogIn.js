@@ -6,6 +6,7 @@ import { RiLockPasswordFill } from "react-icons/ri";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
+// Log in page with a simple login form collecting email, username and password
 export default function LogIn() {
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
@@ -15,6 +16,8 @@ export default function LogIn() {
   const [newUser, setNewUser] = useState(false);
   const navigate = useNavigate();
 
+  // Handles form submission and either signs the user up, logs them in,
+  // or shows them a wrong password alert depending on their input
   function handleSubmit(e) {
     e.preventDefault();
     const userData = {
@@ -57,15 +60,14 @@ export default function LogIn() {
       });
   }
 
+  // Once the info modal is closed navigate to landing page
   function handleAccept() {
     setOpenModal(false);
-    if (newUser) {
-      navigate("/Landing");
-    } else {
-      navigate("/Landing");
-    }
+    navigate("/Landing");
   }
 
+  // Renders the login form, conditional wrong password alert,
+  // and an info modal whenever successful signup occurs
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-gray-100 dark:bg-gray-800">
       <div className="text-center mb-8">

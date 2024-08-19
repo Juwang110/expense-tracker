@@ -13,6 +13,11 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
+// Savings rate comparison page allows the user to fill out a form and
+// calculate their personal savings rate. This page showcases the Federal
+// Reserve Economic Data API and gives insight on the comparison between the
+// user's savings rate and the average in the U.S. while also showing the
+// FRED savings rate data iin a line chart
 export default function Comp() {
   const [fredData, setFredData] = useState(null);
   const [allFredData, setAllFredData] = useState(null);
@@ -21,6 +26,8 @@ export default function Comp() {
   const [savingRate, setSavingRate] = useState(null);
   const [incompleteAlert, setIncompleteAlert] = useState(false);
 
+  // Handles form submission and calculates savings rate,
+  // conditionally sets incomplete alert state
   function handleSubmit() {
     const rate = (savings / dpi) * 100;
     setSavingRate(rate);
@@ -29,6 +36,8 @@ export default function Comp() {
     }
   }
 
+  // Fetches the FRED API data from the PSAVERT series on run
+  // and formats it to work with a line chart
   useEffect(() => {
     const fetchFredData = async (seriesID = "PSAVERT") => {
       try {
@@ -62,6 +71,8 @@ export default function Comp() {
     fetchFredData();
   }, []);
 
+  // Renders the Savings Rate Comparison page with a form, a reseults page, conditional alerts,
+  // and the FRED savings rate line chart.
   return (
     <div className="flex flex-col min-h-screen px-4 md:px-20 dark:bg-gray-700">
       <div className="flex flex-col justify-center text-center py-6 items-center flex-1">
