@@ -1,6 +1,7 @@
 import { Button, Card } from "flowbite-react";
 import { useNavigate } from "react-router-dom";
 
+// Simple landing page text card with button to navigate to About page
 export function LanderCard() {
   const navigate = useNavigate();
 

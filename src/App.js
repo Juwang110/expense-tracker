@@ -13,9 +13,11 @@ import { useState, useEffect } from "react";
 import "tailwindcss/tailwind.css";
 import NavigationBar from "./components/NavigationBar";
 
+// Root component that tracks dark mode and page navigation
 function App() {
   const [darkMode, setDarkMode] = useState(false);
 
+  // Toggles DarkMode on/off given a boolean
   const toggleDarkMode = (isDarkMode) => {
     setDarkMode(isDarkMode);
     if (isDarkMode) {
@@ -27,12 +29,26 @@ function App() {
     }
   };
 
+  // On run remembers if the system is in dark mode from local storage
+  // and toggles it based on that
   useEffect(() => {
     if (localStorage.getItem("dark") === "true") {
       toggleDarkMode(true);
     }
   }, [toggleDarkMode]);
 
+  // Function to display the navbar on top of the children component
+  function WithNavBar({ children }) {
+    return (
+      <div className="">
+        <NavigationBar toggleDarkMode={toggleDarkMode} darkMode={darkMode} />
+        {children}
+      </div>
+    );
+  }
+
+  // Renders all routes and route names for page navigation.
+  // By default includes the navbar on all pages except log in
   return (
     <div className={darkMode ? "dark" : ""}>
       <Router>
@@ -124,15 +140,6 @@ function App() {
       </Router>
     </div>
   );
-
-  function WithNavBar({ children }) {
-    return (
-      <div className="">
-        <NavigationBar toggleDarkMode={toggleDarkMode} darkMode={darkMode} />
-        {children}
-      </div>
-    );
-  }
 }
 
 export default App;

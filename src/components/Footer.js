@@ -1,6 +1,8 @@
 import React from "react";
 import { Footer } from "flowbite-react";
 
+// Website footer present on all pages with links to
+// About, License, Contact pages and logo text
 export function AppFooter() {
   return (
     <Footer container>

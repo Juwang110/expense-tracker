@@ -2,6 +2,7 @@ import React from "react";
 import NavigationBar from "../components/NavigationBar";
 import { AppFooter } from "../components/Footer";
 
+// Simple License page linking to the GNU GPL v3 license and summarizing it
 export default function License() {
   return (
     <div className="flex flex-col min-h-screen px-20 dark:bg-gray-700 dark:text-white">

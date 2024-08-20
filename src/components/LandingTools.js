@@ -1,4 +1,6 @@
 import React from "react";
+
+// Landing page tools text section
 export function LanderTools() {
   return (
     <section class="bg-gray-50 dark:bg-gray-800">

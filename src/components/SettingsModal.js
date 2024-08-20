@@ -1,56 +1,40 @@
 import React from "react";
 import { EditUserForm } from "../components/EditUserForm";
-import { Button, Modal, Checkbox, Label, Radio } from "flowbite-react";
+import { Button, Modal, Checkbox, Label, Radio, Alert } from "flowbite-react";
 import { Sidebar } from "flowbite-react";
-import {
-  HiChartPie,
-  HiInbox,
-  HiShoppingBag,
-  HiUser,
-  HiViewBoards,
-} from "react-icons/hi";
+import { HiChartPie, HiShoppingBag, HiUser } from "react-icons/hi";
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
+
+// User settings menu which gets state from parent NavigationBar,
+// Features a sidebar for different settings options and enables for control of
+// Light/Dark mode, editing user information, deleting user
 export default function SettingsModal({ onClose, darkMode, toggleDarkMode }) {
   const [option, setOption] = useState("default");
-  const [consent, setConsent] = useState(true);
+  const [deleteAlert, setDeleteAlert] = useState(false);
   const navigate = useNavigate();
 
-  function handleConsent(e) {
-    setConsent(e.target.checked);
-    axios
-      .put("http://localhost:5000/api/update_consent", {
-        consent: e.target.checked,
-        id: localStorage.getItem("id"),
-      })
-      .then((response) => {
-        console.log("Consent updated successfully:", response.data);
-      })
-      .catch((error) => {
-        console.error("Error updating consent:", error);
-      });
-  }
-
+  // Handles navigation of settings modal
   function handleOption(option) {
     setOption(option);
   }
 
+  // Handles user account deletion
   function handleDelete() {
     const user_data = { id: localStorage.getItem("id") };
     axios
       .post(`http://localhost:5000/api/delete_user`, user_data)
       .then((response) => {
-        console.log("Account deleted successfully");
+        navigate("/LogIn");
       })
       .catch((error) => {
+        setDeleteAlert(true);
         console.error("Error deleting account:", error);
       });
-
-    navigate("/LogIn");
   }
 
+  // Rerenders the modal based on the menu option chosen
   function renderModalContent() {
     switch (option) {
       case "default":
@@ -93,27 +77,19 @@ export default function SettingsModal({ onClose, darkMode, toggleDarkMode }) {
                   Update your privacy settings below
                 </p>
 
-                <div className="flex gap-2">
-                  <div className="flex h-5 items-center">
-                    <Checkbox
-                      id="shipping"
-                      checked={consent}
-                      onChange={handleConsent}
-                    />
-                  </div>
-                  <div className="flex flex-col">
-                    <Label htmlFor="shipping">Comparison consent</Label>
-                    <div className="text-gray-500 dark:text-gray-300">
-                      <span className="text-xs font-normal">
-                        Allow your data to be factored into the comparison tool
-                        for other users (not implemented currently)
-                      </span>
-                    </div>
-                  </div>
-                </div>
                 <Button color="failure" onClick={handleDelete}>
                   Delete Account
                 </Button>
+                {deleteAlert && (
+                  <Alert
+                    color={"dark" ? "dark" : "warning"}
+                    onDismiss={() => setDeleteAlert(false)}
+                    className="mb-4"
+                  >
+                    <span className="font-medium">Alert!</span> Something went
+                    wrong please try again or refresh.
+                  </Alert>
+                )}
               </div>
             </Modal.Body>
           </>
@@ -132,26 +108,26 @@ export default function SettingsModal({ onClose, darkMode, toggleDarkMode }) {
                     Choose your display mode
                   </legend>
                   <div className="flex items-center gap-2">
+                    {/*Sets display to light mode and changes local storage record */}
                     <Radio
                       id="light"
                       name="display-mode"
                       checked={!darkMode}
                       onChange={() => {
                         localStorage.setItem("dark", false);
-                        console.log(localStorage.getItem("dark"));
                         toggleDarkMode(false);
                       }}
                     />
                     <Label htmlFor="light">Light mode</Label>
                   </div>
                   <div className="flex items-center gap-2">
+                    {/*Sets display to dark mode and changes local storage record */}
                     <Radio
                       id="dark"
                       name="display-mode"
                       checked={darkMode}
                       onChange={() => {
                         localStorage.setItem("dark", true);
-                        console.log(localStorage.getItem("dark"));
                         toggleDarkMode(true);
                       }}
                     />
@@ -165,6 +141,7 @@ export default function SettingsModal({ onClose, darkMode, toggleDarkMode }) {
     }
   }
 
+  // Renders the settings modal with sidebar option navigation
   return (
     <Modal
       show={true}

@@ -6,15 +6,17 @@ import { RiLockPasswordFill } from "react-icons/ri";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
+// Log in page with a simple login form collecting email, username and password
 export default function LogIn() {
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showAlert, setShowAlert] = useState(false);
   const [openModal, setOpenModal] = useState(false);
-  const [newUser, setNewUser] = useState(false);
   const navigate = useNavigate();
 
+  // Handles form submission and either signs the user up, logs them in,
+  // or shows them a wrong password alert depending on their input
   function handleSubmit(e) {
     e.preventDefault();
     const userData = {
@@ -29,22 +31,15 @@ export default function LogIn() {
       .post("http://localhost:5000/api/get_user", userData)
       .then((response) => {
         if (response.data.message === "exists") {
-          console.log("exists");
           localStorage.setItem("id", response.data.id);
-          console.log(response.data.id);
           setOpenModal(true);
         } else if (response.data.message === "wrong password") {
-          console.log("wrong");
           setShowAlert(true);
         } else {
-          console.log(response.data.message);
           localStorage.setItem("id", response.data.id);
-          console.log(response.data.id);
-          setNewUser(true);
           axios
             .post("http://localhost:5000/api/add_user", userData)
             .then((response) => {
-              console.log(response.data.message);
               setOpenModal(true);
             })
             .catch((error) => {
@@ -57,15 +52,14 @@ export default function LogIn() {
       });
   }
 
+  // Once the info modal is closed navigate to landing page
   function handleAccept() {
     setOpenModal(false);
-    if (newUser) {
-      navigate("/Landing");
-    } else {
-      navigate("/Landing");
-    }
+    navigate("/Landing");
   }
 
+  // Renders the login form, conditional wrong password alert,
+  // and an info modal whenever successful signup occurs
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-gray-100 dark:bg-gray-800">
       <div className="text-center mb-8">

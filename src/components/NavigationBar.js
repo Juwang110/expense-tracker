@@ -4,12 +4,16 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import SettingsModal from "./SettingsModal";
 
+// Navigation bar present on all pages with access to settings modal
+// and page navigation to all different site pages
 export default function NavigationBar({ darkMode, toggleDarkMode }) {
   const navigate = useNavigate();
   const username = localStorage.getItem("username");
   const email = localStorage.getItem("email");
   const [settingsModal, setSettingsModal] = useState(false);
 
+  // Renders a Flowbite MegaMenu with page navigation to all pages
+  // And a user section to open settings modal
   return (
     <div className="border-b border-gray-400 dark:border-gray-800">
       <MegaMenu>
@@ -111,6 +115,7 @@ export default function NavigationBar({ darkMode, toggleDarkMode }) {
         </div>
       </MegaMenu>
       <div>
+        {/*Passes down state to SettingsModal*/}
         {settingsModal && (
           <SettingsModal
             onClose={() => setSettingsModal(false)}

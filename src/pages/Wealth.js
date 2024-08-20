@@ -4,6 +4,10 @@ import { AppFooter } from "../components/Footer";
 import { Button, Card, Label, TextInput, Alert, Modal } from "flowbite-react";
 import { useState } from "react";
 
+// Wealth Calculator page with two forms for users to calculate their
+// estimated and actual net worth. Results section gives insight on
+// how well they are saving/investing with inspiration from
+// The Millionaire Next Door novel.
 export default function Wealth() {
   const [income, setIncome] = useState(null);
   const [age, setAge] = useState(null);
@@ -16,6 +20,9 @@ export default function Wealth() {
   const [incompleteAlert, setIncompleteAlert] = useState(false);
   const [showInfoModal, setShowInfoModal] = useState(false);
 
+  // Conditionally renders incomplete alert or calculates actual and estimated net worth
+  // and gives the user a tag based on how well they are saving. These calculations and tags
+  // are from The Millionaire Next Door.
   function wealthCalc() {
     if (
       (income == null) |
@@ -32,6 +39,7 @@ export default function Wealth() {
       setNetWorth(actualNetWorth);
       setPercentageWealth(percentageWealth);
       setEstimatedWorth(expectedNetWorth);
+      setIncompleteAlert(false);
       if (actualNetWorth >= 2 * expectedNetWorth) {
         setWealthStatus("PAW - Prodigious Accumulator of Wealth"); // Prodigious Accumulator of Wealth
       } else if (actualNetWorth <= 0.5 * expectedNetWorth) {
@@ -42,6 +50,8 @@ export default function Wealth() {
     }
   }
 
+  // Renders the net worth calculator form, with conditionally rendering incomplete alert.
+  // Shows a results section and a more info button which displays descriptive modal
   return (
     <div className="flex flex-col min-h-screen px-20 dark:bg-gray-700">
       <div className="relative mt-6">

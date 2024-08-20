@@ -2,6 +2,8 @@ import { Button, Label, TextInput, Alert } from "flowbite-react";
 import axios from "axios";
 import { useState } from "react";
 
+// Edit info form present in settings section to update user email, pass, or username.
+// Upon submission, the form sends the data to a Flask backend via a request.
 export function EditUserForm() {
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
@@ -9,7 +11,11 @@ export function EditUserForm() {
   const [showUsernameAlert, setUsernameAlert] = useState(false);
   const [showEmailAlert, setEmailAlert] = useState(false);
   const [showPasswordAlert, setPasswordAlert] = useState(false);
+  const [showUsernameErrorAlert, setUsernameErrorAlert] = useState(false);
+  const [showEmailErrorAlert, setEmailErrorAlert] = useState(false);
+  const [showPasswordErrorAlert, setPasswordErrorAlert] = useState(false);
 
+  // Handles updating username in database
   function handleUsernameSubmit() {
     const userData = {
       id: localStorage.getItem("id"),
@@ -22,10 +28,12 @@ export function EditUserForm() {
         setUsernameAlert(true);
       })
       .catch((error) => {
+        setUsernameErrorAlert(true);
         console.error("Error updating user:", error);
       });
   }
 
+  // Handles updating email in database
   function handleEmailSubmit() {
     const userData = {
       id: localStorage.getItem("id"),
@@ -38,10 +46,12 @@ export function EditUserForm() {
         setEmailAlert(true);
       })
       .catch((error) => {
+        setEmailErrorAlert(true);
         console.error("Error updating user:", error);
       });
   }
 
+  // Handles updating password in database
   function handlePasswordSubmit() {
     const userData = {
       id: localStorage.getItem("id"),
@@ -53,10 +63,13 @@ export function EditUserForm() {
         setPasswordAlert(true);
       })
       .catch((error) => {
+        setPasswordErrorAlert(true);
         console.error("Error updating user:", error);
       });
   }
 
+  // Renders form to update email, username and password with conditional
+  // email, username and password success alerts depending on Flask response
   return (
     <div>
       <form className="flex max-w-md flex-col gap-4">
@@ -75,6 +88,16 @@ export function EditUserForm() {
           <Alert color="success" onDismiss={() => setEmailAlert(false)}>
             <span className="font-medium">Alert!</span> Successfully updated
             email
+          </Alert>
+        )}
+        {showEmailErrorAlert && (
+          <Alert
+            color={"dark" ? "dark" : "warning"}
+            onDismiss={() => setEmailErrorAlert(false)}
+            className="mb-4"
+          >
+            <span className="font-medium">Alert!</span> Something went wrong
+            please try again or refresh.
           </Alert>
         )}
       </form>
@@ -96,6 +119,16 @@ export function EditUserForm() {
             password
           </Alert>
         )}
+        {showPasswordErrorAlert && (
+          <Alert
+            color={"dark" ? "dark" : "warning"}
+            onDismiss={() => showPasswordErrorAlert(false)}
+            className="mb-4"
+          >
+            <span className="font-medium">Alert!</span> Something went wrong
+            please try again or refresh.
+          </Alert>
+        )}
       </form>
       <form className="flex max-w-md flex-col gap-4">
         <div className="mb-2 block">
@@ -112,6 +145,16 @@ export function EditUserForm() {
           <Alert color="success" onDismiss={() => setUsernameAlert(false)}>
             <span className="font-medium">Alert!</span> Successfully updated
             username
+          </Alert>
+        )}
+        {showUsernameErrorAlert && (
+          <Alert
+            color={"dark" ? "dark" : "warning"}
+            onDismiss={() => showUsernameErrorAlert(false)}
+            className="mb-4"
+          >
+            <span className="font-medium">Alert!</span> Something went wrong
+            please try again or refresh.
           </Alert>
         )}
       </form>

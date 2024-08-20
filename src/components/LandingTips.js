@@ -1,6 +1,7 @@
 import { Button } from "flowbite-react";
 import { useNavigate } from "react-router-dom";
 
+// Landing page tip text with button navigation to financial profile
 export default function LandingTips() {
   const navigate = useNavigate();
   return (

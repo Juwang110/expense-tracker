@@ -4,6 +4,7 @@ import axios from "axios";
 import { FaCheckCircle } from "react-icons/fa";
 import { FaCircleXmark } from "react-icons/fa6";
 
+// A list of incomplete and completed goals to display to the user
 export default function FinanceGoals() {
   const [goalData, setGoalData] = useState([]);
   const [filledDates, setFilledDates] = useState([]);
@@ -11,6 +12,7 @@ export default function FinanceGoals() {
   const [checkedStatus, setCheckedStatus] = useState({});
   const [showAllGoals, setShowAllGoals] = useState(false);
 
+  // On render fetches the user's goals and the dates the survey was filled out for
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -32,6 +34,8 @@ export default function FinanceGoals() {
     fetchData();
   }, []);
 
+  // Fetches whether or not each goal in completed goals was achieved using goalAchieved()
+  // Stores this data as well as if each goal was met, rerenders if goals or dates change
   useEffect(() => {
     const fetchAchievedStatus = async () => {
       const status = {};
@@ -58,13 +62,17 @@ export default function FinanceGoals() {
     fetchAchievedStatus();
   }, [goalData, filledDates]);
 
+  // Given a goal, determines if a survey has been filled out so that the goal has been completed
   const isGoalCompleted = (goal) => {
     return filledDates.some(
       (date) => date[0] === goal[7] && date[1] === goal[6]
     );
   };
 
+  // Sets goals in progress, where the financial survey has been completed for that goals month/year
   const inProgressGoals = goalData.filter((goal) => !isGoalCompleted(goal));
+
+  // Sets completed goals, and sorts it by most recent first
   const completedGoals = goalData
     .filter((goal) => isGoalCompleted(goal))
     .sort((a, b) => {
@@ -73,6 +81,7 @@ export default function FinanceGoals() {
       return dateB - dateA;
     });
 
+  // Gets the previous month and year given a month and year
   function getPreviousMonthYear(month, year) {
     const monthNames = [
       "January",
@@ -98,21 +107,28 @@ export default function FinanceGoals() {
     return { month: monthNames[prevMonthIndex], year: prevYear };
   }
 
+  // Returns a message depending on if a goal was met and by how far off
+  // Given goal category, how the category monthly expense should be changed, by what unit (percent/amount),
+  // by how much, and the year and month of the goal
   const goalAchieved = async (category, change, unit, amount, year, month) => {
     try {
+      // Gets the previous month/year of the goal month/year
       const { month: prevMonth, year: prevYear } = getPreviousMonthYear(
         month,
         year
       );
+      // Gets all of the data from the goal's category for the user
       const response = await axios.post(
         "http://localhost:5000/api/get_category",
         { id: localStorage.getItem("id"), category: category }
       );
 
+      // Sets previous data to the monthly expense the month/year before
       const prevData = response.data.find(
         (item) => item[3] == prevYear && item[4] == prevMonth
       );
 
+      // Sets current data to the monthly expense of the goal's month/year
       const currentData = response.data.find(
         (item) => item[3] == year && item[4] == month
       );
@@ -120,6 +136,7 @@ export default function FinanceGoals() {
       const prevExpense = prevData[2];
       const currentExpense = currentData[2];
 
+      // Returns a message depending on how close/far the user was to meeting their goal
       if (change === "decrease") {
         if (unit === "a percentage of") {
           const percentChange =
@@ -241,6 +258,7 @@ export default function FinanceGoals() {
     }
   };
 
+  // Builds a table row for each goal given
   const goalCell = (goals) => {
     return goals.map((goal, index) => (
       <Table.Row
@@ -260,6 +278,7 @@ export default function FinanceGoals() {
     ));
   };
 
+  // Builds a table row for each goal given (for completed goals)
   const goalCellCompleted = (goals) => {
     return goals.map((goal, index) => {
       const goalId = parseInt(goal[0], 10);
@@ -289,6 +308,7 @@ export default function FinanceGoals() {
     });
   };
 
+  // Constructs a table for in progress goals
   const constructTable = (title, goals) => {
     return (
       <div className="overflow-x-auto mb-6">
@@ -309,8 +329,11 @@ export default function FinanceGoals() {
     );
   };
 
+  // Constructs accordian table for completed goals
   const constructCompletedTable = (title, goals) => {
+    // Limits visible goals to 5 most recent
     const visibleGoals = goals.slice(0, 5);
+    // Users can click a button to show all goals
     const hiddenGoals = goals.slice(5);
 
     return (
@@ -395,6 +418,7 @@ export default function FinanceGoals() {
     );
   };
 
+  // Renders an in progress goal table and an accordian table for completed goals
   return (
     <div>
       {constructTable("In Progress Goals", inProgressGoals)}

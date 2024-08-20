@@ -3,6 +3,8 @@ import NavigationBar from "../components/NavigationBar";
 import { ContactMe } from "../components/ContactMe";
 import { AppFooter } from "../components/Footer";
 
+// Contact me page with an email and message input as well as a submit button
+// to send me an email through flask mail
 export default function Contact() {
   return (
     <div className="flex flex-col min-h-screen px-20 dark:bg-gray-700">

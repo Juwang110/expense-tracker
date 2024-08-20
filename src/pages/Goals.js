@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import NavigationBar from "../components/NavigationBar";
 import { AppFooter } from "../components/Footer";
 import {
   Dropdown,
@@ -14,6 +13,8 @@ import { useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
+// Goals page allowing users to add financial expenditure goals,
+// see existing goals, and delete goals
 export default function Goals() {
   const [month, setMonth] = useState(getCurrentMonth());
   const [year, setYear] = useState(new Date().getFullYear());
@@ -26,10 +27,12 @@ export default function Goals() {
   const [deleteAlert, setDeleteAlert] = useState(false);
   const navigate = useNavigate();
 
+  // Navigates to financial profile page
   function handleProfile() {
     navigate("/FinancialProfile");
   }
 
+  //
   useEffect(() => {
     setGoals([
       {
@@ -44,16 +47,13 @@ export default function Goals() {
     ]);
   }, [month, year]);
 
+  // Fetchs goals to display on current goals whenever a goal is added/deleted
   useEffect(() => {
     fetchGoals();
   }, [successAlert, deleteAlert]);
 
-  useEffect(() => {
-    console.log(myGoals);
-  }, [myGoals]);
-
+  // Retrieves all existing goals for this user
   const fetchGoals = async () => {
-    console.log(localStorage.getItem("id"));
     try {
       const response = await axios.post("http://localhost:5000/api/get_goals", {
         id: localStorage.getItem("id"),
@@ -64,12 +64,14 @@ export default function Goals() {
     }
   };
 
+  // Gets today's month
   function getCurrentMonth() {
     const date = new Date();
     const options = { month: "long" };
     return date.toLocaleDateString("en-US", options);
   }
 
+  // Saves and adds the new goals to the database
   async function handleSave() {
     setIntAlert(false);
     setStringAlert(false);
@@ -77,6 +79,8 @@ export default function Goals() {
     setDeleteAlert(false);
     let allGoalsValid = true;
 
+    // For each goal if the goal is incompletely filled out or
+    // has invalid inputs the page displays a conditional alert
     goals.forEach((goal) => {
       if (goal.amount !== "") {
         if (!canBeConvertedToInt(goal.amount)) {
@@ -103,6 +107,7 @@ export default function Goals() {
       }
     });
 
+    // If all goals are valid, adds each goal to the database
     if (allGoalsValid) {
       try {
         await Promise.all(
@@ -140,6 +145,7 @@ export default function Goals() {
     }
   }
 
+  // Function to display a new goal for the user to fill out
   function addNewGoal() {
     setGoals([
       ...goals,
@@ -155,27 +161,31 @@ export default function Goals() {
     ]);
   }
 
+  // Can the string be converted to an int
   function canBeConvertedToInt(str) {
     return /^\d+$/.test(str);
   }
 
+  // Updates the goal given the index, key and value
   function updateGoal(index, key, value) {
     const newGoals = [...goals];
     newGoals[index][key] = value;
     setGoals(newGoals);
   }
 
+  // Changes the month state to the given month
   function handleMonthChange(selectedMonth) {
     setMonth(selectedMonth);
   }
 
+  // Changes the year state to the given year
   function handleYearChange(selectedYear) {
     setYear(selectedYear);
   }
 
+  // Deletes the goal given the goal id from the database
   function handleDelete(id) {
     setDeleteAlert(false);
-    console.log(id);
     axios
       .post("http://localhost:5000/api/delete_goal", {
         goal_id: id,
@@ -188,6 +198,7 @@ export default function Goals() {
       });
   }
 
+  // For each goal returns a table row with that goal's information
   function goalCell() {
     return myGoals.map((myGoal, index) => (
       <Table.Row
@@ -216,6 +227,7 @@ export default function Goals() {
     ));
   }
 
+  // Constructs the goal table
   function constructTable() {
     return (
       <div className="overflow-x-auto">
@@ -238,6 +250,12 @@ export default function Goals() {
     );
   }
 
+  // Renders adding goal section where after a goal is filled out an empty one appears,
+  // a more info button is displayed to show an info modal,
+  // a current goals list is also displayed with deletion functionality and
+  // a button to navigate to the financial profile.
+  // There is conditional rendering of incomplete and invalid alerts as well as
+  // an success alert and a goal deletion alert.
   return (
     <div className="flex flex-col min-h-screen px-20 dark:bg-gray-700">
       <div className="flex flex-col py-3 flex-1 px-20">

@@ -2,12 +2,15 @@ import { Label, Textarea, TextInput, Button, Alert } from "flowbite-react";
 import axios from "axios";
 import React, { useState } from "react";
 
+// Contact form that allows users to submit their email and message.
+// Upon submission, the form sends the data to a Flask backend via an API request.
 export function ContactMe() {
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [showFailAlert, setShowFailAlert] = useState(false);
 
+  // Handles form submission by using flask mail to post and preventing default behavior
   function handleSubmit(e) {
     e.preventDefault();
     const userData = {
@@ -19,10 +22,8 @@ export function ContactMe() {
       .post("http://localhost:5000/api/send_email", userData)
       .then((response) => {
         if (response.data.message === "Success") {
-          console.log("yay");
           setShowSuccessAlert(true);
         } else {
-          console.log("nah");
           setShowFailAlert(true);
         }
       })
@@ -32,6 +33,8 @@ export function ContactMe() {
       });
   }
 
+  // Renders the contact form, which includes email and message input fields,
+  // a submit button, and conditional success/fail alerts based on the API response
   return (
     <form
       className="w-full max-w-md flex flex-col gap-4 py-8"
@@ -64,6 +67,7 @@ export function ContactMe() {
         />
       </div>
       <Button type="submit">Submit</Button>
+      {/*Success or fail alert depending on if flask mail route worked*/}
       {showSuccessAlert && (
         <Alert color="success" onDismiss={() => setShowSuccessAlert(false)}>
           <span className="font-medium">Alert!</span> Email successfully sent,
