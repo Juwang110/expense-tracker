@@ -11,6 +11,9 @@ export function EditUserForm() {
   const [showUsernameAlert, setUsernameAlert] = useState(false);
   const [showEmailAlert, setEmailAlert] = useState(false);
   const [showPasswordAlert, setPasswordAlert] = useState(false);
+  const [showUsernameErrorAlert, setUsernameErrorAlert] = useState(false);
+  const [showEmailErrorAlert, setEmailErrorAlert] = useState(false);
+  const [showPasswordErrorAlert, setPasswordErrorAlert] = useState(false);
 
   // Handles updating username in database
   function handleUsernameSubmit() {
@@ -25,6 +28,7 @@ export function EditUserForm() {
         setUsernameAlert(true);
       })
       .catch((error) => {
+        setUsernameErrorAlert(true);
         console.error("Error updating user:", error);
       });
   }
@@ -42,6 +46,7 @@ export function EditUserForm() {
         setEmailAlert(true);
       })
       .catch((error) => {
+        setEmailErrorAlert(true);
         console.error("Error updating user:", error);
       });
   }
@@ -58,6 +63,7 @@ export function EditUserForm() {
         setPasswordAlert(true);
       })
       .catch((error) => {
+        setPasswordErrorAlert(true);
         console.error("Error updating user:", error);
       });
   }
@@ -84,6 +90,16 @@ export function EditUserForm() {
             email
           </Alert>
         )}
+        {showEmailErrorAlert && (
+          <Alert
+            color={"dark" ? "dark" : "warning"}
+            onDismiss={() => setEmailErrorAlert(false)}
+            className="mb-4"
+          >
+            <span className="font-medium">Alert!</span> Something went wrong
+            please try again or refresh.
+          </Alert>
+        )}
       </form>
       <form className="flex max-w-md flex-col gap-4 py-4">
         <div className="mb-2 block">
@@ -103,6 +119,16 @@ export function EditUserForm() {
             password
           </Alert>
         )}
+        {showPasswordErrorAlert && (
+          <Alert
+            color={"dark" ? "dark" : "warning"}
+            onDismiss={() => showPasswordErrorAlert(false)}
+            className="mb-4"
+          >
+            <span className="font-medium">Alert!</span> Something went wrong
+            please try again or refresh.
+          </Alert>
+        )}
       </form>
       <form className="flex max-w-md flex-col gap-4">
         <div className="mb-2 block">
@@ -119,6 +145,16 @@ export function EditUserForm() {
           <Alert color="success" onDismiss={() => setUsernameAlert(false)}>
             <span className="font-medium">Alert!</span> Successfully updated
             username
+          </Alert>
+        )}
+        {showUsernameErrorAlert && (
+          <Alert
+            color={"dark" ? "dark" : "warning"}
+            onDismiss={() => showUsernameErrorAlert(false)}
+            className="mb-4"
+          >
+            <span className="font-medium">Alert!</span> Something went wrong
+            please try again or refresh.
           </Alert>
         )}
       </form>

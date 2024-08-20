@@ -1,6 +1,6 @@
 import React from "react";
 import { EditUserForm } from "../components/EditUserForm";
-import { Button, Modal, Checkbox, Label, Radio } from "flowbite-react";
+import { Button, Modal, Checkbox, Label, Radio, Alert } from "flowbite-react";
 import { Sidebar } from "flowbite-react";
 import { HiChartPie, HiShoppingBag, HiUser } from "react-icons/hi";
 import { useState } from "react";
@@ -12,6 +12,7 @@ import { useNavigate } from "react-router-dom";
 // Light/Dark mode, editing user information, deleting user
 export default function SettingsModal({ onClose, darkMode, toggleDarkMode }) {
   const [option, setOption] = useState("default");
+  const [deleteAlert, setDeleteAlert] = useState(false);
   const navigate = useNavigate();
 
   // Handles navigation of settings modal
@@ -28,6 +29,7 @@ export default function SettingsModal({ onClose, darkMode, toggleDarkMode }) {
         navigate("/LogIn");
       })
       .catch((error) => {
+        setDeleteAlert(true);
         console.error("Error deleting account:", error);
       });
   }
@@ -78,6 +80,16 @@ export default function SettingsModal({ onClose, darkMode, toggleDarkMode }) {
                 <Button color="failure" onClick={handleDelete}>
                   Delete Account
                 </Button>
+                {deleteAlert && (
+                  <Alert
+                    color={"dark" ? "dark" : "warning"}
+                    onDismiss={() => setDeleteAlert(false)}
+                    className="mb-4"
+                  >
+                    <span className="font-medium">Alert!</span> Something went
+                    wrong please try again or refresh.
+                  </Alert>
+                )}
               </div>
             </Modal.Body>
           </>
