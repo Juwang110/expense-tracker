@@ -55,7 +55,6 @@ export default function Goals() {
 
   // Retrieves all existing goals for this user
   const fetchGoals = async () => {
-    console.log(localStorage.getItem("id"));
     try {
       const response = await axios.post("http://localhost:5000/api/get_goals", {
         id: localStorage.getItem("id"),
@@ -188,7 +187,6 @@ export default function Goals() {
   // Deletes the goal given the goal id from the database
   function handleDelete(id) {
     setDeleteAlert(false);
-    console.log(id);
     axios
       .post("http://localhost:5000/api/delete_goal", {
         goal_id: id,

@@ -7,7 +7,6 @@ function NavButton({ value, link }) {
   const navigate = useNavigate();
 
   const navigateTo = () => {
-    console.log("navigating");
     navigate(link);
   };
 

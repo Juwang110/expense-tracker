@@ -49,13 +49,11 @@ export default function SettingsModal({ onClose, darkMode, toggleDarkMode }) {
     axios
       .post(`http://localhost:5000/api/delete_user`, user_data)
       .then((response) => {
-        console.log("Account deleted successfully");
+        navigate("/LogIn");
       })
       .catch((error) => {
         console.error("Error deleting account:", error);
       });
-
-    navigate("/LogIn");
   }
 
   // Rerenders the modal based on the menu option chosen
@@ -147,7 +145,6 @@ export default function SettingsModal({ onClose, darkMode, toggleDarkMode }) {
                       checked={!darkMode}
                       onChange={() => {
                         localStorage.setItem("dark", false);
-                        console.log(localStorage.getItem("dark"));
                         toggleDarkMode(false);
                       }}
                     />
@@ -161,7 +158,6 @@ export default function SettingsModal({ onClose, darkMode, toggleDarkMode }) {
                       checked={darkMode}
                       onChange={() => {
                         localStorage.setItem("dark", true);
-                        console.log(localStorage.getItem("dark"));
                         toggleDarkMode(true);
                       }}
                     />

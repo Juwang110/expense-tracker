@@ -32,22 +32,16 @@ export default function LogIn() {
       .post("http://localhost:5000/api/get_user", userData)
       .then((response) => {
         if (response.data.message === "exists") {
-          console.log("exists");
           localStorage.setItem("id", response.data.id);
-          console.log(response.data.id);
           setOpenModal(true);
         } else if (response.data.message === "wrong password") {
-          console.log("wrong");
           setShowAlert(true);
         } else {
-          console.log(response.data.message);
           localStorage.setItem("id", response.data.id);
-          console.log(response.data.id);
           setNewUser(true);
           axios
             .post("http://localhost:5000/api/add_user", userData)
             .then((response) => {
-              console.log(response.data.message);
               setOpenModal(true);
             })
             .catch((error) => {
