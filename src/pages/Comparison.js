@@ -33,6 +33,8 @@ export default function Comp() {
     setSavingRate(rate);
     if (savings == null || dpi == null) {
       setIncompleteAlert(true);
+    } else {
+      setIncompleteAlert(false);
     }
   }
 

@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import NavigationBar from "../components/NavigationBar";
 import { AppFooter } from "../components/Footer";
 import {
   Dropdown,

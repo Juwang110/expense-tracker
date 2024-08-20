@@ -39,6 +39,7 @@ export default function Wealth() {
       setNetWorth(actualNetWorth);
       setPercentageWealth(percentageWealth);
       setEstimatedWorth(expectedNetWorth);
+      setIncompleteAlert(false);
       if (actualNetWorth >= 2 * expectedNetWorth) {
         setWealthStatus("PAW - Prodigious Accumulator of Wealth"); // Prodigious Accumulator of Wealth
       } else if (actualNetWorth <= 0.5 * expectedNetWorth) {

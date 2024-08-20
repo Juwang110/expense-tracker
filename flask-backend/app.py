@@ -206,18 +206,7 @@ def update_user():
     cur.close()
     return jsonify({"message": "updated"})
 
-# Updates match consent for user
-@app.route('/api/update_consent', methods=['PUT'])
-@cross_origin()
-def update_consent():
-    received_data = request.json
-    consent = received_data.get("consent")
-    user_id = received_data.get("id")
-    cur = mysql.connection.cursor()
-    cur.execute('UPDATE Users SET consent = %s WHERE id = %s', (consent, user_id))
-    mysql.connection.commit()
-    cur.close()
-    return jsonify({"message": "updated"})
+
 
 # Deletes the specified user
 @app.route('/api/delete_user', methods=['POST'])
@@ -250,8 +239,8 @@ def get_users():
 def add_user():
     recieved_data = request.json
     cur = mysql.connection.cursor()
-    cur.execute("INSERT INTO Users (username, password, email, consent) VALUES (%s, %s, %s, %s)",
-                (recieved_data.get("username"), recieved_data.get("password"), recieved_data.get("email"), True))
+    cur.execute("INSERT INTO Users (username, password, email) VALUES (%s, %s, %s)",
+                (recieved_data.get("username"), recieved_data.get("password"), recieved_data.get("email")))
     mysql.connection.commit()
     cur.close()
     return jsonify({'message': 'User added successfully!'})

@@ -13,7 +13,6 @@ export default function LogIn() {
   const [password, setPassword] = useState("");
   const [showAlert, setShowAlert] = useState(false);
   const [openModal, setOpenModal] = useState(false);
-  const [newUser, setNewUser] = useState(false);
   const navigate = useNavigate();
 
   // Handles form submission and either signs the user up, logs them in,
@@ -38,7 +37,6 @@ export default function LogIn() {
           setShowAlert(true);
         } else {
           localStorage.setItem("id", response.data.id);
-          setNewUser(true);
           axios
             .post("http://localhost:5000/api/add_user", userData)
             .then((response) => {
