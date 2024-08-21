@@ -202,7 +202,7 @@ export default function FinancePie() {
           <Table.Head>
             <Table.HeadCell>Category</Table.HeadCell>
             <Table.HeadCell>Value</Table.HeadCell>
-            <Table.HeadCell>Percent Change</Table.HeadCell>
+            <Table.HeadCell>% Change from prev month</Table.HeadCell>
           </Table.Head>
           <Table.Body className="divide-y">
             {expenseCell(data, prevData)}

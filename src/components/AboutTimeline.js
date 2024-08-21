@@ -14,9 +14,7 @@ export default function AboutTimeline() {
             <Timeline.Point icon={HiCalendar} />
             <Timeline.Content>
               <Timeline.Time>June 2024</Timeline.Time>
-              <Timeline.Title>
-                First commit and development start
-              </Timeline.Title>
+              <Timeline.Title>Development start</Timeline.Title>
               <Timeline.Body>
                 Created the react app and started developing this budgeting
                 website with the following features in mind: user profiles,
@@ -27,25 +25,24 @@ export default function AboutTimeline() {
           <Timeline.Item>
             <Timeline.Point icon={HiCalendar} />
             <Timeline.Content>
-              <Timeline.Time>March 2022</Timeline.Time>
-              <Timeline.Title>Marketing UI design in Figma</Timeline.Title>
+              <Timeline.Time>August 2024</Timeline.Time>
+              <Timeline.Title>Finalized initial build</Timeline.Title>
               <Timeline.Body>
-                All of the pages and components are first designed in Figma and
-                we keep a parity between the two versions even as we update the
-                project.
+                Finalized initial build of SpendTrack with a profile system, net
+                worth calculator, savings rate comparison calculator with FRED
+                API, budget goals system, and monthly expense insights
               </Timeline.Body>
             </Timeline.Content>
           </Timeline.Item>
           <Timeline.Item>
             <Timeline.Point icon={HiCalendar} />
             <Timeline.Content>
-              <Timeline.Time>April 2022</Timeline.Time>
-              <Timeline.Title>
-                E-Commerce UI code in Tailwind CSS
-              </Timeline.Title>
+              <Timeline.Time>September 2024</Timeline.Time>
+              <Timeline.Title>SpendTrack Deployment</Timeline.Title>
               <Timeline.Body>
-                Get started with dozens of web components and interactive
-                elements built on top of Tailwind CSS.
+                Deployed the initial build of SpendTrack to the web. Going on,
+                there will be future updates to futher enhance this budgeting
+                and expenditure insight experience!
               </Timeline.Body>
             </Timeline.Content>
           </Timeline.Item>
