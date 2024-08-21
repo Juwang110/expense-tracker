@@ -105,9 +105,15 @@ Check out the live version of SpendTrack here: soon to be deployed stay tuned!
   - DB_NAME=name_for_DB
   - MYSQL_ROOT_PASSWORD=your_MYSQL_root_password
 - Federal Reserve Economic Data API:
+
   - Sign up at [FRED](https://fred.stlouisfed.org/docs/api/fred/)
   - Request an obtain a key
   - Add FRED_KEY=your_api_key to the .env file in flask-backend
+
+- Contact Me:
+  - If you would like the contact me section to work add the following to your .env
+  - MAIL_USERNAME=your_email
+  - MAIL_PASSWORD=your_password
 
 ## License
 
