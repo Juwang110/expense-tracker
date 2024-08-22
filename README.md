@@ -12,13 +12,22 @@ Check out the live version of SpendTrack here: soon to be deployed stay tuned!
 
 ## Table of Contents
 
+- [Resources](#resources-used)
 - [Installation](#installation)
+- [Configuration](#configuration)
 - [Usage](#usage)
 - [Features](#features)
-- [Configuration](#configuration)
+- [Screenshots](#screenshots)
+- [Contributing](#contributing)
 - [License](#license)
 - [Acknowledgments](#acknowledgments)
 - [Contact Information](#contact-information)
+
+## Resources Used
+
+- **Front End** React, Flowbite, Javascript, Tailwind CSS
+- **Back End** Flask, MySQL
+- **Other** Recharts
 
 ## Installation
 
@@ -35,12 +44,6 @@ Check out the live version of SpendTrack here: soon to be deployed stay tuned!
    - **Create a Database**:
      - Open your SQL client (e.g., MySQL Workbench) and create a new database.
      - Make sure this database server is running
-   - **Configure Database Connection**:
-     - Open the `backend` directory and create a .env file.
-     - Update the database connection details (e.g., `DATABASE_URL`) with the credentials for your local MySQL server:
-       ```text
-       DATABASE_URL=mysql://username:password@localhost/spendtrack_db
-       ```
 
 3. **Install Frontend Dependencies**:
 
@@ -68,11 +71,31 @@ Check out the live version of SpendTrack here: soon to be deployed stay tuned!
        ```
      - This will start the frontend on `http://localhost:3000`.
    - **Backend**:
-     - In a separate terminal or command prompt, navigate to the `flask-backend` directory and cd into app.py run:
+     - In a separate terminal or command prompt, cd into the `flask-backend` directory and run:
        ```shell
        python app.py
        ```
      - This will start the backend server.
+
+## Configuration
+
+- Environment variables for backend:
+  - In the flask-backend folder create a .env file for your database
+  - Store your database user, port, name and password as needed at the top of the app.py file
+  - DB_USER=user_for_your_DB, example = root
+  - DB_PORT=port_for_DB
+  - DB_NAME=name_for_DB
+  - MYSQL_ROOT_PASSWORD=your_MYSQL_root_password
+- Federal Reserve Economic Data API:
+
+  - Sign up at [FRED](https://fred.stlouisfed.org/docs/api/fred/)
+  - Request an obtain a key
+  - Add FRED_KEY=your_api_key to the .env file in flask-backend
+
+- Contact Me:
+  - If you would like the contact me section to work add the following to your .env
+  - MAIL_USERNAME=your_email
+  - MAIL_PASSWORD=your_password
 
 ## Usage
 
@@ -95,25 +118,100 @@ Check out the live version of SpendTrack here: soon to be deployed stay tuned!
 - Set financial goals to be met or failed given survey inputs
 - Line chart survey history to display monthly history on one category's expense vs. total expenses
 
-## Configuration
+## Screenshots
 
-- Environment variables for backend:
-  - In the flask-backend folder create a .env file for your database
-  - Store your database user, port, name and password as needed at the top of the app.py file
-  - DB_USER=user_for_your_DB, example = root
-  - DB_PORT=port_for_DB
-  - DB_NAME=name_for_DB
-  - MYSQL_ROOT_PASSWORD=your_MYSQL_root_password
-- Federal Reserve Economic Data API:
+Here are some screenshots of SpendTrack in action:
 
-  - Sign up at [FRED](https://fred.stlouisfed.org/docs/api/fred/)
-  - Request an obtain a key
-  - Add FRED_KEY=your_api_key to the .env file in flask-backend
+### Login
 
-- Contact Me:
-  - If you would like the contact me section to work add the following to your .env
-  - MAIL_USERNAME=your_email
-  - MAIL_PASSWORD=your_password
+![Login](src/assets/spendtrackLogin.png)
+
+### Home Page
+
+![Home Page](src/assets/spendtrackHome.png)
+
+### Settings
+
+![Settings](src/assets/spendtrackSettings.png)
+
+### Budget Breakdown Pie
+
+![Budget Breakdown Pie](src/assets/spendtrackPie.png)
+
+### Goals Page
+
+![Goals Page](src/assets/spendtrackGoals.png)
+
+### Goal Results
+
+![Goal Results](src/assets/spendtrackGoalResults.png)
+
+### Expense History
+
+![Expense History](src/assets/spendtrackHistory.png)
+
+### Savings Calculator Results
+
+![Savings Calculator Results](src/assets/spendtrackSavingsResults.png)
+
+### Net Worth Insight
+
+![Net Worth Insight](src/assets/spendtrackWorth.png)
+
+## Contributing
+
+Contributions are welcome! Here's how you can contribute:
+
+1. **Fork the Repository**:
+
+   - Click the "Fork" button at the top right corner of this repository to create your own copy of the project.
+
+2. **Clone Your Fork**:
+
+   - Clone your forked repository to your local machine:
+     ```bash
+     git clone https://github.com/your-username/spendtrack.git
+     ```
+   - Replace `your-username` with your GitHub username.
+
+3. **Create a Branch**:
+
+   - Create a new branch for your feature or bug fix:
+     ```bash
+     git checkout -b feature/YourFeatureName
+     ```
+   - Make sure to use a descriptive name for your branch.
+
+4. **Make Your Changes**:
+
+   - Implement your changes or new features.
+   - Test thoroughly to ensure everything works as expected.
+
+5. **Commit Your Changes**:
+
+   - Commit your changes with a meaningful commit message:
+     ```bash
+     git commit -m "Add feature: YourFeatureName"
+     ```
+
+6. **Push to Your Fork**:
+
+   - Push your branch to your forked repository:
+     ```bash
+     git push origin feature/YourFeatureName
+     ```
+
+7. **Create a Pull Request**:
+
+   - Go to the original repository on GitHub and create a pull request.
+   - Provide a detailed description of your changes and any relevant information.
+
+8. **Review Process**:
+
+   - Your pull request will be reviewed, and feedback may be provided.
+
+9. **Merge**:
+   - Once your pull request is approved, it will be merged into the main branch.
 
 ## License
 
