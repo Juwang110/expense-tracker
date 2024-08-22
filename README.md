@@ -25,9 +25,9 @@ Check out the live version of SpendTrack here: soon to be deployed stay tuned!
 
 ## Resources Used
 
-- **Front End** React, Flowbite, Javascript, Tailwind CSS
-- **Back End** Flask, MySQL
-- **Other** Recharts
+- **Front End:** React, Flowbite, Javascript, Tailwind CSS
+- **Back End:** Flask, MySQL
+- **Other:** Recharts, Federal Reserve Economic Data API
 
 ## Installation
 
