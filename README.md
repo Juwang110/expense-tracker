@@ -225,5 +225,5 @@ This project is licensed under the GNU GPL-3.0 License. See the [LICENSE](LICENS
 
 For questions or feedback, please contact:
 
-- **Email**: justinwang464@gmail.com
-- **LinkedIn**: [Your LinkedIn Profile](www.linkedin.com/in/justin-wang-209a33176)
+- **Email**: juwang110@gmail.com
+- **LinkedIn**: [My LinkedIn Profile](www.linkedin.com/in/justin-wang-209a33176)
