@@ -110,12 +110,7 @@ export default function LogIn() {
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
-          {showAlert && (
-            <Alert color="warning" onDismiss={() => setShowAlert(false)}>
-              <span className="font-medium">Password alert!</span> Wrong
-              password for this account
-            </Alert>
-          )}
+
           {openModal && (
             <Modal show={openModal} onClose={() => setOpenModal(false)}>
               <Modal.Header>Notice</Modal.Header>
@@ -135,6 +130,12 @@ export default function LogIn() {
             </Modal>
           )}
           <Button type="submit">Submit</Button>
+          {showAlert && (
+            <Alert color="warning" onDismiss={() => setShowAlert(false)}>
+              <span className="font-medium">Alert!</span> Wrong
+              password/username for this email
+            </Alert>
+          )}
         </form>
       </div>
     </div>

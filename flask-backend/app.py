@@ -170,15 +170,15 @@ def get_dates():
 def get_user():
     received_data = request.json
     cur = mysql.connection.cursor()
-    cur.execute('SELECT * FROM Users WHERE username = %s AND email = %s',
-                (received_data.get("username"), received_data.get("email")))
+    cur.execute('SELECT * FROM Users WHERE email = %s',
+                (received_data.get("email"),))
     user = cur.fetchone()
     cur.execute('SELECT * FROM Users ORDER BY id DESC')
     top_user = cur.fetchone()
     cur.close()
 
     if user:
-        if user[2] == received_data.get("password"):
+        if user[2] == received_data.get("password") and user[1] == received_data.get("username"):
             return jsonify({"message": "exists", "id" : user[0]})
         else:
             return jsonify({"message": "wrong password"})
