@@ -1,7 +1,7 @@
 {
   "name": "expense-tracker",
   "version": "0.1.0",
-  "homepage": "https://Juwang110.github.io/expense-tracker",
+  "homepage": "https://expense-tracker.vercel.app",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^5.17.0",
