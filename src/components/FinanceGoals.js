@@ -17,13 +17,13 @@ export default function FinanceGoals() {
     const fetchData = async () => {
       try {
         const response = await axios.post(
-          "http://localhost:5000/api/get_goals",
+          `${process.env.REACT_APP_BACKEND_URL}/api/get_goals`,
           { id: localStorage.getItem("id") }
         );
         setGoalData(response.data);
 
         const response1 = await axios.post(
-          "http://localhost:5000/api/get_dates",
+          `${process.env.REACT_APP_BACKEND_URL}/api/get_dates`,
           { id: localStorage.getItem("id") }
         );
         setFilledDates(response1.data);
@@ -119,7 +119,7 @@ export default function FinanceGoals() {
       );
       // Gets all of the data from the goal's category for the user
       const response = await axios.post(
-        "http://localhost:5000/api/get_category",
+        `${process.env.REACT_APP_BACKEND_URL}/api/get_category`,
         { id: localStorage.getItem("id"), category: category }
       );
 
@@ -133,8 +133,13 @@ export default function FinanceGoals() {
         (item) => item[3] == year && item[4] == month
       );
 
-      const prevExpense = prevData[2];
+      const prevExpense =
+        prevData && prevData[2] !== undefined ? prevData[2] : "invalid";
       const currentExpense = currentData[2];
+
+      if (prevExpense === "invalid") {
+        return "No data for previous month/year";
+      }
 
       // Returns a message depending on how close/far the user was to meeting their goal
       if (change === "decrease") {

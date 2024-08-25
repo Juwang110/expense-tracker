@@ -44,7 +44,7 @@ export default function Comp() {
     const fetchFredData = async (seriesID = "PSAVERT") => {
       try {
         const response = await axios.get(
-          "http://localhost:5000/api/fred_data_mostrecent",
+          `${process.env.REACT_APP_BACKEND_URL}/api/fred_data_mostrecent`,
           {
             params: { series_id: seriesID },
           }
@@ -55,7 +55,7 @@ export default function Comp() {
       }
       try {
         const response = await axios.get(
-          "http://localhost:5000/api/fred_data",
+          `${process.env.REACT_APP_BACKEND_URL}/api/fred_data`,
           {
             params: { series_id: "PSAVERT" },
           }

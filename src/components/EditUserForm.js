@@ -23,7 +23,7 @@ export function EditUserForm() {
     };
     localStorage.setItem("username", username);
     axios
-      .put("http://localhost:5000/api/update_user", userData)
+      .put(`${process.env.REACT_APP_BACKEND_URL}/api/update_user`, userData)
       .then((response) => {
         setUsernameAlert(true);
       })
@@ -41,7 +41,7 @@ export function EditUserForm() {
     };
     localStorage.setItem("email", email);
     axios
-      .put("http://localhost:5000/api/update_user", userData)
+      .put(`${process.env.REACT_APP_BACKEND_URL}/api/update_user`, userData)
       .then((response) => {
         setEmailAlert(true);
       })
@@ -58,7 +58,7 @@ export function EditUserForm() {
       password: password,
     };
     axios
-      .put("http://localhost:5000/api/update_user", userData)
+      .put(`${process.env.REACT_APP_BACKEND_URL}/api/update_user`, userData)
       .then((response) => {
         setPasswordAlert(true);
       })

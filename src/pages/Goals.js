@@ -55,9 +55,12 @@ export default function Goals() {
   // Retrieves all existing goals for this user
   const fetchGoals = async () => {
     try {
-      const response = await axios.post("http://localhost:5000/api/get_goals", {
-        id: localStorage.getItem("id"),
-      });
+      const response = await axios.post(
+        `${process.env.REACT_APP_BACKEND_URL}/api/get_goals`,
+        {
+          id: localStorage.getItem("id"),
+        }
+      );
       setMyGoals(response.data);
     } catch (error) {
       console.error("Error fetching goals:", error);
@@ -113,7 +116,7 @@ export default function Goals() {
         await Promise.all(
           goals.map((goal) => {
             if (goal.amount !== "") {
-              axios.post("http://localhost:5000/api/add_goal", {
+              axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/add_goal`, {
                 id: goal.user_id,
                 category: goal.category,
                 unit: goal.unit,
@@ -187,7 +190,7 @@ export default function Goals() {
   function handleDelete(id) {
     setDeleteAlert(false);
     axios
-      .post("http://localhost:5000/api/delete_goal", {
+      .post(`${process.env.REACT_APP_BACKEND_URL}/api/delete_goal`, {
         goal_id: id,
       })
       .then((response) => {
@@ -366,69 +369,69 @@ export default function Goals() {
                 &nbsp;my
                 <Dropdown label={goal.category} inline>
                   <Dropdown.Item
-                    onClick={() => updateGoal(index, "category", "Transport")}
+                    onClick={() => updateGoal(index, "category", "transport")}
                   >
                     Transport
                   </Dropdown.Item>
                   <Dropdown.Item
-                    onClick={() => updateGoal(index, "category", "Flights")}
+                    onClick={() => updateGoal(index, "category", "flights")}
                   >
                     Flights
                   </Dropdown.Item>
                   <Dropdown.Item
-                    onClick={() => updateGoal(index, "category", "Housing")}
+                    onClick={() => updateGoal(index, "category", "housing")}
                   >
                     Housing
                   </Dropdown.Item>
                   <Dropdown.Item
-                    onClick={() => updateGoal(index, "category", "Food")}
+                    onClick={() => updateGoal(index, "category", "food")}
                   >
                     Food
                   </Dropdown.Item>
                   <Dropdown.Item
-                    onClick={() => updateGoal(index, "category", "Medical")}
+                    onClick={() => updateGoal(index, "category", "medical")}
                   >
                     Medical
                   </Dropdown.Item>
                   <Dropdown.Item
-                    onClick={() => updateGoal(index, "category", "Wellness")}
+                    onClick={() => updateGoal(index, "category", "wellness")}
                   >
                     Wellness
                   </Dropdown.Item>
                   <Dropdown.Item
-                    onClick={() => updateGoal(index, "category", "Loans")}
+                    onClick={() => updateGoal(index, "category", "loans")}
                   >
                     Loans
                   </Dropdown.Item>
                   <Dropdown.Item
                     onClick={() =>
-                      updateGoal(index, "category", "Entertainment")
+                      updateGoal(index, "category", "entertainment")
                     }
                   >
                     Entertainment
                   </Dropdown.Item>
                   <Dropdown.Item
-                    onClick={() => updateGoal(index, "category", "Clothing")}
+                    onClick={() => updateGoal(index, "category", "clothing")}
                   >
                     Clothing
                   </Dropdown.Item>
                   <Dropdown.Item
-                    onClick={() => updateGoal(index, "category", "Insurance")}
+                    onClick={() => updateGoal(index, "category", "insurance")}
                   >
                     Insurance
                   </Dropdown.Item>
                   <Dropdown.Item
-                    onClick={() => updateGoal(index, "category", "MiscItems")}
+                    onClick={() => updateGoal(index, "category", "miscitems")}
                   >
                     MiscItems
                   </Dropdown.Item>
                   <Dropdown.Item
-                    onClick={() => updateGoal(index, "category", "SaveInvest")}
+                    onClick={() => updateGoal(index, "category", "saveinvest")}
                   >
                     SaveInvest
                   </Dropdown.Item>
                   <Dropdown.Item
-                    onClick={() => updateGoal(index, "category", "MiscExpense")}
+                    onClick={() => updateGoal(index, "category", "miscexpense")}
                   >
                     MiscExpense
                   </Dropdown.Item>
