@@ -387,9 +387,9 @@ def get_expenses():
         for category in categories:
             query_parts.append(f"""
                 SELECT '{category}' AS category, {category}.monthly_expense AS value
-                FROM Users 
-                JOIN {category} ON Users.id = {category}.user_id
-                WHERE Users.id = %s AND {category}.month = %s AND {category}.year = %s
+                FROM users 
+                JOIN {category} ON users.id = {category}.user_id
+                WHERE users.id = %s AND {category}.month = %s AND {category}.year = %s
             """)
             query_values.extend([user_id, month, year])
 
