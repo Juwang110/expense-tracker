@@ -18,6 +18,7 @@ export default function LogIn() {
   // Handles form submission and either signs the user up, logs them in,
   // or shows them a wrong password alert depending on their input
   function handleSubmit(e) {
+    console.log(process.env.REACT_APP_BACKEND_URL);
     e.preventDefault();
     const userData = {
       username: username,
@@ -28,7 +29,7 @@ export default function LogIn() {
     localStorage.setItem("email", email);
 
     axios
-      .post("http://localhost:5000/api/get_user", userData)
+      .post(`${process.env.REACT_APP_BACKEND_URL}/api/get_user`, userData)
       .then((response) => {
         if (response.data.message === "exists") {
           localStorage.setItem("id", response.data.id);
@@ -38,7 +39,7 @@ export default function LogIn() {
         } else {
           localStorage.setItem("id", response.data.id);
           axios
-            .post("http://localhost:5000/api/add_user", userData)
+            .post(`${process.env.REACT_APP_BACKEND_URL}/api/add_user`, userData)
             .then((response) => {
               setOpenModal(true);
             })
@@ -50,6 +51,7 @@ export default function LogIn() {
       .catch((error) => {
         console.error("Error checking user:", error);
       });
+    console.log(localStorage.getItem("id"));
   }
 
   // Once the info modal is closed navigate to landing page
@@ -110,12 +112,7 @@ export default function LogIn() {
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
-          {showAlert && (
-            <Alert color="warning" onDismiss={() => setShowAlert(false)}>
-              <span className="font-medium">Password alert!</span> Wrong
-              password for this account
-            </Alert>
-          )}
+
           {openModal && (
             <Modal show={openModal} onClose={() => setOpenModal(false)}>
               <Modal.Header>Notice</Modal.Header>
@@ -135,6 +132,12 @@ export default function LogIn() {
             </Modal>
           )}
           <Button type="submit">Submit</Button>
+          {showAlert && (
+            <Alert color="warning" onDismiss={() => setShowAlert(false)}>
+              <span className="font-medium">Alert!</span> Wrong
+              password/username for this email
+            </Alert>
+          )}
         </form>
       </div>
     </div>

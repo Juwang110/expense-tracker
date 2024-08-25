@@ -94,7 +94,7 @@ export default function FinancePie() {
     const fetchData = async () => {
       try {
         const response = await axios.post(
-          "http://localhost:5000/api/all_expenses",
+          `${process.env.REACT_APP_BACKEND_URL}/api/all_expenses`,
           { id: localStorage.getItem("id"), month: month, year: year }
         );
         setData(response.data);
@@ -110,7 +110,7 @@ export default function FinancePie() {
     const fetchData = async () => {
       try {
         const response = await axios.post(
-          "http://localhost:5000/api/all_expenses",
+          `${process.env.REACT_APP_BACKEND_URL}/api/all_expenses`,
           { id: localStorage.getItem("id"), month: prevMonth, year: prevYear }
         );
         setPrevData(response.data);

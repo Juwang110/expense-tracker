@@ -114,7 +114,10 @@ export default function FinancialSurvey() {
 
     // Posts survey category expense data to SQL
     axios
-      .post("http://localhost:5000/api/handle_survey", surveyData)
+      .post(
+        `${process.env.REACT_APP_BACKEND_URL}/api/handle_survey`,
+        surveyData
+      )
       .then((response) => {
         if (response.data.message === "success") {
           setSubmitAlert(true);

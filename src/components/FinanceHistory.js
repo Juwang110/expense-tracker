@@ -18,20 +18,20 @@ export default function FinanceHistory() {
   const [totalData, setTotalData] = useState([]);
   const [saveExpenseData, setSaveExpenseData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [category, setCategory] = useState("SaveInvest");
+  const [category, setCategory] = useState("saveinvest");
 
   // Fetches all data from specified category and total expenses for each month
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.post(
-          "http://localhost:5000/api/get_category",
+          `${process.env.REACT_APP_BACKEND_URL}/api/get_category`,
           { id: localStorage.getItem("id"), category: category }
         );
         setCategoryData(response.data);
 
         const responseTotals = await axios.post(
-          "http://localhost:5000/api/total_expenses",
+          `${process.env.REACT_APP_BACKEND_URL}/api/total_expenses`,
           { id: localStorage.getItem("id") }
         );
         setTotalData(responseTotals.data);
@@ -102,45 +102,45 @@ export default function FinanceHistory() {
             {category} compared to total expenses in usd
           </h2>
           <Dropdown label={category} inline>
-            <Dropdown.Item onClick={() => handleCategoryChange("Transport")}>
+            <Dropdown.Item onClick={() => handleCategoryChange("transport")}>
               Transport
             </Dropdown.Item>
-            <Dropdown.Item onClick={() => handleCategoryChange("Flights")}>
+            <Dropdown.Item onClick={() => handleCategoryChange("flights")}>
               Flights
             </Dropdown.Item>
-            <Dropdown.Item onClick={() => handleCategoryChange("Housing")}>
+            <Dropdown.Item onClick={() => handleCategoryChange("housing")}>
               Housing
             </Dropdown.Item>
-            <Dropdown.Item onClick={() => handleCategoryChange("Food")}>
+            <Dropdown.Item onClick={() => handleCategoryChange("food")}>
               Food
             </Dropdown.Item>
-            <Dropdown.Item onClick={() => handleCategoryChange("Medical")}>
+            <Dropdown.Item onClick={() => handleCategoryChange("medical")}>
               Medical
             </Dropdown.Item>
-            <Dropdown.Item onClick={() => handleCategoryChange("Wellness")}>
+            <Dropdown.Item onClick={() => handleCategoryChange("wellness")}>
               Wellness
             </Dropdown.Item>
-            <Dropdown.Item onClick={() => handleCategoryChange("Loans")}>
+            <Dropdown.Item onClick={() => handleCategoryChange("loans")}>
               Loans
             </Dropdown.Item>
             <Dropdown.Item
-              onClick={() => handleCategoryChange("Entertainment")}
+              onClick={() => handleCategoryChange("entertainment")}
             >
               Entertainment
             </Dropdown.Item>
-            <Dropdown.Item onClick={() => handleCategoryChange("Clothing")}>
+            <Dropdown.Item onClick={() => handleCategoryChange("clothing")}>
               Clothing
             </Dropdown.Item>
-            <Dropdown.Item onClick={() => handleCategoryChange("Insurance")}>
+            <Dropdown.Item onClick={() => handleCategoryChange("insurance")}>
               Insurance
             </Dropdown.Item>
-            <Dropdown.Item onClick={() => handleCategoryChange("MiscItems")}>
+            <Dropdown.Item onClick={() => handleCategoryChange("miscitems")}>
               MiscItems
             </Dropdown.Item>
-            <Dropdown.Item onClick={() => handleCategoryChange("SaveInvest")}>
+            <Dropdown.Item onClick={() => handleCategoryChange("saveinvest")}>
               SaveInvest
             </Dropdown.Item>
-            <Dropdown.Item onClick={() => handleCategoryChange("MiscExpense")}>
+            <Dropdown.Item onClick={() => handleCategoryChange("miscexpense")}>
               MiscExpense
             </Dropdown.Item>
           </Dropdown>

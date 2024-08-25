@@ -24,7 +24,7 @@ export default function SettingsModal({ onClose, darkMode, toggleDarkMode }) {
   function handleDelete() {
     const user_data = { id: localStorage.getItem("id") };
     axios
-      .post(`http://localhost:5000/api/delete_user`, user_data)
+      .post(`${process.env.REACT_APP_BACKEND_URL}/api/delete_user`, user_data)
       .then((response) => {
         navigate("/LogIn");
       })

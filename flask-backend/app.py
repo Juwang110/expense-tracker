@@ -10,9 +10,14 @@ import os
 from urllib.parse import urlparse
 
 app = Flask(__name__, static_folder='../../build')
-CORS(app)
 load_dotenv()
 logging.basicConfig(level=logging.INFO)
+
+frontend_origins = [
+    'http://localhost:3000',  # Local development
+    os.getenv('FRONTEND_ORIGIN')  # Vercel URL for deployed frontend
+]
+CORS(app, resources={r"/*": {"origins": frontend_origins}})
 
 # Parse the JawsDB URL
 jawsdb_url = os.getenv('JAWSDB_URL')
@@ -40,14 +45,13 @@ mail = Mail(app)
 
 # List of all category tables
 tables = [
-    'Transport', 'Flights', 'Housing', 'Food', 'Medical', 'Wellness', 
-    'Loans', 'Entertainment', 'Clothing', 'Insurance', 'MiscItems', 
-    'SaveInvest', 'MiscExpense'
+    'transport', 'flights', 'housing', 'food', 'medical', 'wellness', 
+    'loans', 'entertainment', 'clothing', 'insurance', 'miscitems', 
+    'saveinvest', 'miscexpense'
 ]
 
 # Flask-Mail email route to send me an email
 @app.route('/api/send_email', methods=['POST'])
-@cross_origin()
 def send_email():
     data = request.json
     sender_email = data.get('email')  
@@ -114,7 +118,6 @@ def get_fred_data_all():
 
 # Adding a budget goal into the goals table
 @app.route('/api/add_goal', methods=['POST'])
-@cross_origin()
 def add_goal():
     data = request.json
     user_id = data.get('id')  
@@ -126,7 +129,7 @@ def add_goal():
     goal_year = data.get('goal_year')
 
     cur = mysql.connection.cursor()
-    cur.execute("INSERT INTO Goals (user_id, category, unit, amount, change_by, goal_month, goal_year) VALUES (%s, %s, %s, %s, %s, %s, %s)",
+    cur.execute("INSERT INTO goals (user_id, category, unit, amount, change_by, goal_month, goal_year) VALUES (%s, %s, %s, %s, %s, %s, %s)",
                 (user_id, category, unit, amount, change_by, goal_month, goal_year))
 
     mysql.connection.commit()
@@ -140,7 +143,7 @@ def delete_goal():
         received_data = request.json
         goal_id = received_data.get("goal_id")
         cur = mysql.connection.cursor()
-        cur.execute('DELETE FROM Goals WHERE id = %s', (goal_id,))
+        cur.execute('DELETE FROM goals WHERE id = %s', (goal_id,))
         mysql.connection.commit()
         cur.close()
         return jsonify({"message": "Goal deleted successfully"})
@@ -153,7 +156,7 @@ def get_goals():
     received_data = request.json
     user_id = received_data.get('id')
     cur = mysql.connection.cursor()
-    cur.execute('SELECT * FROM Goals WHERE user_id = %s', (user_id,)) 
+    cur.execute('SELECT * FROM goals WHERE user_id = %s', (user_id,)) 
     data = cur.fetchall()
     cur.close()
     return jsonify(data)
@@ -164,26 +167,26 @@ def get_dates():
     received_data = request.json
     user_id = received_data.get('id')
     cur = mysql.connection.cursor()
-    cur.execute('SELECT month, year FROM Transport WHERE user_id = %s', (user_id,)) 
+    cur.execute('SELECT month, year FROM transport WHERE user_id = %s', (user_id,)) 
     data = cur.fetchall()
     cur.close()
     return jsonify(data)
 
 # Login route attempting to retrieve user
 @app.route('/api/get_user', methods=['POST'])
-@cross_origin()
 def get_user():
     received_data = request.json
     cur = mysql.connection.cursor()
-    cur.execute('SELECT * FROM Users WHERE username = %s AND email = %s',
-                (received_data.get("username"), received_data.get("email")))
+    
+    cur.execute('SELECT * FROM users WHERE email = %s',
+                (received_data.get("email"),))
     user = cur.fetchone()
-    cur.execute('SELECT * FROM Users ORDER BY id DESC')
+    cur.execute('SELECT * FROM users ORDER BY id DESC')
     top_user = cur.fetchone()
     cur.close()
 
     if user:
-        if user[2] == received_data.get("password"):
+        if user[2] == received_data.get("password") and user[1] == received_data.get("username"):
             return jsonify({"message": "exists", "id" : user[0]})
         else:
             return jsonify({"message": "wrong password"})
@@ -194,7 +197,6 @@ def get_user():
 
 # Updates the current user with a new email/user/pass
 @app.route('/api/update_user', methods=['PUT'])
-@cross_origin()
 def update_user():
     received_data = request.json
     user_id = received_data.get("id")
@@ -203,15 +205,14 @@ def update_user():
     password = received_data.get("password")
     cur = mysql.connection.cursor()
     if email:
-        cur.execute('UPDATE Users SET email = %s WHERE id = %s', (email, user_id))
+        cur.execute('UPDATE users SET email = %s WHERE id = %s', (email, user_id))
     if username:
-        cur.execute('UPDATE Users SET username = %s WHERE id = %s', (username, user_id))
+        cur.execute('UPDATE users SET username = %s WHERE id = %s', (username, user_id))
     if password:
-        cur.execute('UPDATE Users SET password = %s WHERE id = %s', (password, user_id))
+        cur.execute('UPDATE users SET password = %s WHERE id = %s', (password, user_id))
     mysql.connection.commit()
     cur.close()
     return jsonify({"message": "updated"})
-
 
 
 # Deletes the specified user
@@ -221,7 +222,7 @@ def delete_user():
         received_data = request.json
         user_id = received_data.get("id")
         cur = mysql.connection.cursor()
-        cur.execute('DELETE FROM Users WHERE id = %s', (user_id,))
+        cur.execute('DELETE FROM users WHERE id = %s', (user_id,))
         for table in tables:
             cur.execute(f'DELETE FROM {table} WHERE user_id = %s', (user_id,))
         
@@ -235,7 +236,7 @@ def delete_user():
 @app.route('/api/get_users', methods=['GET'])
 def get_users():
     cur = mysql.connection.cursor()
-    cur.execute('SELECT * FROM Users') 
+    cur.execute('SELECT * FROM users') 
     data = cur.fetchall()
     cur.close()
     return jsonify(data)
@@ -243,10 +244,10 @@ def get_users():
 # Adds a new user
 @app.route('/api/add_user', methods=['POST'])
 def add_user():
-    recieved_data = request.json
+    received_data = request.json
     cur = mysql.connection.cursor()
-    cur.execute("INSERT INTO Users (username, password, email) VALUES (%s, %s, %s)",
-                (recieved_data.get("username"), recieved_data.get("password"), recieved_data.get("email")))
+    cur.execute("INSERT INTO users (username, password, email) VALUES (%s, %s, %s)",
+                (received_data.get("username"), received_data.get("password"), received_data.get("email")))
     mysql.connection.commit()
     cur.close()
     return jsonify({'message': 'User added successfully!'})
@@ -271,7 +272,6 @@ def get_category():
 
 # Gets the total expenses of all categories except Save/Invest
 @app.route('/api/total_expenses', methods=['POST'])
-@cross_origin()
 def get_total_expenses():
     try:
         received_data = request.json
@@ -281,73 +281,73 @@ def get_total_expenses():
             SELECT month, year, SUM(total_expense) AS total_expenditure
             FROM (
                 SELECT month, year, monthly_expense AS total_expense
-                FROM Transport
+                FROM transport
                 WHERE user_id = %s
 
                 UNION ALL
 
                 SELECT month, year, monthly_expense
-                FROM Flights
+                FROM flights
                 WHERE user_id = %s
 
                 UNION ALL
 
                 SELECT month, year, monthly_expense
-                FROM Housing
+                FROM housing
                 WHERE user_id = %s
 
                 UNION ALL
 
                 SELECT month, year, monthly_expense
-                FROM Food
+                FROM food
                 WHERE user_id = %s
 
                 UNION ALL
 
                 SELECT month, year, monthly_expense
-                FROM Medical
+                FROM medical
                 WHERE user_id = %s
 
                 UNION ALL
 
                 SELECT month, year, monthly_expense
-                FROM Wellness
+                FROM wellness
                 WHERE user_id = %s
 
                 UNION ALL
 
                 SELECT month, year, monthly_expense
-                FROM Loans
+                FROM loans
                 WHERE user_id = %s
 
                 UNION ALL
 
                 SELECT month, year, monthly_expense
-                FROM Entertainment
+                FROM entertainment
                 WHERE user_id = %s
 
                 UNION ALL
 
                 SELECT month, year, monthly_expense
-                FROM Clothing
+                FROM clothing
                 WHERE user_id = %s
 
                 UNION ALL
 
                 SELECT month, year, monthly_expense
-                FROM Insurance
+                FROM insurance
                 WHERE user_id = %s
 
                 UNION ALL
 
                 SELECT month, year, monthly_expense
-                FROM MiscItems
+                FROM miscitems
                 WHERE user_id = %s
 
                 UNION ALL
 
                 SELECT month, year, monthly_expense
-                FROM MiscExpense
+                FROM miscexpense
                 WHERE user_id = %s
 
             ) AS all_expenses
@@ -363,9 +363,9 @@ def get_total_expenses():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+
 # Gets each category's expense during a given month and year
 @app.route('/api/all_expenses', methods=['POST'])
-@cross_origin()
 def get_expenses():
     try:
         received_data = request.json
@@ -375,100 +375,27 @@ def get_expenses():
 
         cur = mysql.connection.cursor()
 
-        query = """
-            SELECT 'Transport' AS category, Transport.monthly_expense AS value
-            FROM Users 
-            JOIN Transport ON Users.id = Transport.user_id
-            WHERE Users.id = %s AND Transport.month = %s AND Transport.year = %s
-            
-            UNION ALL
-            
-            SELECT 'Flights' AS category, Flights.monthly_expense AS value
-            FROM Users 
-            JOIN Flights ON Users.id = Flights.user_id
-            WHERE Users.id = %s AND Flights.month = %s AND Flights.year = %s
-            
-            UNION ALL
-            
-            SELECT 'Housing' AS category, Housing.monthly_expense AS value
-            FROM Users 
-            JOIN Housing ON Users.id = Housing.user_id
-            WHERE Users.id = %s AND Housing.month = %s AND Housing.year = %s
-            
-            UNION ALL
-            
-            SELECT 'Food' AS category, Food.monthly_expense AS value
-            FROM Users 
-            JOIN Food ON Users.id = Food.user_id
-            WHERE Users.id = %s AND Food.month = %s AND Food.year = %s
-            
-            UNION ALL
-            
-            SELECT 'Medical' AS category, Medical.monthly_expense AS value
-            FROM Users 
-            JOIN Medical ON Users.id = Medical.user_id
-            WHERE Users.id = %s AND Medical.month = %s AND Medical.year = %s
-            
-            UNION ALL
-            
-            SELECT 'Wellness' AS category, Wellness.monthly_expense AS value
-            FROM Users 
-            JOIN Wellness ON Users.id = Wellness.user_id
-            WHERE Users.id = %s AND Wellness.month = %s AND Wellness.year = %s
-            
-            UNION ALL
-            
-            SELECT 'Loans' AS category, Loans.monthly_expense AS value
-            FROM Users 
-            JOIN Loans ON Users.id = Loans.user_id
-            WHERE Users.id = %s AND Loans.month = %s AND Loans.year = %s
-            
-            UNION ALL
-            
-            SELECT 'Entertainment' AS category, Entertainment.monthly_expense AS value
-            FROM Users 
-            JOIN Entertainment ON Users.id = Entertainment.user_id
-            WHERE Users.id = %s AND Entertainment.month = %s AND Entertainment.year = %s
-            
-            UNION ALL
-            
-            SELECT 'Clothing' AS category, Clothing.monthly_expense AS value
-            FROM Users 
-            JOIN Clothing ON Users.id = Clothing.user_id
-            WHERE Users.id = %s AND Clothing.month = %s AND Clothing.year = %s
-            
-            UNION ALL
-            
-            SELECT 'Insurance' AS category, Insurance.monthly_expense AS value
-            FROM Users 
-            JOIN Insurance ON Users.id = Insurance.user_id
-            WHERE Users.id = %s AND Insurance.month = %s AND Insurance.year = %s
-            
-            UNION ALL
-            
-            SELECT 'MiscItems' AS category, MiscItems.monthly_expense AS value
-            FROM Users 
-            JOIN MiscItems ON Users.id = MiscItems.user_id
-            WHERE Users.id = %s AND MiscItems.month = %s AND MiscItems.year = %s
-            
-            UNION ALL
-            
-            SELECT 'SaveInvest' AS category, SaveInvest.monthly_expense AS value
-            FROM Users 
-            JOIN SaveInvest ON Users.id = SaveInvest.user_id
-            WHERE Users.id = %s AND SaveInvest.month = %s AND SaveInvest.year = %s
-            
-            UNION ALL
-            
-            SELECT 'MiscExpense' AS category, MiscExpense.monthly_expense AS value
-            FROM Users 
-            JOIN MiscExpense ON Users.id = MiscExpense.user_id
-            WHERE Users.id = %s AND MiscExpense.month = %s AND MiscExpense.year = %s
-        """
+        categories = [
+            'transport', 'flights', 'housing', 'food', 'medical',
+            'wellness', 'loans', 'entertainment', 'clothing',
+            'insurance', 'miscitems', 'saveinvest', 'miscexpense'
+        ]
+        
+        query_parts = []
+        query_values = []
 
-        cur.execute(query, (user_id, month, year, user_id, month, year, user_id, month, year, user_id, month, year, user_id, month, year,
-                            user_id, month, year, user_id, month, year, user_id, month, year, user_id, month, year, user_id, month, year,
-                            user_id, month, year, user_id, month, year, user_id, month, year))
+        for category in categories:
+            query_parts.append(f"""
+                SELECT '{category}' AS category, {category}.monthly_expense AS value
+                FROM Users 
+                JOIN {category} ON Users.id = {category}.user_id
+                WHERE Users.id = %s AND {category}.month = %s AND {category}.year = %s
+            """)
+            query_values.extend([user_id, month, year])
+
+        query = " UNION ALL ".join(query_parts)
+
+        cur.execute(query, query_values)
         expenses = cur.fetchall()
         cur.close()
         
@@ -485,104 +412,36 @@ def get_expenses():
 def handle_survey():
     received_data = request.json
     user_id = received_data.get("id")
-    transportExpense = received_data.get("transportExpense")
-    flightExpense = received_data.get("flightExpense")
-    housingExpense = received_data.get("housingExpense")
-    foodExpense = received_data.get("foodExpense")
-    medicalExpense = received_data.get("medicalExpense")
-    wellnessExpense = received_data.get("wellnessExpense")
-    loanExpense = received_data.get("loanExpense")
-    entExpense = received_data.get("entExpense")
-    clothingExpense = received_data.get("clothingExpense")
-    insuranceExpense = received_data.get("insuranceExpense")
-    itemsExpense = received_data.get("itemsExpense")
-    saveExpense = received_data.get("saveExpense")
-    miscExpense = received_data.get("miscExpense")
+    expenses = {
+        'transport': received_data.get("transportExpense"),
+        'flights': received_data.get("flightExpense"),
+        'housing': received_data.get("housingExpense"),
+        'food': received_data.get("foodExpense"),
+        'medical': received_data.get("medicalExpense"),
+        'wellness': received_data.get("wellnessExpense"),
+        'loans': received_data.get("loanExpense"),
+        'entertainment': received_data.get("entExpense"),
+        'clothing': received_data.get("clothingExpense"),
+        'insurance': received_data.get("insuranceExpense"),
+        'miscitems': received_data.get("itemsExpense"),
+        'saveinvest': received_data.get("saveExpense"),
+        'miscexpense': received_data.get("miscExpense")
+    }
     year = received_data.get("year")
     month = received_data.get("month")
     cur = mysql.connection.cursor()
 
-    cur.execute("SELECT * FROM Transport WHERE user_id = %s AND year = %s AND month = %s", (user_id, year, month))
-    if cur.fetchone():
-        cur.execute("UPDATE Transport SET monthly_expense = %s WHERE user_id = %s AND year = %s AND month = %s", (transportExpense, user_id, year, month))
-    else:
-        cur.execute("INSERT INTO Transport (user_id, monthly_expense, year, month) VALUES (%s, %s, %s, %s)", (user_id, transportExpense, year, month))
-
-    cur.execute("SELECT * FROM Flights WHERE user_id = %s AND year = %s AND month = %s", (user_id, year, month))
-    if cur.fetchone():
-        cur.execute("UPDATE Flights SET monthly_expense = %s WHERE user_id = %s AND year = %s AND month = %s", (flightExpense, user_id, year, month))
-    else:
-        cur.execute("INSERT INTO Flights (user_id, monthly_expense, year, month) VALUES (%s, %s, %s, %s)", (user_id, flightExpense, year, month))  
-
-    cur.execute("SELECT * FROM Housing WHERE user_id = %s AND year = %s AND month = %s", (user_id, year, month))
-    if cur.fetchone():
-        cur.execute("UPDATE Housing SET monthly_expense = %s WHERE user_id = %s AND year = %s AND month = %s", (housingExpense, user_id, year, month))
-    else:
-        cur.execute("INSERT INTO Housing (user_id, monthly_expense, year, month) VALUES (%s, %s, %s, %s)", (user_id, housingExpense, year, month))  
-
-    cur.execute("SELECT * FROM Food WHERE user_id = %s AND year = %s AND month = %s", (user_id, year, month))
-    if cur.fetchone():
-        cur.execute("UPDATE Food SET monthly_expense = %s WHERE user_id = %s AND year = %s AND month = %s", (foodExpense, user_id, year, month))
-    else:
-        cur.execute("INSERT INTO Food (user_id, monthly_expense, year, month) VALUES (%s, %s, %s, %s)", (user_id, foodExpense, year, month))  
-
-    cur.execute("SELECT * FROM Medical WHERE user_id = %s AND year = %s AND month = %s", (user_id, year, month))
-    if cur.fetchone():
-        cur.execute("UPDATE Medical SET monthly_expense = %s WHERE user_id = %s AND year = %s AND month = %s", (medicalExpense, user_id, year, month))
-    else:
-        cur.execute("INSERT INTO Medical (user_id, monthly_expense, year, month) VALUES (%s, %s, %s, %s)", (user_id, medicalExpense, year, month))  
-
-    cur.execute("SELECT * FROM Wellness WHERE user_id = %s AND year = %s AND month = %s", (user_id, year, month))
-    if cur.fetchone():
-        cur.execute("UPDATE Wellness SET monthly_expense = %s WHERE user_id = %s AND year = %s AND month = %s", (wellnessExpense, user_id, year, month))
-    else:
-        cur.execute("INSERT INTO Wellness (user_id, monthly_expense, year, month) VALUES (%s, %s, %s, %s)", (user_id, wellnessExpense, year, month))  
-
-    cur.execute("SELECT * FROM Loans WHERE user_id = %s AND year = %s AND month = %s", (user_id, year, month))
-    if cur.fetchone():
-        cur.execute("UPDATE Loans SET monthly_expense = %s WHERE user_id = %s AND year = %s AND month = %s", (loanExpense, user_id, year, month))
-    else:
-        cur.execute("INSERT INTO Loans (user_id, monthly_expense, year, month) VALUES (%s, %s, %s, %s)", (user_id, loanExpense, year, month))  
-
-    cur.execute("SELECT * FROM Entertainment WHERE user_id = %s AND year = %s AND month = %s", (user_id, year, month))
-    if cur.fetchone():
-        cur.execute("UPDATE Entertainment SET monthly_expense = %s WHERE user_id = %s AND year = %s AND month = %s", (entExpense, user_id, year, month))
-    else:
-        cur.execute("INSERT INTO Entertainment (user_id, monthly_expense, year, month) VALUES (%s, %s, %s, %s)", (user_id, entExpense, year, month))  
-
-    cur.execute("SELECT * FROM Clothing WHERE user_id = %s AND year = %s AND month = %s", (user_id, year, month))
-    if cur.fetchone():
-        cur.execute("UPDATE Clothing SET monthly_expense = %s WHERE user_id = %s AND year = %s AND month = %s", (clothingExpense, user_id, year, month))
-    else:
-        cur.execute("INSERT INTO Clothing (user_id, monthly_expense, year, month) VALUES (%s, %s, %s, %s)", (user_id, clothingExpense, year, month))  
-
-    cur.execute("SELECT * FROM Insurance WHERE user_id = %s AND year = %s AND month = %s", (user_id, year, month))
-    if cur.fetchone():
-        cur.execute("UPDATE Insurance SET monthly_expense = %s WHERE user_id = %s AND year = %s AND month = %s", (insuranceExpense, user_id, year, month))
-    else:
-        cur.execute("INSERT INTO Insurance (user_id, monthly_expense, year, month) VALUES (%s, %s, %s, %s)", (user_id, insuranceExpense, year, month)) 
-         
-    cur.execute("SELECT * FROM MiscItems WHERE user_id = %s AND year = %s AND month = %s", (user_id, year, month))
-    if cur.fetchone():
-        cur.execute("UPDATE MiscItems SET monthly_expense = %s WHERE user_id = %s AND year = %s AND month = %s", (itemsExpense, user_id, year, month))
-    else:
-        cur.execute("INSERT INTO MiscItems (user_id, monthly_expense, year, month) VALUES (%s, %s, %s, %s)", (user_id, itemsExpense, year, month))
-
-    cur.execute("SELECT * FROM SaveInvest WHERE user_id = %s AND year = %s AND month = %s", (user_id, year, month))
-    if cur.fetchone():
-        cur.execute("UPDATE SaveInvest SET monthly_expense = %s WHERE user_id = %s AND year = %s AND month = %s", (saveExpense, user_id, year, month))
-    else:
-        cur.execute("INSERT INTO SaveInvest (user_id, monthly_expense, year, month) VALUES (%s, %s, %s, %s)", (user_id, saveExpense, year, month))  
-
-    cur.execute("SELECT * FROM MiscExpense WHERE user_id = %s AND year = %s AND month = %s", (user_id, year, month))
-    if cur.fetchone():
-        cur.execute("UPDATE MiscExpense SET monthly_expense = %s WHERE user_id = %s AND year = %s AND month = %s", (miscExpense, user_id, year, month))
-    else:
-        cur.execute("INSERT INTO MiscExpense (user_id, monthly_expense, year, month) VALUES (%s, %s, %s, %s)", (user_id, miscExpense, year, month))  
+    for category, expense in expenses.items():
+        cur.execute(f"SELECT * FROM {category} WHERE user_id = %s AND year = %s AND month = %s", (user_id, year, month))
+        if cur.fetchone():
+            cur.execute(f"UPDATE {category} SET monthly_expense = %s WHERE user_id = %s AND year = %s AND month = %s", (expense, user_id, year, month))
+        else:
+            cur.execute(f"INSERT INTO {category} (user_id, monthly_expense, year, month) VALUES (%s, %s, %s, %s)", (user_id, expense, year, month))
 
     mysql.connection.commit()
     cur.close()
     return jsonify({'message': 'success'})
+
 
 
 @app.route('/api/test_db_connection', methods=['GET'])

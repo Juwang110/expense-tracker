@@ -19,7 +19,7 @@ export function ContactMe() {
     };
 
     axios
-      .post("http://localhost:5000/api/send_email", userData)
+      .post(`${process.env.REACT_APP_BACKEND_URL}/api/send_email`, userData)
       .then((response) => {
         if (response.data.message === "Success") {
           setShowSuccessAlert(true);
