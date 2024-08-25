@@ -7,17 +7,22 @@ import logging
 import requests
 
 import os
+from urllib.parse import urlparse
 
 app = Flask(__name__, static_folder='../../build')
 CORS(app)
 load_dotenv()
 logging.basicConfig(level=logging.INFO)
 
+# Parse the JawsDB URL
+jawsdb_url = os.getenv('JAWSDB_URL')
+url = urlparse(jawsdb_url)
+
 # Configuring MySQL connection
-app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = os.getenv("DB_USER")
-app.config['MYSQL_PASSWORD'] = os.getenv("MYSQL_ROOT_PASSWORD")
-app.config['MYSQL_DB'] = os.getenv("DB_NAME")
+app.config['MYSQL_HOST'] = url.hostname
+app.config['MYSQL_USER'] = url.username
+app.config['MYSQL_PASSWORD'] = url.password
+app.config['MYSQL_DB'] = url.path[1:]  # Removing leading '/'
 
 # Initialize MySQL
 mysql = MySQL(app)
@@ -578,6 +583,19 @@ def handle_survey():
     mysql.connection.commit()
     cur.close()
     return jsonify({'message': 'success'})
+
+
+@app.route('/api/test_db_connection', methods=['GET'])
+def test_db_connection():
+    try:
+        cursor = mysql.connection.cursor()
+        cursor.execute("SHOW TABLES;")
+        tables = cursor.fetchall()
+        cursor.close()
+        return jsonify({"tables": tables}), 200
+    except Exception as e:
+        app.logger.error(f'Failed to connect to the database: {str(e)}')
+        return jsonify({"error": "Failed to connect to the database"}), 500
 
 
 @app.route('/', defaults={'path': ''})
