@@ -9,7 +9,7 @@ import requests
 import os
 from urllib.parse import urlparse
 
-app = Flask(__name__, static_folder='../../build')
+app = Flask(__name__, static_folder='../../build', static_url_path='')
 load_dotenv()
 logging.basicConfig(level=logging.INFO)
 
@@ -58,6 +58,14 @@ tables = [
     'loans', 'entertainment', 'clothing', 'insurance', 'miscitems', 
     'saveinvest', 'miscexpense', 'goals'
 ]
+
+# Serve static files
+@app.route('/')
+@app.route('/<path:path>')
+def serve_static(path=''):
+    if path != '' and os.path.exists(os.path.join(app.static_folder, path)):
+        return send_from_directory(app.static_folder, path)
+    return send_from_directory(app.static_folder, 'index.html')
 
 # Flask-Mail email route to send me an email
 @app.route('/api/send_email', methods=['POST'])
