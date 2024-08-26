@@ -45,6 +45,10 @@ export default function FinanceHistory() {
     fetchData();
   }, [category]);
 
+  useEffect(() => {
+    console.log(categoryData);
+  }, [categoryData]);
+
   // Sets SaveExpense object to use for line chart
   useEffect(() => {
     // If data is present, creates new object with time, category monthly expense and total expense
@@ -53,23 +57,25 @@ export default function FinanceHistory() {
       const updatedData = [];
 
       categoryData.forEach((value) => {
-        const monthYear = `${value[4]} ${value[3]}`;
+        const monthYear = `${value["month"]} ${value["year"]}`;
         updatedData.push({
           time: monthYear,
-          [category]: value[2],
+          [category]: value["monthly_expense"],
           Total_Expenditures: "",
         });
       });
 
       totalData.forEach(
         (value) => {
-          const monthYear = `${value[0]} ${value[1]}`;
+          const monthYear = `${value["month"]} ${value["year"]}`;
           const existingIndex = updatedData.findIndex(
             (item) => item.time === monthYear
           );
 
           if (existingIndex !== -1) {
-            updatedData[existingIndex].Total_Expenditures = parseInt(value[2]);
+            updatedData[existingIndex].Total_Expenditures = parseInt(
+              value["total_expenditure"]
+            );
           }
         },
         [categoryData]
