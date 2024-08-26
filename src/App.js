@@ -54,14 +54,6 @@ function App() {
       <Router>
         <Routes>
           <Route
-            path="/"
-            element={
-              <WithNavBar>
-                <Landing />
-              </WithNavBar>
-            }
-          />
-          <Route
             path="/Landing"
             element={
               <WithNavBar>
@@ -135,6 +127,7 @@ function App() {
           />
 
           <Route path="/expense-tracker" element={<LogIn />} />
+          <Route path="/" element={<LogIn />} />
           <Route path="/LogIn" element={<LogIn />} />
         </Routes>
       </Router>
