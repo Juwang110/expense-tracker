@@ -60,15 +60,13 @@ tables = [
 ]
 
 # Serve static files
-@app.route('/')
-def serve():
-    return send_from_directory(app.static_folder, 'index.html')
-
-# Serve static files (JS, CSS, images, etc.)
+@app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
-def static_proxy(path):
-    return send_from_directory(app.static_folder, path)
-
+def serve(path):
+    if path != "" and os.path.exists(app.static_folder + '/' + path):
+        return send_from_directory(app.static_folder, path)
+    else:
+        return send_from_directory(app.static_folder, 'index.html')
 
 # Flask-Mail email route to send me an email
 @app.route('/api/send_email', methods=['POST'])
@@ -583,14 +581,6 @@ def test_db_connection():
         app.logger.error(f'Failed to connect to the database: {str(e)}')
         return jsonify({"error": "Failed to connect to the database"}), 500
 
-
-@app.route('/', defaults={'path': ''})
-@app.route('/<path:path>')
-def serve(path):
-    if path != "" and os.path.exists(app.static_folder + '/' + path):
-        return send_from_directory(app.static_folder, path)
-    else:
-        return send_from_directory(app.static_folder, 'index.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
