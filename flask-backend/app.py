@@ -67,6 +67,10 @@ def serve(path):
         return send_from_directory(app.static_folder, path)
     else:
         return send_from_directory(app.static_folder, 'index.html')
+    
+@app.route('/test')
+def test():
+    return "This is a test route."
 
 # Flask-Mail email route to send me an email
 @app.route('/api/send_email', methods=['POST'])
