@@ -20,6 +20,7 @@ export default function FinanceGoals() {
           `${process.env.REACT_APP_BACKEND_URL}/api/get_goals`,
           { id: localStorage.getItem("id") }
         );
+
         setGoalData(response.data);
 
         const response1 = await axios.post(
@@ -42,18 +43,18 @@ export default function FinanceGoals() {
       const checked = {};
       for (const goal of completedGoals) {
         const achieved = await goalAchieved(
-          goal[2],
-          goal[5],
-          goal[3],
-          goal[4],
-          goal[6],
-          goal[7]
+          goal["category"],
+          goal["change_by"],
+          goal["unit"],
+          goal["amount"],
+          goal["goal_year"],
+          goal["goal_month"]
         );
-        status[goal[0]] = achieved;
+        status[goal["id"]] = achieved;
         if (achieved.endsWith("good job!")) {
-          checked[goal[0]] = true;
+          checked[goal["id"]] = true;
         } else {
-          checked[goal[0]] = false;
+          checked[goal["id"]] = false;
         }
       }
       setAchievedStatus(status);
@@ -62,10 +63,16 @@ export default function FinanceGoals() {
     fetchAchievedStatus();
   }, [goalData, filledDates]);
 
+  useEffect(() => {
+    console.log(achievedStatus);
+  }, [achievedStatus]);
+
   // Given a goal, determines if a survey has been filled out so that the goal has been completed
   const isGoalCompleted = (goal) => {
     return filledDates.some(
-      (date) => date[0] === goal[7] && date[1] === goal[6]
+      (date) =>
+        date["month"] === goal["goal_month"] &&
+        date["year"] === goal["goal_year"]
     );
   };
 
@@ -125,17 +132,19 @@ export default function FinanceGoals() {
 
       // Sets previous data to the monthly expense the month/year before
       const prevData = response.data.find(
-        (item) => item[3] == prevYear && item[4] == prevMonth
+        (item) => item["year"] == prevYear && item["month"] == prevMonth
       );
 
       // Sets current data to the monthly expense of the goal's month/year
       const currentData = response.data.find(
-        (item) => item[3] == year && item[4] == month
+        (item) => item["year"] == year && item["month"] == month
       );
 
       const prevExpense =
-        prevData && prevData[2] !== undefined ? prevData[2] : "invalid";
-      const currentExpense = currentData[2];
+        prevData && prevData["monthly_expense"] !== undefined
+          ? prevData["monthly_expense"]
+          : "invalid";
+      const currentExpense = currentData["monthly_expense"];
 
       if (prevExpense === "invalid") {
         return "No data for previous month/year";
@@ -271,14 +280,14 @@ export default function FinanceGoals() {
         className="bg-white dark:border-gray-700 dark:bg-gray-800"
       >
         <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-          {goal[2]}
+          {goal["category"]}
         </Table.Cell>
-        <Table.Cell>{goal[0]}</Table.Cell>
-        <Table.Cell>{goal[6]}</Table.Cell>
-        <Table.Cell>{goal[7]}</Table.Cell>
-        <Table.Cell>{goal[5]}</Table.Cell>
-        <Table.Cell>{goal[3]}</Table.Cell>
-        <Table.Cell>{goal[4]}</Table.Cell>
+        <Table.Cell>{goal["id"]}</Table.Cell>
+        <Table.Cell>{goal["goal_year"]}</Table.Cell>
+        <Table.Cell>{goal["goal_month"]}</Table.Cell>
+        <Table.Cell>{goal["change_by"]}</Table.Cell>
+        <Table.Cell>{goal["unit"]}</Table.Cell>
+        <Table.Cell>{goal["amount"]}</Table.Cell>
       </Table.Row>
     ));
   };
@@ -294,14 +303,14 @@ export default function FinanceGoals() {
           className="bg-white dark:border-gray-700 dark:bg-gray-800"
         >
           <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-            {goal[2]}
+            {goal["category"]}
           </Table.Cell>
-          <Table.Cell>{goal[0]}</Table.Cell>
-          <Table.Cell>{goal[6]}</Table.Cell>
-          <Table.Cell>{goal[7]}</Table.Cell>
-          <Table.Cell>{goal[5]}</Table.Cell>
-          <Table.Cell>{goal[3]}</Table.Cell>
-          <Table.Cell>{goal[4]}</Table.Cell>
+          <Table.Cell>{goal["id"]}</Table.Cell>
+          <Table.Cell>{goal["goal_year"]}</Table.Cell>
+          <Table.Cell>{goal["goal_month"]}</Table.Cell>
+          <Table.Cell>{goal["change_by"]}</Table.Cell>
+          <Table.Cell>{goal["unit"]}</Table.Cell>
+          <Table.Cell>{goal["amount"]}</Table.Cell>
 
           <Table.Cell>
             {achievedStatus.hasOwnProperty(goalId)
@@ -349,7 +358,7 @@ export default function FinanceGoals() {
             <Accordion.Panel key={index}>
               <Accordion.Title className="text-gray-900 dark:text-white dark:bg-gray-800">
                 <span className="flex items-center space-x-2">
-                  {goal[2]} - {goal[6]} {goal[7]}
+                  {goal["category"]} - {goal["goal_year"]} {goal["goal_month"]}
                   {checkedStatus[goal[0]] ? (
                     <FaCheckCircle className="ml-2 mt-0.5" color="green" />
                   ) : (
@@ -361,11 +370,12 @@ export default function FinanceGoals() {
                 <div className="p-4 dark:bg-gray-800 rounded">
                   <p>
                     <strong>Status: </strong>
-                    {achievedStatus[goal[0]]}
+                    {achievedStatus[goal["id"]]}
                   </p>
                   <p>
                     <strong>Original goal: </strong>
-                    {goal[5]} {goal[2]} by {goal[3]} {goal[4]}
+                    {goal["change_by"]} {goal["category"]} by {goal["unit"]}{" "}
+                    {goal["amount"]}
                   </p>
                 </div>
               </Accordion.Content>
@@ -385,8 +395,9 @@ export default function FinanceGoals() {
                   <Accordion.Panel key={index}>
                     <Accordion.Title className="text-gray-900 dark:text-white dark:bg-gray-800">
                       <span className="flex items-center space-x-2">
-                        {goal[2]} - {goal[6]} {goal[7]}
-                        {checkedStatus[goal[0]] ? (
+                        {goal["category"]} - {goal["goal_year"]}{" "}
+                        {goal["goal_month"]}
+                        {checkedStatus[goal["id"]] ? (
                           <FaCheckCircle
                             className="ml-2 mt-0.5"
                             color="green"
@@ -400,11 +411,12 @@ export default function FinanceGoals() {
                       <div className="p-4 dark:bg-gray-800 rounded">
                         <p>
                           <strong>Status: </strong>
-                          {achievedStatus[goal[0]]}
+                          {achievedStatus[goal["id"]]}
                         </p>
                         <p>
                           <strong>Original goal: </strong>
-                          {goal[5]} {goal[2]} by {goal[3]} {goal[4]}
+                          {goal["decrease"]} {goal["category"]} by{" "}
+                          {goal["unit"]} {goal["amount"]}
                         </p>
                       </div>
                     </Accordion.Content>

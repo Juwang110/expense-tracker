@@ -2,7 +2,7 @@ from dotenv import load_dotenv
 from flask import Flask, jsonify, send_from_directory, request
 from flask_cors import CORS, cross_origin
 from flask_mail import Mail, Message
-from flask_mysqldb import MySQL
+import pymysql
 import logging
 import requests
 
@@ -29,8 +29,17 @@ app.config['MYSQL_USER'] = url.username
 app.config['MYSQL_PASSWORD'] = url.password
 app.config['MYSQL_DB'] = url.path[1:]  # Removing leading '/'
 
-# Initialize MySQL
-mysql = MySQL(app)
+# Initialize PyMySQL connection
+def get_db_connection():
+    connection = pymysql.connect(
+        host=app.config['MYSQL_HOST'],
+        user=app.config['MYSQL_USER'],
+        password=app.config['MYSQL_PASSWORD'],
+        database=app.config['MYSQL_DB'],
+        cursorclass=pymysql.cursors.DictCursor
+    )
+    return connection
+
 
 # Configure Flask-Mail
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
@@ -47,7 +56,7 @@ mail = Mail(app)
 tables = [
     'transport', 'flights', 'housing', 'food', 'medical', 'wellness', 
     'loans', 'entertainment', 'clothing', 'insurance', 'miscitems', 
-    'saveinvest', 'miscexpense'
+    'saveinvest', 'miscexpense', 'goals'
 ]
 
 # Flask-Mail email route to send me an email
@@ -116,11 +125,11 @@ def get_fred_data_all():
 
     return jsonify(data)
 
-# Adding a budget goal into the goals table
 @app.route('/api/add_goal', methods=['POST'])
 def add_goal():
+    # Log the incoming request data
     data = request.json
-    user_id = data.get('id')  
+    user_id = data.get('id')
     category = data.get('category')
     unit = data.get('unit')
     amount = data.get('amount')
@@ -128,13 +137,38 @@ def add_goal():
     goal_month = data.get('goal_month')
     goal_year = data.get('goal_year')
 
-    cur = mysql.connection.cursor()
-    cur.execute("INSERT INTO goals (user_id, category, unit, amount, change_by, goal_month, goal_year) VALUES (%s, %s, %s, %s, %s, %s, %s)",
-                (user_id, category, unit, amount, change_by, goal_month, goal_year))
+    app.logger.info('Received request to add goal with data: %s', data)
 
-    mysql.connection.commit()
-    cur.close()
-    return jsonify({"message": "updated"})
+    try:
+        # Establish a database connection
+        conn = get_db_connection()
+        cur = conn.cursor()
+        app.logger.info('Database connection established and cursor created.')
+
+        # Log and execute the insert operation
+        app.logger.info('Inserting goal into "goals" table.')
+        cur.execute(
+            "INSERT INTO goals (user_id, category, unit, amount, change_by, goal_month, goal_year) VALUES (%s, %s, %s, %s, %s, %s, %s)",
+            (user_id, category, unit, amount, change_by, goal_month, goal_year)
+        )
+        app.logger.info('Goal added successfully with user_id: %s, category: %s, amount: %s, goal_month: %s, goal_year: %s',
+                        user_id, category, amount, goal_month, goal_year)
+
+        # Commit the transaction
+        conn.commit()
+        app.logger.info('Transaction committed successfully.')
+
+        # Close the cursor and connection
+        cur.close()
+        conn.close()
+        app.logger.info('Cursor and connection closed.')
+
+        return jsonify({"message": "Goal added successfully"})
+    except Exception as e:
+        # Log the exception details
+        app.logger.error('Error occurred while adding goal: %s', str(e))
+        return jsonify({"error": "Failed to add goal"}), 500
+
 
 # Deleting a specified goal from the goals table
 @app.route('/api/delete_goal', methods=['POST'])
@@ -142,10 +176,14 @@ def delete_goal():
     try:
         received_data = request.json
         goal_id = received_data.get("goal_id")
-        cur = mysql.connection.cursor()
+        app.logger.info(goal_id)
+
+        conn = get_db_connection()
+        cur = conn.cursor()
         cur.execute('DELETE FROM goals WHERE id = %s', (goal_id,))
-        mysql.connection.commit()
+        conn.commit()
         cur.close()
+        conn.close()
         return jsonify({"message": "Goal deleted successfully"})
     except Exception as e:
         return jsonify({"error": "Failed to delete Goal"}), 500
@@ -153,122 +191,180 @@ def delete_goal():
 # Gets all goals for a specific user
 @app.route('/api/get_goals', methods=['POST'])
 def get_goals():
-    received_data = request.json
-    user_id = received_data.get('id')
-    cur = mysql.connection.cursor()
-    cur.execute('SELECT * FROM goals WHERE user_id = %s', (user_id,)) 
-    data = cur.fetchall()
-    cur.close()
-    return jsonify(data)
+    try:
+        received_data = request.json
+        user_id = received_data.get('id')
+
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute('SELECT * FROM goals WHERE user_id = %s', (user_id,))
+        data = cur.fetchall()
+        cur.close()
+        conn.close()
+
+        return jsonify(data)
+    except Exception as e:
+        return jsonify({"error": "Failed to get goals"}), 500
 
 # Gets all dates that the specified user filled out the survey for
 @app.route('/api/get_dates', methods=['POST'])
 def get_dates():
-    received_data = request.json
-    user_id = received_data.get('id')
-    cur = mysql.connection.cursor()
-    cur.execute('SELECT month, year FROM transport WHERE user_id = %s', (user_id,)) 
-    data = cur.fetchall()
-    cur.close()
-    return jsonify(data)
+    try:
+        received_data = request.json
+        user_id = received_data.get('id')
 
-# Login route attempting to retrieve user
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute('SELECT month, year FROM transport WHERE user_id = %s', (user_id,))
+        data = cur.fetchall()
+        cur.close()
+        conn.close()
+
+        return jsonify(data)
+    except Exception as e:
+        return jsonify({"error": "Failed to get dates"}), 500
+
+
 @app.route('/api/get_user', methods=['POST'])
 def get_user():
-    received_data = request.json
-    cur = mysql.connection.cursor()
-    
-    cur.execute('SELECT * FROM users WHERE email = %s',
-                (received_data.get("email"),))
-    user = cur.fetchone()
-    cur.execute('SELECT * FROM users ORDER BY id DESC')
-    top_user = cur.fetchone()
-    cur.close()
+    try:
+        received_data = request.json
+        email = received_data.get("email")
+        password = received_data.get("password")
+        username = received_data.get("username")
 
-    if user:
-        if user[2] == received_data.get("password") and user[1] == received_data.get("username"):
-            return jsonify({"message": "exists", "id" : user[0]})
+        conn = get_db_connection()
+        cur = conn.cursor()
+
+        cur.execute('SELECT * FROM users WHERE email = %s', (email,))
+        user = cur.fetchone()
+
+        cur.execute('SELECT * FROM users ORDER BY id DESC')
+        top_user = cur.fetchone()
+        
+        cur.close()
+        conn.close()
+
+        if user:
+            user_id = user['id']
+            user_password = user['password']
+            user_username = user['username']
+            
+            if user_password == password and user_username == username:
+                return jsonify({"message": "exists", "id": user_id})
+            else:
+                return jsonify({"message": "wrong password"})
+        elif top_user:
+            return jsonify({"message": "doesn't exist", "id": top_user['id'] + 1})
         else:
-            return jsonify({"message": "wrong password"})
-    elif top_user:
-        return jsonify({"message": "doesn't exist", "id" : top_user[0] + 1})
-    else:
-        return jsonify({"message": "doesn't exist", "id" : 1})
+            return jsonify({"message": "doesn't exist", "id": 1})
+    except Exception as e:
+        return jsonify({"error": "An unexpected error occurred while retrieving user. Please try again later."}), 500
+
 
 # Updates the current user with a new email/user/pass
 @app.route('/api/update_user', methods=['PUT'])
 def update_user():
-    received_data = request.json
-    user_id = received_data.get("id")
-    email = received_data.get("email")
-    username = received_data.get("username")
-    password = received_data.get("password")
-    cur = mysql.connection.cursor()
-    if email:
-        cur.execute('UPDATE users SET email = %s WHERE id = %s', (email, user_id))
-    if username:
-        cur.execute('UPDATE users SET username = %s WHERE id = %s', (username, user_id))
-    if password:
-        cur.execute('UPDATE users SET password = %s WHERE id = %s', (password, user_id))
-    mysql.connection.commit()
-    cur.close()
-    return jsonify({"message": "updated"})
+    try:
+        received_data = request.json
+        user_id = received_data.get("id")
+        email = received_data.get("email")
+        username = received_data.get("username")
+        password = received_data.get("password")
+
+        conn = get_db_connection()
+        cur = conn.cursor()
+
+        if email:
+            cur.execute('UPDATE users SET email = %s WHERE id = %s', (email, user_id))
+        if username:
+            cur.execute('UPDATE users SET username = %s WHERE id = %s', (username, user_id))
+        if password:
+            cur.execute('UPDATE users SET password = %s WHERE id = %s', (password, user_id))
+
+        conn.commit()
+        cur.close()
+        conn.close()
+        
+        return jsonify({"message": "updated"})
+    except Exception as e:
+        return jsonify({"error": "Failed to update user"}), 500
 
 
-# Deletes the specified user
+
 @app.route('/api/delete_user', methods=['POST'])
 def delete_user():
     try:
         received_data = request.json
         user_id = received_data.get("id")
-        cur = mysql.connection.cursor()
-        cur.execute('DELETE FROM users WHERE id = %s', (user_id,))
+        
+        conn = get_db_connection()
+        cur = conn.cursor()
+
         for table in tables:
             cur.execute(f'DELETE FROM {table} WHERE user_id = %s', (user_id,))
-        
-        mysql.connection.commit()
+
+        cur.execute('DELETE FROM users WHERE id = %s', (user_id,))
+
+        conn.commit()
+
         cur.close()
+        conn.close()
+
         return jsonify({"message": "User deleted successfully"})
     except Exception as e:
         return jsonify({"error": "Failed to delete user"}), 500
 
+
 # Gets all users
 @app.route('/api/get_users', methods=['GET'])
 def get_users():
-    cur = mysql.connection.cursor()
-    cur.execute('SELECT * FROM users') 
-    data = cur.fetchall()
-    cur.close()
-    return jsonify(data)
+    try:
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute('SELECT * FROM users')
+        data = cur.fetchall()
+        cur.close()
+        conn.close()
+        return jsonify(data)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 # Adds a new user
 @app.route('/api/add_user', methods=['POST'])
 def add_user():
-    received_data = request.json
-    cur = mysql.connection.cursor()
-    cur.execute("INSERT INTO users (username, password, email) VALUES (%s, %s, %s)",
-                (received_data.get("username"), received_data.get("password"), received_data.get("email")))
-    mysql.connection.commit()
-    cur.close()
-    return jsonify({'message': 'User added successfully!'})
+    try:
+        received_data = request.json
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute("INSERT INTO users (username, password, email) VALUES (%s, %s, %s)",
+                    (received_data.get("username"), received_data.get("password"), received_data.get("email")))
+        conn.commit()
+        cur.close()
+        conn.close()
+        return jsonify({'message': 'User added successfully!'})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 # Gets all category survey entries from a specified category with the current user
 @app.route('/api/get_category', methods=['POST'])
 def get_category():
-    received_data = request.json
-    user_id = received_data.get('id')
-    category = received_data.get('category')
-    
-    cur = mysql.connection.cursor()
     try:
+        received_data = request.json
+        user_id = received_data.get('id')
+        category = received_data.get('category')
+        
+        conn = get_db_connection()
+        cur = conn.cursor()
         query = f"SELECT * FROM {category} WHERE user_id = %s"
         cur.execute(query, (user_id,))
         data = cur.fetchall()
         cur.close()
+        conn.close()
         return jsonify(data)
     except Exception as e:
-        cur.close()
         return jsonify({'error': str(e)}), 500
+
 
 # Gets the total expenses of all categories except Save/Invest
 @app.route('/api/total_expenses', methods=['POST'])
@@ -276,7 +372,10 @@ def get_total_expenses():
     try:
         received_data = request.json
         user_id = received_data.get("id")
-        cur = mysql.connection.cursor()
+        
+        conn = get_db_connection()
+        cur = conn.cursor()
+        
         query = """
             SELECT month, year, SUM(total_expense) AS total_expenditure
             FROM (
@@ -354,14 +453,16 @@ def get_total_expenses():
             GROUP BY month, year;
         """
 
-        cur.execute(query, (user_id, user_id, user_id, user_id, user_id, user_id, user_id, user_id, user_id, user_id, user_id, user_id))
+        cur.execute(query, (user_id,) * 12)
         data = cur.fetchall()
         cur.close()
+        conn.close()
         
         return jsonify(data)
     
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
 
 
 # Gets each category's expense during a given month and year
@@ -373,7 +474,8 @@ def get_expenses():
         month = received_data.get("month")
         year = received_data.get("year")
 
-        cur = mysql.connection.cursor()
+        conn = get_db_connection()
+        cur = conn.cursor()
 
         categories = [
             'transport', 'flights', 'housing', 'food', 'medical',
@@ -398,14 +500,16 @@ def get_expenses():
         cur.execute(query, query_values)
         expenses = cur.fetchall()
         cur.close()
+        conn.close()
         
         # Convert the result into a list of dictionaries to use for pie chart
-        formatted_expenses = [{'category': expense[0], 'value': int(expense[1])} for expense in expenses]
+        formatted_expenses = [{'category': expense['category'], 'value': int(expense['value'])} for expense in expenses]
         
         return jsonify(formatted_expenses)
     
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
 
 # Handles the expense survey either updating or inserting depending on completion for that month and year
 @app.route('/api/handle_survey', methods=['POST'])
@@ -429,28 +533,40 @@ def handle_survey():
     }
     year = received_data.get("year")
     month = received_data.get("month")
-    cur = mysql.connection.cursor()
 
-    for category, expense in expenses.items():
-        cur.execute(f"SELECT * FROM {category} WHERE user_id = %s AND year = %s AND month = %s", (user_id, year, month))
-        if cur.fetchone():
-            cur.execute(f"UPDATE {category} SET monthly_expense = %s WHERE user_id = %s AND year = %s AND month = %s", (expense, user_id, year, month))
-        else:
-            cur.execute(f"INSERT INTO {category} (user_id, monthly_expense, year, month) VALUES (%s, %s, %s, %s)", (user_id, expense, year, month))
+    conn = get_db_connection()
+    cur = conn.cursor()
 
-    mysql.connection.commit()
-    cur.close()
-    return jsonify({'message': 'success'})
+    try:
+        for category, expense in expenses.items():
+            cur.execute(f"SELECT * FROM {category} WHERE user_id = %s AND year = %s AND month = %s", (user_id, year, month))
+            if cur.fetchone():
+                cur.execute(f"UPDATE {category} SET monthly_expense = %s WHERE user_id = %s AND year = %s AND month = %s", (expense, user_id, year, month))
+            else:
+                cur.execute(f"INSERT INTO {category} (user_id, monthly_expense, year, month) VALUES (%s, %s, %s, %s)", (user_id, expense, year, month))
+
+        conn.commit()
+        return jsonify({'message': 'success'})
+    
+    except Exception as e:
+        conn.rollback()
+        return jsonify({'error': str(e)}), 500
+    
+    finally:
+        cur.close()
+        conn.close()
 
 
 
 @app.route('/api/test_db_connection', methods=['GET'])
 def test_db_connection():
     try:
-        cursor = mysql.connection.cursor()
-        cursor.execute("SHOW TABLES;")
-        tables = cursor.fetchall()
-        cursor.close()
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute("SHOW TABLES;")
+        tables = cur.fetchall()
+        cur.close()
+        conn.close()
         return jsonify({"tables": tables}), 200
     except Exception as e:
         app.logger.error(f'Failed to connect to the database: {str(e)}')

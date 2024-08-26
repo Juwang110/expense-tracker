@@ -23,6 +23,7 @@ export default function SettingsModal({ onClose, darkMode, toggleDarkMode }) {
   // Handles user account deletion
   function handleDelete() {
     const user_data = { id: localStorage.getItem("id") };
+    console.log(localStorage.getItem("id"));
     axios
       .post(`${process.env.REACT_APP_BACKEND_URL}/api/delete_user`, user_data)
       .then((response) => {

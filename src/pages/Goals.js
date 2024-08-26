@@ -61,6 +61,7 @@ export default function Goals() {
           id: localStorage.getItem("id"),
         }
       );
+      console.log(response.data);
       setMyGoals(response.data);
     } catch (error) {
       console.error("Error fetching goals:", error);
@@ -209,18 +210,18 @@ export default function Goals() {
         className="bg-white dark:border-gray-700 dark:bg-gray-800"
       >
         <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-          {myGoal[2]}
+          {myGoal["category"]}
         </Table.Cell>
-        <Table.Cell>{myGoal[0]}</Table.Cell>
-        <Table.Cell>{myGoal[6]}</Table.Cell>
-        <Table.Cell>{myGoal[7]}</Table.Cell>
-        <Table.Cell>{myGoal[5]}</Table.Cell>
-        <Table.Cell>{myGoal[3]}</Table.Cell>
-        <Table.Cell>{myGoal[4]}</Table.Cell>
+        <Table.Cell>{myGoal["id"]}</Table.Cell>
+        <Table.Cell>{myGoal["goal_year"]}</Table.Cell>
+        <Table.Cell>{myGoal["goal_month"]}</Table.Cell>
+        <Table.Cell>{myGoal["change_by"]}</Table.Cell>
+        <Table.Cell>{myGoal["unit"]}</Table.Cell>
+        <Table.Cell>{myGoal["amount"]}</Table.Cell>
         <Table.Cell>
           <a
             href="#"
-            onClick={() => handleDelete(myGoal[0])}
+            onClick={() => handleDelete(myGoal["id"])}
             className="font-medium text-cyan-600 hover:underline dark:text-cyan-500"
           >
             Delete
