@@ -9,7 +9,7 @@ import requests
 import os
 from urllib.parse import urlparse
 
-app = Flask(__name__, static_folder='../../build', static_url_path='')
+app = Flask(__name__, static_folder='../build', static_url_path='')
 load_dotenv()
 logging.basicConfig(level=logging.INFO)
 
