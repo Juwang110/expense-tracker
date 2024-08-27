@@ -1,1 +1,1 @@
-web: gunicorn flask-backend.app:app
+web: npm install && npm run build && gunicorn flask-backend.app:app
