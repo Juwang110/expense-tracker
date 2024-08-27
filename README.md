@@ -8,7 +8,7 @@ It also features other tools such as a net worth calculator.
 
 ## Live Demo
 
-Check out the live version of SpendTrack here: soon to be deployed stay tuned!
+Check out the live version of SpendTrack here: [SpendTrack](https://expense-tracker-lovat-kappa-21.vercel.app/)
 
 ## Table of Contents
 
@@ -28,8 +28,11 @@ Check out the live version of SpendTrack here: soon to be deployed stay tuned!
 - **Front End:** React, Flowbite, Javascript, Tailwind CSS
 - **Back End:** Flask, MySQL
 - **Other:** Recharts, Federal Reserve Economic Data API
+- **Deployment:** Heroku, JawsDB, Vercel
 
 ## Installation
+
+If you would like to host this project locally, follow these steps:
 
 1. **Clone the Repository**:
 
@@ -79,13 +82,20 @@ Check out the live version of SpendTrack here: soon to be deployed stay tuned!
 
 ## Configuration
 
-- Environment variables for backend:
+- Environment variables for backend/frontend:
+
   - In the flask-backend folder create a .env file for your database
-  - Store your database user, port, name and password as needed at the top of the app.py file
+  - Store your database user, port, name and password as needed
   - DB_USER=user_for_your_DB, example = root
   - DB_PORT=port_for_DB
   - DB_NAME=name_for_DB
   - MYSQL_ROOT_PASSWORD=your_MYSQL_root_password
+  - Replace app.config variables in app.py with these .env variables on MYSQL_HOST, etc.
+  - Delete lines 22-24 in app.py to disable connection to cloud database
+  - Add the following to your .env: REACT_APP_BACKEND_URL=http://localhost:5000
+
+  - Add FRONTEND_ORIGIN=http://localhost:3000 if hosting locally to .env
+
 - Federal Reserve Economic Data API:
 
   - Sign up at [FRED](https://fred.stlouisfed.org/docs/api/fred/)
@@ -93,6 +103,7 @@ Check out the live version of SpendTrack here: soon to be deployed stay tuned!
   - Add FRED_KEY=your_api_key to the .env file in flask-backend
 
 - Contact Me:
+
   - If you would like the contact me section to work add the following to your .env
   - MAIL_USERNAME=your_email
   - MAIL_PASSWORD=your_password
@@ -219,7 +230,7 @@ This project is licensed under the GNU GPL-3.0 License. See the [LICENSE](LICENS
 
 ## Acknowledgments
 
-- Special thanks to the creators of [React](https://reactjs.org/), [Flask](https://flask.palletsprojects.com/), [MySQL](https://www.mysql.com/), [Tailwind CSS](https://tailwindcss.com/), [Recharts](https://recharts.org/), [Flowbite](https://flowbite-react.com/) and Thomas J. Stanley for their resources that I used in the creation of this personal project. Without these, this application would not have been possible.
+- Special thanks to the creators of [React](https://reactjs.org/), [Flask](https://flask.palletsprojects.com/), [MySQL](https://www.mysql.com/), [Tailwind CSS](https://tailwindcss.com/), [Recharts](https://recharts.org/), [Flowbite](https://flowbite-react.com/) and Thomas J. Stanley for their resources that I used in the creation of this personal project. Without these, this application would not have been possible. In addition I would like to thank the creators of [Heroku](https://www.heroku.com/), [JawsDB](https://www.jawsdb.com/) and [Vercel](https://vercel.com/) for enabling me to deploy this app to the cloud.
 
 ## Contact Information
 
