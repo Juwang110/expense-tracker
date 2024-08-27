@@ -19,11 +19,12 @@ frontend_origins = [
 ]
 CORS(app, resources={r"/*": {"origins": frontend_origins}})
 
-# Parse the JawsDB URL
+# Parse the JawsDB URL, delete these lines if not using cloud database
 jawsdb_url = os.getenv('JAWSDB_URL')
 url = urlparse(jawsdb_url)
 
 # Configuring MySQL connection
+# Replace the following with database credentials
 app.config['MYSQL_HOST'] = url.hostname
 app.config['MYSQL_USER'] = url.username
 app.config['MYSQL_PASSWORD'] = url.password
