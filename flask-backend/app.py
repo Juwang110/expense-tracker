@@ -9,7 +9,7 @@ import requests
 import os
 from urllib.parse import urlparse
 
-app = Flask(__name__, static_folder='../../build')
+app = Flask(__name__, static_folder='../build', static_url_path='')
 load_dotenv()
 logging.basicConfig(level=logging.INFO)
 
@@ -58,6 +58,18 @@ tables = [
     'loans', 'entertainment', 'clothing', 'insurance', 'miscitems', 
     'saveinvest', 'miscexpense', 'goals'
 ]
+
+@app.route('/', defaults={'path': ''})
+@app.route('/<path:path>')
+def serve(path):
+    if path != "" and os.path.exists(os.path.join(app.static_folder, path)):
+        return send_from_directory(app.static_folder, path)
+    else:
+        return send_from_directory(app.static_folder, 'index.html')
+    
+@app.route('/test')
+def test():
+    return "This is a test route."
 
 # Flask-Mail email route to send me an email
 @app.route('/api/send_email', methods=['POST'])
@@ -573,13 +585,7 @@ def test_db_connection():
         return jsonify({"error": "Failed to connect to the database"}), 500
 
 
-@app.route('/', defaults={'path': ''})
-@app.route('/<path:path>')
-def serve(path):
-    if path != "" and os.path.exists(app.static_folder + '/' + path):
-        return send_from_directory(app.static_folder, path)
-    else:
-        return send_from_directory(app.static_folder, 'index.html')
-
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()
+
+#app.run(debug=TRUE)

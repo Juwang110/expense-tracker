@@ -18,7 +18,7 @@ export default function NavigationBar({ darkMode, toggleDarkMode }) {
     <div className="border-b border-gray-400 dark:border-gray-800">
       <MegaMenu>
         <div className="mx-auto flex max-w-screen-xl flex-wrap items-center justify-between p-4 md:space-x-8">
-          <Navbar.Brand href="/landing">
+          <Navbar.Brand href="/Landing">
             <img
               alt="App Icon"
               src="https://cdn-icons-png.freepik.com/256/6204/6204408.png?uid=R151848132&ga=GA1.1.1507691374.1717099387&semt=ais_hybrid"
