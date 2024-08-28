@@ -63,10 +63,6 @@ export default function FinanceGoals() {
     fetchAchievedStatus();
   }, [goalData, filledDates]);
 
-  useEffect(() => {
-    console.log(achievedStatus);
-  }, [achievedStatus]);
-
   // Given a goal, determines if a survey has been filled out so that the goal has been completed
   const isGoalCompleted = (goal) => {
     return filledDates.some(

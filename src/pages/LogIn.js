@@ -18,7 +18,6 @@ export default function LogIn() {
   // Handles form submission and either signs the user up, logs them in,
   // or shows them a wrong password alert depending on their input
   function handleSubmit(e) {
-    console.log(process.env.REACT_APP_BACKEND_URL);
     e.preventDefault();
     const userData = {
       username: username,
@@ -51,7 +50,6 @@ export default function LogIn() {
       .catch((error) => {
         console.error("Error checking user:", error);
       });
-    console.log(localStorage.getItem("id"));
   }
 
   // Once the info modal is closed navigate to landing page
