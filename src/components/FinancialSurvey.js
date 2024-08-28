@@ -541,7 +541,7 @@ export default function FinancialSurvey() {
       >
         <Modal.Header>Transport Expense Guide</Modal.Header>
         <Modal.Body>
-          <p>Consider the following expenses:</p>
+          <p className="dark:text-white">Consider the following expenses:</p>
           <List className="py-3">
             <List.Item>Gas prices</List.Item>
             <List.Item>Car maintenance</List.Item>
@@ -558,7 +558,7 @@ export default function FinancialSurvey() {
       <Modal show={showFlightModal} onClose={() => setShowFlightModal(false)}>
         <Modal.Header>Flight Expense Guide</Modal.Header>
         <Modal.Body>
-          <p>Consider the following expenses:</p>
+          <p className="dark:text-white">Consider the following expenses:</p>
           <List className="py-3">
             <List.Item>Flight tickets</List.Item>
             <List.Item>Baggage fees</List.Item>
@@ -576,7 +576,7 @@ export default function FinancialSurvey() {
       <Modal show={showHousingModal} onClose={() => setShowHousingModal(false)}>
         <Modal.Header>Housing Expense Guide</Modal.Header>
         <Modal.Body>
-          <p>Consider the following expenses:</p>
+          <p className="dark:text-white">Consider the following expenses:</p>
           <List className="py-3">
             <List.Item>Rent or mortgage payments</List.Item>
             <List.Item>Property taxes</List.Item>
@@ -594,7 +594,7 @@ export default function FinancialSurvey() {
       <Modal show={showFoodModal} onClose={() => setShowFoodModal(false)}>
         <Modal.Header>Food Expense Guide</Modal.Header>
         <Modal.Body>
-          <p>Consider the following expenses:</p>
+          <p className="dark:text-white">Consider the following expenses:</p>
           <List className="py-3">
             <List.Item>Groceries</List.Item>
             <List.Item>Dining out</List.Item>
@@ -612,7 +612,7 @@ export default function FinancialSurvey() {
       <Modal show={showMedicalModal} onClose={() => setShowMedicalModal(false)}>
         <Modal.Header>Medical Expense Guide</Modal.Header>
         <Modal.Body>
-          <p>Consider the following expenses:</p>
+          <p className="dark:text-white">Consider the following expenses:</p>
           <List className="py-3">
             <List.Item>Doctor visits</List.Item>
             <List.Item>Prescription medications</List.Item>
@@ -633,7 +633,7 @@ export default function FinancialSurvey() {
       >
         <Modal.Header>Wellness Expense Guide</Modal.Header>
         <Modal.Body>
-          <p>Consider the following expenses:</p>
+          <p className="dark:text-white">Consider the following expenses:</p>
           <List className="py-3">
             <List.Item>Gym memberships</List.Item>
             <List.Item>Spa treatments</List.Item>
@@ -651,7 +651,7 @@ export default function FinancialSurvey() {
       <Modal show={showLoanModal} onClose={() => setShowLoanModal(false)}>
         <Modal.Header>Loan Expense Guide</Modal.Header>
         <Modal.Body>
-          <p>Consider the following expenses:</p>
+          <p className="dark:text-white">Consider the following expenses:</p>
           <List className="py-3">
             <List.Item>
               Loan payments (e.g., personal loans, student loans)
@@ -671,7 +671,7 @@ export default function FinancialSurvey() {
       <Modal show={showEntModal} onClose={() => setShowEntModal(false)}>
         <Modal.Header>Entertainment Expense Guide</Modal.Header>
         <Modal.Body>
-          <p>Consider the following expenses:</p>
+          <p className="dark:text-white">Consider the following expenses:</p>
           <List className="py-3">
             <List.Item>Movie tickets</List.Item>
             <List.Item>Concerts and shows</List.Item>
@@ -692,7 +692,7 @@ export default function FinancialSurvey() {
       >
         <Modal.Header>Clothing Expense Guide</Modal.Header>
         <Modal.Body>
-          <p>Consider the following expenses:</p>
+          <p className="dark:text-white">Consider the following expenses:</p>
           <List className="py-3">
             <List.Item>Clothing purchases</List.Item>
             <List.Item>Shoes and accessories</List.Item>
@@ -713,7 +713,7 @@ export default function FinancialSurvey() {
       >
         <Modal.Header>Insurance Expense Guide</Modal.Header>
         <Modal.Body>
-          <p>Consider the following expenses:</p>
+          <p className="dark:text-white">Consider the following expenses:</p>
           <List className="py-3">
             <List.Item>Health insurance premiums</List.Item>
             <List.Item>Life insurance premiums</List.Item>
@@ -731,7 +731,7 @@ export default function FinancialSurvey() {
       <Modal show={showItemsModal} onClose={() => setShowItemsModal(false)}>
         <Modal.Header>Items Expense Guide</Modal.Header>
         <Modal.Body>
-          <p>Consider the following expenses:</p>
+          <p className="dark:text-white">Consider the following expenses:</p>
           <List className="py-3">
             <List.Item>Electronics purchases</List.Item>
             <List.Item>Furniture and appliances</List.Item>
@@ -749,7 +749,7 @@ export default function FinancialSurvey() {
       <Modal show={showSaveModal} onClose={() => setShowSaveModal(false)}>
         <Modal.Header>Save Expense Guide</Modal.Header>
         <Modal.Body>
-          <p>Consider the following expenses:</p>
+          <p className="dark:text-white">Consider the following expenses:</p>
           <List className="py-3">
             <List.Item>Savings contributions</List.Item>
             <List.Item>Investment accounts</List.Item>
@@ -767,7 +767,7 @@ export default function FinancialSurvey() {
       <Modal show={showMiscModal} onClose={() => setShowMiscModal(false)}>
         <Modal.Header>Miscellaneous Expense Guide</Modal.Header>
         <Modal.Body>
-          <p>Consider the following expenses:</p>
+          <p className="dark:text-white">Consider the following expenses:</p>
           <List className="py-3">
             <List.Item>Gifts and donations</List.Item>
             <List.Item>Legal fees and services</List.Item>

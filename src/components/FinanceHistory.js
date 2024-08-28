@@ -45,10 +45,6 @@ export default function FinanceHistory() {
     fetchData();
   }, [category]);
 
-  useEffect(() => {
-    console.log(categoryData);
-  }, [categoryData]);
-
   // Sets SaveExpense object to use for line chart
   useEffect(() => {
     // If data is present, creates new object with time, category monthly expense and total expense
