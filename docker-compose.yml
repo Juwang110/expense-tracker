@@ -1,0 +1,25 @@
+services:
+  backend:
+    build:
+      context: ./flask-backend  # Set the context to the flask-backend directory
+      dockerfile: Dockerfile      # Specify the Dockerfile in the flask-backend directory
+    ports:
+      - "5000:5000"
+    environment:
+      - FLASK_ENV=development
+      - JAWSDB_URL=${JAWSDB_URL}
+      - MAIL_USERNAME=${MAIL_USERNAME}
+      - MAIL_PASSWORD=${MAIL_PASSWORD}
+      - FRED_KEY=${FRED_KEY}
+      - FRONTEND_ORIGIN=${FRONTEND_ORIGIN}
+
+  frontend:
+    build:
+      context: .                 # Set context to root directory, where package.json is located
+      dockerfile: ./src/Dockerfile # Assuming the Dockerfile is in the src folder
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./src:/app                # Mount the src folder to /app in the container
+    depends_on:
+      - backend

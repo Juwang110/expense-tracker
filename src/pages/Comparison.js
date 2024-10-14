@@ -13,6 +13,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
+
 // Savings rate comparison page allows the user to fill out a form and
 // calculate their personal savings rate. This page showcases the Federal
 // Reserve Economic Data API and gives insight on the comparison between the
@@ -37,6 +38,7 @@ export default function Comp() {
       setIncompleteAlert(false);
     }
   }
+
 
   // Fetches the FRED API data from the PSAVERT series on run
   // and formats it to work with a line chart
