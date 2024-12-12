@@ -1,24 +1,31 @@
-# Use an official Node.js runtime as the base image
-FROM node:18.17-alpine
+# Building React App
+FROM node:18.17-alpine AS builder
 
-# Set the working directory in the container
+# Set workdir
 WORKDIR /app
 
-# Copy the package.json and install dependencies
+# Copy package.json and package-lock.json
 COPY package*.json ./
-RUN npm install --production  # Only install production dependencies
 
-# Copy the rest of the app's source code
+# Install dependencies
+RUN npm install
+
+# Copy all source code
 COPY . .
 
-# Build the React app for production
+# Build
 RUN npm run build
 
-# Install a simple HTTP server to serve the build files
-RUN npm install -g serve
+# Use Nginx
+FROM nginx:1.26.2
 
-# Expose port 3000
-EXPOSE 3000
+# Copy Nginx configuration file
+COPY nginx.conf /etc/nginx/nginx.conf
 
-# Serve the built app
-CMD ["serve", "-s", "build"]
+# Copy the build output
+COPY --from=builder /app/build /usr/share/nginx/html
+
+EXPOSE 80
+
+# Start Nginx
+CMD ["nginx", "-g", "daemon off;"]

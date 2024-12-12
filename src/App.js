@@ -9,9 +9,11 @@ import About from "./pages/About";
 import Wealth from "./pages/Wealth";
 import Comp from "./pages/Comparison";
 import Goals from "./pages/Goals";
+import NotFound from "./pages/NotFound"
 import { useState, useEffect } from "react";
 import "tailwindcss/tailwind.css";
 import NavigationBar from "./components/NavigationBar";
+
 
 // Root component that tracks dark mode and page navigation
 function App() {
@@ -129,6 +131,7 @@ function App() {
           <Route path="/expense-tracker" element={<LogIn />} />
           <Route path="/" element={<LogIn />} />
           <Route path="/LogIn" element={<LogIn />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </Router>
     </div>
