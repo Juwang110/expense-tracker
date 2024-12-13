@@ -1,0 +1,6 @@
+build:
+  docker:
+    web: flask-backend/Dockerfile 
+
+run:
+  web: python flask-backend/app.py  
