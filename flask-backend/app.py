@@ -18,6 +18,7 @@ frontend_origins = [
     'http://localhost:80',
     'http://localhost',
     'http://localhost:',
+    'https://expense-tracker-lovat-kappa-21.vercel.app',
     os.getenv('FRONTEND_ORIGIN')  # Vercel URL for deployed frontend
 ]
 CORS(app, resources={r"/*": {"origins": frontend_origins}})
