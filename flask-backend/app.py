@@ -15,6 +15,9 @@ logging.basicConfig(level=logging.INFO)
 
 frontend_origins = [
     'http://localhost:3000',  # Local development
+    'http://localhost:80',
+    'http://localhost',
+    'http://localhost:',
     os.getenv('FRONTEND_ORIGIN')  # Vercel URL for deployed frontend
 ]
 CORS(app, resources={r"/*": {"origins": frontend_origins}})
@@ -24,7 +27,6 @@ jawsdb_url = os.getenv('JAWSDB_URL')
 url = urlparse(jawsdb_url)
 
 # Configuring MySQL connection
-# Replace the following with database credentials
 app.config['MYSQL_HOST'] = url.hostname
 app.config['MYSQL_USER'] = url.username
 app.config['MYSQL_PASSWORD'] = url.password
@@ -71,6 +73,10 @@ def serve(path):
 @app.route('/test')
 def test():
     return "This is a test route."
+
+@app.route('/test-error')
+def test_error():
+    raise Exception("This is a test error!")
 
 # Flask-Mail email route to send me an email
 @app.route('/api/send_email', methods=['POST'])
@@ -587,6 +593,6 @@ def test_db_connection():
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(host='0.0.0.0', port=5000, debug=True)
 
 #app.run(debug=TRUE)

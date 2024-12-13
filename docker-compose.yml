@@ -1,0 +1,33 @@
+services:
+  backend:
+    build:
+      context: ./flask-backend  # Set the context to the flask-backend directory
+      dockerfile: Dockerfile      # Specify the Dockerfile in the flask-backend directory
+    ports:
+      - "5000:5000"
+    environment:
+      - FLASK_ENV=development
+      - JAWSDB_URL=${JAWSDB_URL}
+      - MAIL_USERNAME=${MAIL_USERNAME}
+      - MAIL_PASSWORD=${MAIL_PASSWORD}
+      - FRED_KEY=${FRED_KEY}
+      - FRONTEND_ORIGIN=${FRONTEND_ORIGIN}
+      - DB_USER=root
+      - DB_PORT=3306
+      - DB_NAME=expense
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - FRONTEND_ORIGIN=https://expense-tracker-lovat-kappa-21.vercel.app
+      - REACT_APP_BACKEND_URL=http://backend:5000
+
+  frontend:
+    build:
+      context: .                 # Set context to root directory, where package.json is located
+      dockerfile: ./src/Dockerfile # Assuming the Dockerfile is in the src folder
+    ports:
+      - "80:80"
+    environment:
+      - REACT_APP_BACKEND_URL=http://backend:5000
+    volumes:
+      - ./src:/app                # Mount the src folder to /app in the container
+    depends_on:
+      - backend
