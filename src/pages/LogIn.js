@@ -3,8 +3,9 @@ import { Label, TextInput, Button, Alert, Modal } from "flowbite-react";
 import { HiMail } from "react-icons/hi";
 import { FaRegUser } from "react-icons/fa";
 import { RiLockPasswordFill } from "react-icons/ri";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
+
+const axios = require("axios");
 
 // Log in page with a simple login form collecting email, username and password
 export default function LogIn() {
