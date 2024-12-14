@@ -1,5 +1,4 @@
 import React from "react";
-import NavigationBar from "../components/NavigationBar";
 import { ContactMe } from "../components/ContactMe";
 import { AppFooter } from "../components/Footer";
 

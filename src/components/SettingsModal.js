@@ -1,6 +1,6 @@
 import React from "react";
 import { EditUserForm } from "../components/EditUserForm";
-import { Button, Modal, Checkbox, Label, Radio, Alert } from "flowbite-react";
+import { Button, Modal, Label, Radio, Alert } from "flowbite-react";
 import { Sidebar } from "flowbite-react";
 import { HiChartPie, HiShoppingBag, HiUser } from "react-icons/hi";
 import { useState } from "react";

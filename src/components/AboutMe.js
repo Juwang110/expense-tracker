@@ -1,7 +1,6 @@
 import React from "react";
 import { Button, Card } from "flowbite-react";
 import { useNavigate } from "react-router-dom";
-import userIcon from "../assets/userIcon.png";
 import developer from "../assets/developer.jpg";
 
 // About me page text card with title and paragraph using Flowbite Card

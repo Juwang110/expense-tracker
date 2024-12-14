@@ -1,5 +1,4 @@
 import React from "react";
-import NavigationBar from "../components/NavigationBar";
 import fintech from "../assets/fintech.jpg";
 import { AppFooter } from "../components/Footer";
 import { AboutMe } from "../components/AboutMe";

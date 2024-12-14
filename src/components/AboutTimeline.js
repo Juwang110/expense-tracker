@@ -1,5 +1,5 @@
-import { Button, Timeline } from "flowbite-react";
-import { HiArrowNarrowRight, HiCalendar } from "react-icons/hi";
+import { Timeline } from "flowbite-react";
+import { HiCalendar } from "react-icons/hi";
 
 // Timeline component to show development process using Flowbite Timeline
 export default function AboutTimeline() {

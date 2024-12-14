@@ -1,7 +1,6 @@
 import {
   Accordion,
   Button,
-  Checkbox,
   Label,
   TextInput,
   Modal,
@@ -9,9 +8,7 @@ import {
   List,
   Dropdown,
 } from "flowbite-react";
-import { HiMail } from "react-icons/hi";
 import { AiOutlineDollarCircle } from "react-icons/ai";
-import { HiInformationCircle } from "react-icons/hi";
 import { useState } from "react";
 import axios from "axios";
 

@@ -309,7 +309,7 @@ export default function FinanceGoals() {
           <Table.Cell>{goal["amount"]}</Table.Cell>
 
           <Table.Cell>
-            {achievedStatus.hasOwnProperty(goalId)
+            {Object.prototype.hasOwnProperty.call(achievedStatus, goalId)
               ? achievedStatus[goalId].toString()
               : "Not Achieved"}
           </Table.Cell>
