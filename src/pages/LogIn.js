@@ -4,8 +4,7 @@ import { HiMail } from "react-icons/hi";
 import { FaRegUser } from "react-icons/fa";
 import { RiLockPasswordFill } from "react-icons/ri";
 import { useNavigate } from "react-router-dom";
-
-const axios = require("axios");
+import axios from "axios";
 
 // Log in page with a simple login form collecting email, username and password
 export default function LogIn() {
