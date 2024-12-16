@@ -1,0 +1,64 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+
+      - name: Frontend
+        run: npm install
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Frontend tests with jest
+        run: npm test
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.10
+
+      - name: Backend dependencies
+        working-directory: flask_backend
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run pytest
+        run: pytest
+
+  deploy:
+    needs: lint-and-test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Deploy Frontend
+        run: npx vercel --token ${{ secrets.VERCEL_TOKEN }} --prod
+
+      - name: Heroku
+        run: echo ${{ secrets.HEROKU_API_KEY }} | docker login --username=_ --password-stdin registry.heroku.com
+
+      - name: Build and Push
+        working-directory: flask_backend
+        run: |
+          docker build -t registry.heroku.com/${{ secrets.HEROKU_APP_NAME }}/web .
+          docker push registry.heroku.com/${{ secrets.HEROKU_APP_NAME }}/web
+
+      - name: Release Backend
+        run: |
+          heroku container:release web --app ${{ secrets.HEROKU_APP_NAME }}

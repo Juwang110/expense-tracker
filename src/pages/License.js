@@ -1,5 +1,4 @@
 import React from "react";
-import NavigationBar from "../components/NavigationBar";
 import { AppFooter } from "../components/Footer";
 
 // Simple License page linking to the GNU GPL v3 license and summarizing it

@@ -1,5 +1,4 @@
 import React from "react";
-import NavigationBar from "../components/NavigationBar";
 import { AppFooter } from "../components/Footer";
 import { Button, Card, Label, TextInput, Alert, Modal } from "flowbite-react";
 import { useState } from "react";

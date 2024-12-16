@@ -8,7 +8,6 @@ import {
   Legend,
   ResponsiveContainer,
   Cell,
-  Label,
 } from "recharts";
 
 // Pie chart which displays all monthly expenses for a specified month/year

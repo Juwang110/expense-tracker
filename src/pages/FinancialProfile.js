@@ -1,7 +1,6 @@
 import React from "react";
 import FinancialSurvey from "../components/FinancialSurvey";
 import FinancePie from "../components/FinancePie";
-import NavigationBar from "../components/NavigationBar";
 import { AppFooter } from "../components/Footer";
 import FinanceHistory from "../components/FinanceHistory";
 import FinanceGoals from "../components/FinanceGoals";

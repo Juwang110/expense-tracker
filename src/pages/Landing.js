@@ -1,5 +1,4 @@
 import React from "react";
-import NavigationBar from "../components/NavigationBar";
 import { AppFooter } from "../components/Footer";
 import { LanderCard } from "../components/LanderCard";
 import { LanderCarousel } from "../components/LanderCarousel";

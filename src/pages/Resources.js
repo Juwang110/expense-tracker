@@ -7,7 +7,7 @@ import { List } from "flowbite-react";
 export default function Resources() {
   return (
     <div className="flex flex-col min-h-screen px-20 dark:bg-gray-700">
-      <div class="flex flex-col  text-center py-3 items-center flex-1">
+      <div className="flex flex-col  text-center py-3 items-center flex-1">
         <h1 className="text-4xl font-bold tracking-tight text-gray-950 dark:text-white py-5">
           Resources
         </h1>
