@@ -11,6 +11,11 @@ on:
 jobs:
   lint-and-test:
     runs-on: ubuntu-latest
+    env:
+      JAWSDB_URL: ${{ secrets.JAWSDB_URL }}
+      MAIL_USERNAME: ${{ secrets.MAIL_USERNAME }}
+      MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
+      FRONTEND_ORIGIN: ${{ secrets.FRONTEND_ORIGIN }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
