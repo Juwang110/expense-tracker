@@ -15,6 +15,7 @@ Check out the live version of SpendTrack here: [SpendTrack](https://expense-trac
 - [Resources](#resources-used)
 - [Installation](#installation)
 - [Configuration](#configuration)
+- [Docker (optional)](#docker)
 - [Usage](#usage)
 - [Features](#features)
 - [Screenshots](#screenshots)
@@ -27,7 +28,7 @@ Check out the live version of SpendTrack here: [SpendTrack](https://expense-trac
 
 - **Front End:** React, Flowbite, Javascript, Tailwind CSS
 - **Back End:** Flask, MySQL
-- **Other:** Recharts, Federal Reserve Economic Data API
+- **Other:** Docker, CI/CD actions, Recharts, Federal Reserve Economic Data API
 - **Deployment:** Heroku, JawsDB, Vercel
 
 ## Installation
@@ -91,7 +92,7 @@ If you would like to host this project locally, follow these steps:
   - DB_NAME=name_for_DB
   - MYSQL_ROOT_PASSWORD=your_MYSQL_root_password
   - Replace app.config variables in app.py with these .env variables on MYSQL_HOST, etc.
-  - Delete lines 22-24 in app.py to disable connection to cloud database
+  - Delete lines 26-28 in app.py to disable connection to cloud database
   - Add the following to your .env: REACT_APP_BACKEND_URL=http://localhost:5000
 
   - Add FRONTEND_ORIGIN=http://localhost:3000 if hosting locally to .env
@@ -107,6 +108,28 @@ If you would like to host this project locally, follow these steps:
   - If you would like the contact me section to work add the following to your .env
   - MAIL_USERNAME=your_email
   - MAIL_PASSWORD=your_password
+
+## Docker
+
+You can now use Docker Compose to run SpendTrack. If you'd like to run SpendTrack using Docker Compose, follow these additional steps:
+
+### Prerequisites
+- Install [Docker](https://www.docker.com/products/docker-desktop) and [Docker Compose](https://docs.docker.com/compose/install/) on your system.
+
+### Steps to Run
+- Referring to the previous configuration step, create a .env with all necessary variables as listed before
+with FRED API, and contact me variables included.
+- This deployment and docker setup uses Heroku's JawsDB with a .env variable called JAWSDB_URL.
+- If you are not using this database setup, follow the next subsection.
+- In the root directory, run: docker-compose up --build
+- Access the application in your browser
+
+### Running with local database
+- To use docker with a local MySQL database, install MySQL and create a new database
+- Add your db url to your .env and update the docker-compose.yml and flask_backend/Dockerfile to
+use your locally hosted db
+- In the root directory, run: docker-compose up --build
+- Access the application in your browser
 
 ## Usage
 

@@ -1,8 +1,8 @@
 services:
   backend:
     build:
-      context: ./flask-backend  # Set the context to the flask-backend directory
-      dockerfile: Dockerfile      # Specify the Dockerfile in the flask-backend directory
+      context: ./flask-backend  
+      dockerfile: Dockerfile      
     ports:
       - "5000:5000"
     environment:
@@ -21,13 +21,13 @@ services:
 
   frontend:
     build:
-      context: .                 # Set context to root directory, where package.json is located
-      dockerfile: ./src/Dockerfile # Assuming the Dockerfile is in the src folder
+      context: .                
+      dockerfile: ./src/Dockerfile 
     ports:
       - "80:80"
     environment:
       - REACT_APP_BACKEND_URL=http://backend:5000
     volumes:
-      - ./src:/app                # Mount the src folder to /app in the container
+      - ./src:/app                
     depends_on:
       - backend
