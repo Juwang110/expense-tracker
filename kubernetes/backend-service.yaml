@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-service
+  labels:
+    app: expense-tracker
+    tier: backend
+spec:
+  selector:
+    app: expense-tracker
+    tier: backend
+  ports:
+    - protocol: TCP
+      port: 5000      
+      targetPort: 5000 
+  type: ClusterIP # This means that it is only accessble within cluster, if wanted to make outside accessible, use nodeport or lodebalancer

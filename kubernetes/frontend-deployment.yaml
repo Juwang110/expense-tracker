@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-deployment
+  labels:
+    app: expense-tracker
+    tier: frontend
+spec:
+  replicas: 2  
+  selector:
+    matchLabels:
+      app: expense-tracker
+      tier: frontend
+  template:
+    metadata:
+      labels:
+        app: expense-tracker
+        tier: frontend
+    spec:
+      containers:
+      - name: frontend
+        image: juwang110/expense-tracker-frontend:latest
+        ports:
+        - containerPort: 80

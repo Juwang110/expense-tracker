@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-deployment
+  labels:
+    app: expense-tracker
+    tier: backend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: expense-tracker
+      tier: backend
+  template:
+    metadata:
+      labels:
+        app: expense-tracker
+        tier: backend
+    spec:
+      containers:
+      - name: backend
+        image: juwang110/expense-tracker-backend:latest
+        ports:
+        - containerPort: 5000
+        env:
+        - name: FLASK_ENV
+          value: "development"
+        - name: JAWSDB_URL
+          valueFrom:
+            secretKeyRef:
+              name: app-secrets
+              key: JAWSDB_URL
+        - name: MAIL_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: app-secrets
+              key: MAIL_USERNAME
+        - name: MAIL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: app-secrets
+              key: MAIL_PASSWORD
+        - name: FRED_KEY
+          valueFrom:
+            secretKeyRef:
+              name: app-secrets
+              key: FRED_KEY
+        - name: FRONTEND_ORIGIN
+          value: "https://expense-tracker-lovat-kappa-21.vercel.app"
