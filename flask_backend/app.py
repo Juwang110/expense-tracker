@@ -21,7 +21,8 @@ frontend_origins = [
     'https://expense-tracker-lovat-kappa-21.vercel.app',
     os.getenv('FRONTEND_ORIGIN')  # Vercel URL for deployed frontend
 ]
-CORS(app, resources={r"/*": {"origins": frontend_origins}})
+# CORS(app, resources={r"/*": {"origins": frontend_origins}})
+CORS(app)
 
 # Parse the JawsDB URL, delete these lines if not using cloud database
 jawsdb_url = os.getenv('JAWSDB_URL')
