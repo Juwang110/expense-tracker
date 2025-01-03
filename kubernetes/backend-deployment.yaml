@@ -22,6 +22,7 @@ spec:
         image: juwang110/expense-tracker-backend:latest
         ports:
         - containerPort: 5000
+        command: ["python", "app.py"] 
         env:
         - name: FLASK_ENV
           value: "development"

@@ -12,5 +12,5 @@ spec:
   ports:
     - protocol: TCP
       port: 5000      
-      targetPort: 5000 
-  type: ClusterIP # This means that it is only accessble within cluster, if wanted to make outside accessible, use nodeport or lodebalancer
+      nodePort: 31080
+  type: NodePort

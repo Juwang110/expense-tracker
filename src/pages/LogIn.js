@@ -18,6 +18,7 @@ export default function LogIn() {
   // Handles form submission and either signs the user up, logs them in,
   // or shows them a wrong password alert depending on their input
   function handleSubmit(e) {
+    console.log("handleSubmit triggered");
     e.preventDefault();
     const userData = {
       username: username,

@@ -22,3 +22,6 @@ spec:
         image: juwang110/expense-tracker-frontend:latest
         ports:
         - containerPort: 80
+        env:
+        - name: REACT_APP_BACKEND_URL
+          value: "http://backend-service:5000"
